@@ -1,5 +1,7 @@
 USE app;
-
+SET NAMES utf8mb4;
+SET character_set_database = utf8mb4;
+SET collation_database = utf8mb4_0900_ai_ci;
 -- ----------------------------
 -- 1、部门表
 -- ----------------------------
