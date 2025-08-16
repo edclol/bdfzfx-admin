@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSignalInfoMapper">
+    
+    <resultMap type="SysSignalInfo" id="SysSignalInfoResult">
+        <result property="id"    column="id"    />
+        <result property="excelId"    column="excel_id"    />
+        <result property="stationId"    column="station_id"    />
+        <result property="signalName"    column="signal_name"    />
+        <result property="signalType"    column="signal_type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysSignalInfoVo">
+        select id, excel_id, station_id, signal_name, signal_type, create_by, create_time, update_by, update_time from sys_signal_info
+    </sql>
+
+    <select id="selectSysSignalInfoList" parameterType="SysSignalInfo" resultMap="SysSignalInfoResult">
+        <include refid="selectSysSignalInfoVo"/>
+        <where>  
+            <if test="excelId != null "> and excel_id = #{excelId}</if>
+            <if test="stationId != null  and stationId != ''"> and station_id like concat('%', #{stationId}, '%')</if>
+            <if test="signalName != null  and signalName != ''"> and signal_name like concat('%', #{signalName}, '%')</if>
+            <if test="signalType != null  and signalType != ''"> and signal_type like concat('%', #{signalType}, '%')</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSignalInfoById" parameterType="Long" resultMap="SysSignalInfoResult">
+        <include refid="selectSysSignalInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysSignalInfo" parameterType="SysSignalInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_signal_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="excelId != null">excel_id,</if>
+            <if test="stationId != null and stationId != ''">station_id,</if>
+            <if test="signalName != null and signalName != ''">signal_name,</if>
+            <if test="signalType != null and signalType != ''">signal_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="excelId != null">#{excelId},</if>
+            <if test="stationId != null and stationId != ''">#{stationId},</if>
+            <if test="signalName != null and signalName != ''">#{signalName},</if>
+            <if test="signalType != null and signalType != ''">#{signalType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSignalInfo" parameterType="SysSignalInfo">
+        update sys_signal_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="excelId != null">excel_id = #{excelId},</if>
+            <if test="stationId != null and stationId != ''">station_id = #{stationId},</if>
+            <if test="signalName != null and signalName != ''">signal_name = #{signalName},</if>
+            <if test="signalType != null and signalType != ''">signal_type = #{signalType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSignalInfoById" parameterType="Long">
+        delete from sys_signal_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSignalInfoByIds" parameterType="String">
+        delete from sys_signal_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
