@@ -15,7 +15,7 @@ import com.bdfzfx.common.xss.Xss;
 /**
  * 用户对象 sys_user
  * 
- * @author ruoyi
+ *  
  */
 public class SysUser extends BaseEntity
 {

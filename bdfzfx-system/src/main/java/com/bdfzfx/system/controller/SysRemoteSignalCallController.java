@@ -24,7 +24,7 @@ import com.bdfzfx.common.core.page.TableDataInfo;
 /**
  * 遥信调用记录Controller
  * 
- * @author ruoyi
+ *
  * @date 2025-08-17
  */
 @RestController

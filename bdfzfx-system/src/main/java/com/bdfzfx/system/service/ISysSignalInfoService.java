@@ -6,7 +6,7 @@ import com.bdfzfx.system.domain.SysSignalInfo;
 /**
  * 信号信息Service接口
  * 
- * @author ruoyi
+ *
  * @date 2025-08-16
  */
 public interface ISysSignalInfoService 

@@ -3,7 +3,7 @@ package com.bdfzfx.common.enums;
 /**
  * 用户状态
  * 
- * @author ruoyi
+ *
  */
 public enum UserStatus
 {

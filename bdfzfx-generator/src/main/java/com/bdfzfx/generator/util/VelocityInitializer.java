@@ -7,7 +7,7 @@ import com.bdfzfx.common.constant.Constants;
 /**
  * VelocityEngine工厂
  * 
- * @author ruoyi
+ *
  */
 public class VelocityInitializer
 {

@@ -8,7 +8,7 @@ import com.bdfzfx.common.core.domain.BaseEntity;
 /**
  * 信号信息对象 sys_signal_info
  * 
- * @author ruoyi
+ *
  * @date 2025-08-16
  */
 public class SysSignalInfo extends BaseEntity

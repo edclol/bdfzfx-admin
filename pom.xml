@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.bdfzfx</groupId>
+    <artifactId>bdfzfx</artifactId>
     <version>0.1.0</version>
 
-    <name>ruoyi</name>
+    <name>bdfzfx</name>
     <description>管理系统</description>
     
     <properties>
-        <ruoyi.version>3.9.0</ruoyi.version>
+        <bdfzfx.version>0.1.0</bdfzfx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -184,37 +184,37 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
+                <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${bdfzfx.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
+                <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${bdfzfx.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
+                <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${bdfzfx.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
+                <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${bdfzfx.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
+                <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${bdfzfx.version}</version>
             </dependency>
 
         </dependencies>

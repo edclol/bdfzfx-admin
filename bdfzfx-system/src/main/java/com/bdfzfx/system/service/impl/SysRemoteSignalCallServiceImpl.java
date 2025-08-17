@@ -11,7 +11,7 @@ import com.bdfzfx.system.service.ISysRemoteSignalCallService;
 /**
  * 遥信调用记录Service业务层处理
  * 
- * @author ruoyi
+ *
  * @date 2025-08-17
  */
 @Service

@@ -7,7 +7,7 @@ import com.bdfzfx.common.utils.StringUtils;
 /**
  * 字符集工具类
  * 
- * @author ruoyi
+ *
  */
 public class CharsetKit
 {

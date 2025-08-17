@@ -7,7 +7,7 @@ import com.bdfzfx.generator.domain.GenTable;
 /**
  * 业务 服务层
  * 
- * @author ruoyi
+ *
  */
 public interface IGenTableService
 {

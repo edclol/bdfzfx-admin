@@ -6,7 +6,7 @@ import com.bdfzfx.system.domain.SysRemoteSignalCall;
 /**
  * 遥信调用记录Service接口
  * 
- * @author ruoyi
+ *
  * @date 2025-08-17
  */
 public interface ISysRemoteSignalCallService 

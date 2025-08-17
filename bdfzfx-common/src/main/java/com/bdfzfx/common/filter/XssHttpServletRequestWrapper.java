@@ -15,7 +15,7 @@ import com.bdfzfx.common.utils.html.EscapeUtil;
 /**
  * XSS过滤处理
  * 
- * @author ruoyi
+ *
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper
 {

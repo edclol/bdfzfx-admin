@@ -11,7 +11,7 @@ import com.bdfzfx.common.utils.spring.SpringUtils;
 /**
  * 字典工具类
  * 
- * @author ruoyi
+ *
  */
 public class DictUtils
 {

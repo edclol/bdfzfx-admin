@@ -15,7 +15,7 @@ import com.bdfzfx.common.utils.StringUtils;
 /**
  * Filter配置
  *
- * @author ruoyi
+ *
  */
 @Configuration
 public class FilterConfig

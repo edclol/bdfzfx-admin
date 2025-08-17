@@ -5,7 +5,7 @@ import com.bdfzfx.common.utils.DateUtils;
 import com.bdfzfx.common.utils.StringUtils;
 
 /**
- * @author ruoyi 序列生成类
+ *   序列生成类
  */
 public class Seq
 {

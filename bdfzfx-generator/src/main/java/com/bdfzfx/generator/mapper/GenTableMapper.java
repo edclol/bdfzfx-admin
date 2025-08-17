@@ -6,7 +6,7 @@ import com.bdfzfx.generator.domain.GenTable;
 /**
  * 业务 数据层
  * 
- * @author ruoyi
+ *
  */
 public interface GenTableMapper
 {

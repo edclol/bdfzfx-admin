@@ -10,7 +10,7 @@ import com.bdfzfx.common.core.domain.BaseEntity;
 /**
  * 遥信调用记录对象 sys_remote_signal_call
  * 
- * @author ruoyi
+ *
  * @date 2025-08-17
  */
 public class SysRemoteSignalCall extends BaseEntity

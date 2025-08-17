@@ -6,7 +6,7 @@ import com.bdfzfx.common.constant.HttpStatus;
 /**
  * 响应信息主体
  *
- * @author ruoyi
+ *  
  */
 public class R<T> implements Serializable
 {

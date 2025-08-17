@@ -39,7 +39,7 @@ import com.bdfzfx.generator.service.IGenTableService;
 /**
  * 代码生成 操作处理
  * 
- * @author ruoyi
+ *
  */
 @RestController
 @RequestMapping("/tool/gen")

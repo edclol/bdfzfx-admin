@@ -25,7 +25,7 @@ import com.bdfzfx.system.service.ISysDeptService;
 /**
  * 部门信息
  * 
- * @author ruoyi
+ *  
  */
 @RestController
 @RequestMapping("/system/dept")
