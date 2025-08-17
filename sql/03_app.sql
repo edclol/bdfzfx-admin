@@ -477,6 +477,7 @@ insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0',
 insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', sysdate(), '', null, '登录状态列表');
 INSERT INTO sys_dict_type VALUES (11, '调用结果', 'sys_remote_signal_call_result', '0', 'admin', sysdate(), '', null, '调用结果');
 INSERT INTO sys_dict_type VALUES (12, '设备类型', 'sys_device_type', '0', 'admin', sysdate(), '', null, '设备类型');
+INSERT INTO sys_dict_type VALUES (12, '电压等级', 'sys_voltage_level', '0', 'admin', sysdate(), '', null, '电压等级');
 
 
 -- ----------------------------
@@ -539,6 +540,9 @@ INSERT INTO sys_dict_data VALUES (34, 3, '一次设备', '3', 'sys_device_type',
 INSERT INTO sys_dict_data VALUES (35, 4, '二次设备', '4', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (36, 5, '站用交直流', '5', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (37, 6, '辅控装置', '6', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (38, 1, '220kV', '1', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (39, 2, '110kV', '2', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (40, 3, '35kV', '3', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 
 
 -- ----------------------------
