@@ -537,6 +537,8 @@ INSERT INTO sys_dict_data VALUES (32, 1, '自动装置', '1', 'sys_device_type',
 INSERT INTO sys_dict_data VALUES (33, 2, '公用设备', '2', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (34, 3, '一次设备', '3', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (35, 4, '二次设备', '4', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (36, 5, '站用交直流', '5', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (37, 6, '辅控装置', '6', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 
 
 -- ----------------------------
