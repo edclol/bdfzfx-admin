@@ -475,6 +475,8 @@ insert into sys_dict_type values(7,  '通知类型', 'sys_notice_type',     '0',
 insert into sys_dict_type values(8,  '通知状态', 'sys_notice_status',   '0', 'admin', sysdate(), '', null, '通知状态列表');
 insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0', 'admin', sysdate(), '', null, '操作类型列表');
 insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', sysdate(), '', null, '登录状态列表');
+INSERT INTO sys_dict_type VALUES (11, '调用结果', 'sys_remote_signal_call_result', '0', 'admin', sysdate(), '', null, '调用结果');
+INSERT INTO sys_dict_type VALUES (12, '设备类型', 'sys_device_type', '0', 'admin', sysdate(), '', null, '设备类型');
 
 
 -- ----------------------------
@@ -529,6 +531,12 @@ insert into sys_dict_data values(26, 8,  '生成代码', '8',       'sys_oper_ty
 insert into sys_dict_data values(27, 9,  '清空数据', '9',       'sys_oper_type',       '',   'danger',  'N', '0', 'admin', sysdate(), '', null, '清空操作');
 insert into sys_dict_data values(28, 1,  '成功',     '0',       'sys_common_status',   '',   'primary', 'N', '0', 'admin', sysdate(), '', null, '正常状态');
 insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_status',   '',   'danger',  'N', '0', 'admin', sysdate(), '', null, '停用状态');
+INSERT INTO sys_dict_data VALUES (30, 1, '成功', '0', 'sys_remote_signal_call_result', null, 'success', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (31, 0, '失败', '1', 'sys_remote_signal_call_result', null, 'warning', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (32, 1, '自动装置', '1', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (33, 2, '公用设备', '2', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (34, 3, '一次设备', '3', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (35, 4, '二次设备', '4', 'sys_device_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 
 
 -- ----------------------------

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysRemoteSignalCallMapper">
+    
+    <resultMap type="SysRemoteSignalCall" id="SysRemoteSignalCallResult">
+        <result property="id"    column="id"    />
+        <result property="callTime"    column="call_time"    />
+        <result property="interfaceName"    column="interface_name"    />
+        <result property="callResult"    column="call_result"    />
+        <result property="responseTime"    column="response_time"    />
+        <result property="stationId"    column="station_id"    />
+        <result property="stationName"    column="station_name"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="voltageLevel"    column="voltage_level"    />
+        <result property="operation"    column="operation"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysRemoteSignalCallVo">
+        select id, call_time, interface_name, call_result, response_time, station_id, station_name, device_name, device_type, voltage_level, operation, create_by, create_time, update_by, update_time from sys_remote_signal_call
+    </sql>
+
+    <select id="selectSysRemoteSignalCallList" parameterType="SysRemoteSignalCall" resultMap="SysRemoteSignalCallResult">
+        <include refid="selectSysRemoteSignalCallVo"/>
+        <where>  
+            <if test="params.beginCallTime != null and params.beginCallTime != '' and params.endCallTime != null and params.endCallTime != ''"> and call_time between #{params.beginCallTime} and #{params.endCallTime}</if>
+            <if test="interfaceName != null  and interfaceName != ''"> and interface_name like concat('%', #{interfaceName}, '%')</if>
+            <if test="callResult != null  and callResult != ''"> and call_result = #{callResult}</if>
+            <if test="responseTime != null  and responseTime != ''"> and response_time = #{responseTime}</if>
+            <if test="stationId != null  and stationId != ''"> and station_id = #{stationId}</if>
+            <if test="stationName != null  and stationName != ''"> and station_name like concat('%', #{stationName}, '%')</if>
+            <if test="deviceName != null  and deviceName != ''"> and device_name like concat('%', #{deviceName}, '%')</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="voltageLevel != null  and voltageLevel != ''"> and voltage_level = #{voltageLevel}</if>
+            <if test="operation != null  and operation != ''"> and operation = #{operation}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysRemoteSignalCallById" parameterType="Long" resultMap="SysRemoteSignalCallResult">
+        <include refid="selectSysRemoteSignalCallVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysRemoteSignalCall" parameterType="SysRemoteSignalCall" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_remote_signal_call
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="callTime != null">call_time,</if>
+            <if test="interfaceName != null and interfaceName != ''">interface_name,</if>
+            <if test="callResult != null and callResult != ''">call_result,</if>
+            <if test="responseTime != null and responseTime != ''">response_time,</if>
+            <if test="stationId != null and stationId != ''">station_id,</if>
+            <if test="stationName != null and stationName != ''">station_name,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="deviceType != null and deviceType != ''">device_type,</if>
+            <if test="voltageLevel != null and voltageLevel != ''">voltage_level,</if>
+            <if test="operation != null and operation != ''">operation,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="callTime != null">#{callTime},</if>
+            <if test="interfaceName != null and interfaceName != ''">#{interfaceName},</if>
+            <if test="callResult != null and callResult != ''">#{callResult},</if>
+            <if test="responseTime != null and responseTime != ''">#{responseTime},</if>
+            <if test="stationId != null and stationId != ''">#{stationId},</if>
+            <if test="stationName != null and stationName != ''">#{stationName},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="deviceType != null and deviceType != ''">#{deviceType},</if>
+            <if test="voltageLevel != null and voltageLevel != ''">#{voltageLevel},</if>
+            <if test="operation != null and operation != ''">#{operation},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysRemoteSignalCall" parameterType="SysRemoteSignalCall">
+        update sys_remote_signal_call
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="callTime != null">call_time = #{callTime},</if>
+            <if test="interfaceName != null and interfaceName != ''">interface_name = #{interfaceName},</if>
+            <if test="callResult != null and callResult != ''">call_result = #{callResult},</if>
+            <if test="responseTime != null and responseTime != ''">response_time = #{responseTime},</if>
+            <if test="stationId != null and stationId != ''">station_id = #{stationId},</if>
+            <if test="stationName != null and stationName != ''">station_name = #{stationName},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="deviceType != null and deviceType != ''">device_type = #{deviceType},</if>
+            <if test="voltageLevel != null and voltageLevel != ''">voltage_level = #{voltageLevel},</if>
+            <if test="operation != null and operation != ''">operation = #{operation},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysRemoteSignalCallById" parameterType="Long">
+        delete from sys_remote_signal_call where id = #{id}
+    </delete>
+
+    <delete id="deleteSysRemoteSignalCallByIds" parameterType="String">
+        delete from sys_remote_signal_call where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
