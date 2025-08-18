@@ -33,9 +33,9 @@ server:
 # 日志配置
 logging:
   level:
-    com.bdfzfx: debug
+    com.bdfzfx: info
     org.springframework: warn
-    com.alibaba: debug
+    com.alibaba: info
 
 # 用户配置
 user:
