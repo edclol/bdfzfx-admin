@@ -1,7 +1,10 @@
-package com.bdfzfx.system.controller;
+package com.bdfzfx.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import com.bdfzfx.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/call")
+@Api("遥信调用记录管理")
 public class SysRemoteSignalCallController extends BaseController
 {
     @Autowired
@@ -37,6 +41,7 @@ public class SysRemoteSignalCallController extends BaseController
     /**
      * 查询遥信调用记录列表
      */
+    @ApiOperation("获取遥信调用记录列表")
     @PreAuthorize("@ss.hasPermi('system:call:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysRemoteSignalCall sysRemoteSignalCall)
@@ -52,6 +57,7 @@ public class SysRemoteSignalCallController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:call:export')")
     @Log(title = "遥信调用记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
+    @ApiOperation("导出遥信调用记录列表")
     public void export(HttpServletResponse response, SysRemoteSignalCall sysRemoteSignalCall)
     {
         List<SysRemoteSignalCall> list = sysRemoteSignalCallService.selectSysRemoteSignalCallList(sysRemoteSignalCall);
@@ -64,6 +70,7 @@ public class SysRemoteSignalCallController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:call:query')")
     @GetMapping(value = "/{id}")
+    @ApiOperation("获取遥信调用记录详细信息")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
         return success(sysRemoteSignalCallService.selectSysRemoteSignalCallById(id));
@@ -75,6 +82,7 @@ public class SysRemoteSignalCallController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:call:add')")
     @Log(title = "遥信调用记录", businessType = BusinessType.INSERT)
     @PostMapping
+    @ApiOperation("新增遥信调用记录")
     public AjaxResult add(@RequestBody SysRemoteSignalCall sysRemoteSignalCall)
     {
         return toAjax(sysRemoteSignalCallService.insertSysRemoteSignalCall(sysRemoteSignalCall));
@@ -86,6 +94,7 @@ public class SysRemoteSignalCallController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:call:edit')")
     @Log(title = "遥信调用记录", businessType = BusinessType.UPDATE)
     @PutMapping
+    @ApiOperation("修改遥信调用记录")
     public AjaxResult edit(@RequestBody SysRemoteSignalCall sysRemoteSignalCall)
     {
         return toAjax(sysRemoteSignalCallService.updateSysRemoteSignalCall(sysRemoteSignalCall));
@@ -97,6 +106,7 @@ public class SysRemoteSignalCallController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:call:remove')")
     @Log(title = "遥信调用记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
+    @ApiOperation("删除遥信调用记录")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysRemoteSignalCallService.deleteSysRemoteSignalCallByIds(ids));
