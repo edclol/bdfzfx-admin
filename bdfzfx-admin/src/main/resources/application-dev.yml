@@ -6,7 +6,7 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://bdfzfx-admin-mysql:3306/app?useUnicode=true&connectionCollation=utf8mb4_0900_ai_ci&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        url: jdbc:mysql://localhost:3306/app?useUnicode=true&connectionCollation=utf8mb4_0900_ai_ci&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
         username: app
         password: tB91Y7X5e8oipZJu
       # 从库数据源
@@ -63,7 +63,7 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: bdfzfx-admin-redis
+    host: localhost
     # 端口，默认为6379
     port: 6379
     # 数据库索引
