@@ -478,6 +478,7 @@ insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0',
 INSERT INTO sys_dict_type VALUES (11, '调用结果', 'sys_remote_signal_call_result', '0', 'admin', sysdate(), '', null, '调用结果');
 INSERT INTO sys_dict_type VALUES (12, '设备类型', 'sys_device_type', '0', 'admin', sysdate(), '', null, '设备类型');
 INSERT INTO sys_dict_type VALUES (13, '电压等级', 'sys_voltage_level', '0', 'admin', sysdate(), '', null, '电压等级');
+INSERT INTO sys_dict_type VALUES (14, '标注任务状态', 'sys_label_task', '0', 'admin', sysdate(), '', null, '标注任务状态');
 
 
 -- ----------------------------
@@ -543,7 +544,10 @@ INSERT INTO sys_dict_data VALUES (37, 6, '辅控装置', '6', 'sys_device_type',
 INSERT INTO sys_dict_data VALUES (38, 1, '220kV', '1', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (39, 2, '110kV', '2', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (40, 3, '35kV', '3', 'sys_voltage_level', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
-
+INSERT INTO sys_dict_data VALUES (41, 3, '已发布 ', '0', 'sys_label_task', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (42, 3, '进行中', '1', 'sys_label_task', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (43, 3, '已完成', '2', 'sys_label_task', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (44, 3, '已回收', '3', 'sys_label_task', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 
 -- ----------------------------
 -- 13、参数配置表
