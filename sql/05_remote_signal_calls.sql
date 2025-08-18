@@ -76,3 +76,52 @@ VALUES
 -- 场景8：失败场景补充，长响应时间
 ('2024-12-13 14:15:00', '遥信辅助分析异步调用结果查询', '1', '2s', 'STATION_001', '厂站1', '设备H', '3',
  '110kW', '数据处理', 'admin', NOW(), 'admin', NOW());
+
+drop table if exists sys_yx_info_all;
+CREATE TABLE sys_yx_info_all
+(
+    id                      INT AUTO_INCREMENT PRIMARY KEY,
+    yx_id                   VARCHAR(255) NOT NULL COMMENT '遥信ID',
+    info_name               VARCHAR(255) COMMENT '信息名称',
+    info_name_original      VARCHAR(255) COMMENT '原始信息名称',
+    substation_id           VARCHAR(50) COMMENT '变电站ID',
+    interval_id             VARCHAR(50) COMMENT '间隔ID',
+    yx_type                 VARCHAR(50) COMMENT '遥信类型',
+    device_type             VARCHAR(100) COMMENT '设备类型',
+    part_type               VARCHAR(100) COMMENT '部件类型',
+    device_principle        VARCHAR(255) COMMENT '设备原理',
+    v_level                 VARCHAR(50) COMMENT '电压等级',
+    alarm_type              VARCHAR(100) COMMENT '告警类型',
+    alarm_level             VARCHAR(50) COMMENT '告警级别',
+    need_push               VARCHAR(20) COMMENT '是否需要推送',
+    reference               TEXT COMMENT '参考资料',
+    requirement             TEXT COMMENT '要求',
+    target_device           VARCHAR(255) COMMENT '目标设备',
+    origin_device           VARCHAR(255) COMMENT '源设备',
+    data_primary_device     VARCHAR(255) COMMENT '主数据设备',
+    data_secondary_device   VARCHAR(255) COMMENT '从数据设备',
+    is_include_curly_braces VARCHAR(20) COMMENT '是否包含花括号'
+) ENGINE = InnoDB COMMENT ='遥信信息数据表';
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库', '1', '1', 'all', 'system/all/index', 1, 0, 'C', '0', '0', 'system:all:edit', 'build', 'admin', sysdate(), '', null, '样本库菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:all:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:all:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:all:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:all:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:all:export',       '#', 'admin', sysdate(), '', null, '');

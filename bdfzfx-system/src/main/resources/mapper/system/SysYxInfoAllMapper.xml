@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysYxInfoAllMapper">
+    
+    <resultMap type="SysYxInfoAll" id="SysYxInfoAllResult">
+        <result property="id"    column="id"    />
+        <result property="yxId"    column="yx_id"    />
+        <result property="infoName"    column="info_name"    />
+        <result property="infoNameOriginal"    column="info_name_original"    />
+        <result property="substationId"    column="substation_id"    />
+        <result property="intervalId"    column="interval_id"    />
+        <result property="yxType"    column="yx_type"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="partType"    column="part_type"    />
+        <result property="devicePrinciple"    column="device_principle"    />
+        <result property="vLevel"    column="v_level"    />
+        <result property="alarmType"    column="alarm_type"    />
+        <result property="alarmLevel"    column="alarm_level"    />
+        <result property="needPush"    column="need_push"    />
+        <result property="reference"    column="reference"    />
+        <result property="requirement"    column="requirement"    />
+        <result property="targetDevice"    column="target_device"    />
+        <result property="originDevice"    column="origin_device"    />
+        <result property="dataPrimaryDevice"    column="data_primary_device"    />
+        <result property="dataSecondaryDevice"    column="data_secondary_device"    />
+        <result property="isIncludeCurlyBraces"    column="is_include_curly_braces"    />
+    </resultMap>
+
+    <sql id="selectSysYxInfoAllVo">
+        select id, yx_id, info_name, info_name_original, substation_id, interval_id, yx_type, device_type, part_type, device_principle, v_level, alarm_type, alarm_level, need_push, reference, requirement, target_device, origin_device, data_primary_device, data_secondary_device, is_include_curly_braces from sys_yx_info_all
+    </sql>
+
+    <select id="selectSysYxInfoAllList" parameterType="SysYxInfoAll" resultMap="SysYxInfoAllResult">
+        <include refid="selectSysYxInfoAllVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="yxId != null  and yxId != ''"> and yx_id = #{yxId}</if>
+            <if test="substationId != null  and substationId != ''"> and substation_id = #{substationId}</if>
+            <if test="intervalId != null  and intervalId != ''"> and interval_id = #{intervalId}</if>
+            <if test="yxType != null  and yxType != ''"> and yx_type = #{yxType}</if>
+            <if test="vLevel != null  and vLevel != ''"> and v_level = #{vLevel}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysYxInfoAllById" parameterType="Long" resultMap="SysYxInfoAllResult">
+        <include refid="selectSysYxInfoAllVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysYxInfoAll" parameterType="SysYxInfoAll" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_yx_info_all
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yxId != null and yxId != ''">yx_id,</if>
+            <if test="infoName != null">info_name,</if>
+            <if test="infoNameOriginal != null">info_name_original,</if>
+            <if test="substationId != null and substationId != ''">substation_id,</if>
+            <if test="intervalId != null and intervalId != ''">interval_id,</if>
+            <if test="yxType != null and yxType != ''">yx_type,</if>
+            <if test="deviceType != null">device_type,</if>
+            <if test="partType != null">part_type,</if>
+            <if test="devicePrinciple != null">device_principle,</if>
+            <if test="vLevel != null and vLevel != ''">v_level,</if>
+            <if test="alarmType != null">alarm_type,</if>
+            <if test="alarmLevel != null">alarm_level,</if>
+            <if test="needPush != null">need_push,</if>
+            <if test="reference != null">reference,</if>
+            <if test="requirement != null">requirement,</if>
+            <if test="targetDevice != null">target_device,</if>
+            <if test="originDevice != null">origin_device,</if>
+            <if test="dataPrimaryDevice != null">data_primary_device,</if>
+            <if test="dataSecondaryDevice != null">data_secondary_device,</if>
+            <if test="isIncludeCurlyBraces != null">is_include_curly_braces,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yxId != null and yxId != ''">#{yxId},</if>
+            <if test="infoName != null">#{infoName},</if>
+            <if test="infoNameOriginal != null">#{infoNameOriginal},</if>
+            <if test="substationId != null and substationId != ''">#{substationId},</if>
+            <if test="intervalId != null and intervalId != ''">#{intervalId},</if>
+            <if test="yxType != null and yxType != ''">#{yxType},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="partType != null">#{partType},</if>
+            <if test="devicePrinciple != null">#{devicePrinciple},</if>
+            <if test="vLevel != null and vLevel != ''">#{vLevel},</if>
+            <if test="alarmType != null">#{alarmType},</if>
+            <if test="alarmLevel != null">#{alarmLevel},</if>
+            <if test="needPush != null">#{needPush},</if>
+            <if test="reference != null">#{reference},</if>
+            <if test="requirement != null">#{requirement},</if>
+            <if test="targetDevice != null">#{targetDevice},</if>
+            <if test="originDevice != null">#{originDevice},</if>
+            <if test="dataPrimaryDevice != null">#{dataPrimaryDevice},</if>
+            <if test="dataSecondaryDevice != null">#{dataSecondaryDevice},</if>
+            <if test="isIncludeCurlyBraces != null">#{isIncludeCurlyBraces},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysYxInfoAll" parameterType="SysYxInfoAll">
+        update sys_yx_info_all
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="yxId != null and yxId != ''">yx_id = #{yxId},</if>
+            <if test="infoName != null">info_name = #{infoName},</if>
+            <if test="infoNameOriginal != null">info_name_original = #{infoNameOriginal},</if>
+            <if test="substationId != null and substationId != ''">substation_id = #{substationId},</if>
+            <if test="intervalId != null and intervalId != ''">interval_id = #{intervalId},</if>
+            <if test="yxType != null and yxType != ''">yx_type = #{yxType},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="partType != null">part_type = #{partType},</if>
+            <if test="devicePrinciple != null">device_principle = #{devicePrinciple},</if>
+            <if test="vLevel != null and vLevel != ''">v_level = #{vLevel},</if>
+            <if test="alarmType != null">alarm_type = #{alarmType},</if>
+            <if test="alarmLevel != null">alarm_level = #{alarmLevel},</if>
+            <if test="needPush != null">need_push = #{needPush},</if>
+            <if test="reference != null">reference = #{reference},</if>
+            <if test="requirement != null">requirement = #{requirement},</if>
+            <if test="targetDevice != null">target_device = #{targetDevice},</if>
+            <if test="originDevice != null">origin_device = #{originDevice},</if>
+            <if test="dataPrimaryDevice != null">data_primary_device = #{dataPrimaryDevice},</if>
+            <if test="dataSecondaryDevice != null">data_secondary_device = #{dataSecondaryDevice},</if>
+            <if test="isIncludeCurlyBraces != null">is_include_curly_braces = #{isIncludeCurlyBraces},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysYxInfoAllById" parameterType="Long">
+        delete from sys_yx_info_all where id = #{id}
+    </delete>
+
+    <delete id="deleteSysYxInfoAllByIds" parameterType="String">
+        delete from sys_yx_info_all where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
