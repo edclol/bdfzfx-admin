@@ -46,28 +46,45 @@ public class SysUserOnlineController extends BaseController
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys)
         {
-            LoginUser user = redisCache.getCacheObject(key);
-            if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
-            {
-                userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+            // 修复类型转换问题
+            Object userObj = redisCache.getCacheObject(key);
+            LoginUser user = null;
+            if (userObj != null) {
+                if (userObj instanceof LoginUser) {
+                    user = (LoginUser) userObj;
+                } else if (userObj instanceof com.alibaba.fastjson2.JSONObject) {
+                    // 将JSONObject转换为LoginUser
+                    user = ((com.alibaba.fastjson2.JSONObject) userObj).toJavaObject(LoginUser.class);
+                } else {
+                    // 其他情况使用JSON反序列化
+                    user = com.alibaba.fastjson2.JSON.parseObject(com.alibaba.fastjson2.JSON.toJSONString(userObj), LoginUser.class);
+                }
             }
-            else if (StringUtils.isNotEmpty(ipaddr))
-            {
-                userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
-            }
-            else if (StringUtils.isNotEmpty(userName) && StringUtils.isNotNull(user.getUser()))
-            {
-                userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
-            }
-            else
-            {
-                userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
+
+            if (user != null) {
+                if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName))
+                {
+                    userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+                }
+                else if (StringUtils.isNotEmpty(ipaddr))
+                {
+                    userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
+                }
+                else if (StringUtils.isNotEmpty(userName) && StringUtils.isNotNull(user.getUser()))
+                {
+                    userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
+                }
+                else
+                {
+                    userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
+                }
             }
         }
         Collections.reverse(userOnlineList);
         userOnlineList.removeAll(Collections.singleton(null));
         return getDataTable(userOnlineList);
     }
+
 
     /**
      * 强退用户

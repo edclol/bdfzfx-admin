@@ -26,6 +26,7 @@ public class RedisConfig extends CachingConfigurerSupport
         template.setConnectionFactory(connectionFactory);
 
         FastJson2JsonRedisSerializer<Object> serializer = new FastJson2JsonRedisSerializer<>(Object.class);
+        template.setDefaultSerializer(serializer);
 
         // 使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());
