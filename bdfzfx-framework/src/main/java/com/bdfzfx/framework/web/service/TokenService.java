@@ -71,15 +71,25 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                log.error("userKey:" + userKey);
-                LoginUser user = redisCache.getCacheObject(userKey);
-                log.error("user:" + user);
+                // 修复类型转换问题
+                Object userObj = redisCache.getCacheObject(userKey);
+                LoginUser user = null;
+                if (userObj != null) {
+                    if (userObj instanceof LoginUser) {
+                        user = (LoginUser) userObj;
+                    } else if (userObj instanceof com.alibaba.fastjson2.JSONObject) {
+                        // 将JSONObject转换为LoginUser
+                        user = ((com.alibaba.fastjson2.JSONObject) userObj).toJavaObject(LoginUser.class);
+                    } else {
+                        // 其他情况使用JSON反序列化
+                        user = com.alibaba.fastjson2.JSON.parseObject(com.alibaba.fastjson2.JSON.toJSONString(userObj), LoginUser.class);
+                    }
+                }
                 return user;
             }
             catch (Exception e)
             {
-                e.printStackTrace();
-                log.error("获取用户信息异常'{}'", e.getMessage());
+                log.error("获取用户信息异常", e);
             }
         }
         return null;
