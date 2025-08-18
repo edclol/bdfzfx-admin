@@ -11,6 +11,12 @@ import com.bdfzfx.system.domain.SysYxInfoAll;
  */
 public interface ISysYxInfoAllService 
 {
+
+    /**
+     * 根据类型统计数量
+     */
+    Integer countByType(String type);
+
     /**
      * 查询样本库
      * 

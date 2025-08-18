@@ -59,7 +59,11 @@ spring:
         wall:
           config:
             multi-statement-allow: t
-
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000
+      key-prefix: sys_
   # redis 配置
   redis:
     # 地址
