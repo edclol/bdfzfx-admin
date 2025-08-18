@@ -64,14 +64,15 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: 'index',
+    redirect: '/system/call',
     children: [
-      {
-        path: 'index',
-        component: () => import('@/views/index'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
+      // {
+      //   path: 'index',
+      //   hidden: true,
+      //   component: () => import('@/views/index'),
+      //   name: 'Index',
+      //   meta: { title: '首页', icon: 'dashboard', affix: true }
+      // }
     ]
   },
   {
