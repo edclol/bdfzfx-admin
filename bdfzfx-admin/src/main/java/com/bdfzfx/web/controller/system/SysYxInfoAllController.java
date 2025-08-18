@@ -1,10 +1,16 @@
 package com.bdfzfx.web.controller.system;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bdfzfx.system.domain.StatItem;
+import com.bdfzfx.system.domain.SysYxInfoStatResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +43,42 @@ public class SysYxInfoAllController extends BaseController
 {
     @Autowired
     private ISysYxInfoAllService sysYxInfoAllService;
+
+    /**
+     * 获取样本库数据统计信息
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:list')")
+    @ApiOperation("获取样本库数据统计")
+    @GetMapping("/stat")
+    @Cacheable(value = "sysYxInfoStat", key = "'stat'", unless = "#result == null")
+    public AjaxResult getStat() {
+        // 获取各类设备的数量
+        Integer yici = sysYxInfoAllService.countByType("一次设备");
+        Integer erci = sysYxInfoAllService.countByType("二次设备");
+        Integer zidong = sysYxInfoAllService.countByType("自动装置");
+        Integer jiaozhliu = sysYxInfoAllService.countByType("站用交直流");
+        Integer gongyong = sysYxInfoAllService.countByType("公用设备");
+        Integer fukong = sysYxInfoAllService.countByType("辅控装置");
+
+        // 计算总量
+        Integer total = yici + erci + zidong + jiaozhliu + gongyong + fukong;
+
+        // 构建统计结果
+        List<StatItem> categories = Arrays.asList(
+                new StatItem("一次设备", yici),
+                new StatItem("二次设备", erci),
+                new StatItem("自动装置", zidong),
+                new StatItem("站用交直流", jiaozhliu),
+                new StatItem("公用设备", gongyong),
+                new StatItem("辅控装置", fukong)
+        );
+
+        SysYxInfoStatResult result = new SysYxInfoStatResult(total, categories);
+
+        return success(result);
+    }
+
+
 
     /**
      * 查询样本库列表
