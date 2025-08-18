@@ -35,6 +35,7 @@ logging:
   level:
     com.bdfzfx: debug
     org.springframework: warn
+    com.alibaba: debug
 
 # 用户配置
 user:

@@ -71,16 +71,20 @@ public class TokenService
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
+                log.error("userKey:" + userKey);
                 LoginUser user = redisCache.getCacheObject(userKey);
+                log.error("user:" + user);
                 return user;
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 log.error("获取用户信息异常'{}'", e.getMessage());
             }
         }
         return null;
     }
+
 
     /**
      * 设置用户身份信息
@@ -151,6 +155,8 @@ public class TokenService
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
+        log.error("userKey:" + userKey);
+        log.error("loginUser:" + loginUser);
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 
