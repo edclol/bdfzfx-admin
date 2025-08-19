@@ -1,9 +1,6 @@
 package com.bdfzfx.web.controller.system;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bdfzfx.system.domain.StatItem;
@@ -94,6 +91,24 @@ public class SysYxInfoAllController extends BaseController
     }
 
     /**
+     * 查询随机样本库列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:list')")
+    @GetMapping("/list/random")
+    @ApiOperation("获取随机样本库列表")
+    public TableDataInfo listRandom(SysYxInfoAll sysYxInfoAll)
+    {
+        startPage();
+        List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(sysYxInfoAll);
+        // 随机获取1000个样本
+        if (list.size() >= 1000) {
+            Collections.shuffle(list);
+            list = list.subList(0, 1000);
+        }
+        return getDataTable(list);
+    }
+
+    /**
      * 导出样本库列表
      */
     @PreAuthorize("@ss.hasPermi('system:all:export')")
@@ -103,6 +118,24 @@ public class SysYxInfoAllController extends BaseController
     public void export(HttpServletResponse response, SysYxInfoAll sysYxInfoAll)
     {
         List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(sysYxInfoAll);
+        ExcelUtil<SysYxInfoAll> util = new ExcelUtil<SysYxInfoAll>(SysYxInfoAll.class);
+        util.exportExcel(response, list, "样本库数据");
+    }
+    /**
+     * 导出1000样本库列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:export')")
+    @Log(title = "样本库", businessType = BusinessType.EXPORT)
+    @PostMapping("/export/random")
+    @ApiOperation("导出样本库列表")
+    public void exportRandom(HttpServletResponse response, SysYxInfoAll sysYxInfoAll)
+    {
+        List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(sysYxInfoAll);
+        // 随机获取1000个样本
+        if (list.size() >= 1000) {
+            Collections.shuffle(list);
+            list = list.subList(0, 1000);
+        }
         ExcelUtil<SysYxInfoAll> util = new ExcelUtil<SysYxInfoAll>(SysYxInfoAll.class);
         util.exportExcel(response, list, "样本库数据");
     }
