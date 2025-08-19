@@ -17,28 +17,36 @@ export function getAll(id) {
   })
 }
 
-// 新增样本库
-export function addAll(data) {
+
+// 获取样本库统计
+export function getAllStat() {
   return request({
-    url: '/system/all',
+    url: '/system/all/stat',
+    method: 'get'
+  })
+}
+
+// 获取样本版本列表
+export function getVersion() {
+  return request({
+    url: '/system/version/list',
+    method: 'get'
+  })
+}
+
+// 新增：随机导出（返回二进制）
+export function getRandomExport(query) {
+  return request({
+    url: '/system/all/export/random',
     method: 'post',
-    data: data
+    params: query,
+    responseType: 'blob'
   })
 }
 
-// 修改样本库
-export function updateAll(data) {
+export function importTemplate() {
   return request({
-    url: '/system/all',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除样本库
-export function delAll(id) {
-  return request({
-    url: '/system/all/' + id,
-    method: 'delete'
+    url: '/system/all/importTemplate',
+    method: 'get',
   })
 }

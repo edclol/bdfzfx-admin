@@ -64,7 +64,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: '/system/call',
+    redirect: '/all',
     children: [
       // {
       //   path: 'index',
