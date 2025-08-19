@@ -48,16 +48,16 @@ public class SysYxInfoAllController extends BaseController
     @Autowired
     private TokenService tokenService;
 
-    /**
-     *  样本版本管理
-     */
-    @PreAuthorize("@ss.hasPermi('system:all:list')")
-    @ApiOperation("样本版本管理")
-    @GetMapping("/version")
-    public AjaxResult getVersion()
-    {
-        return success(sysYxInfoAllService.getVersion());
-    }
+//    /**
+//     *  样本版本管理
+//     */
+//    @PreAuthorize("@ss.hasPermi('system:all:list')")
+//    @ApiOperation("样本版本管理")
+//    @GetMapping("/version")
+//    public AjaxResult getVersion()
+//    {
+//        return success(sysYxInfoAllService.getVersion());
+//    }
 
 
     /**
