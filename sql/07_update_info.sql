@@ -300,3 +300,76 @@ insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame
 values('同义词库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:export',       '#', 'admin', sysdate(), '', null, '');
 
 
+DROP TABLE IF EXISTS sys_typical_monitor_info;
+CREATE TABLE sys_typical_monitor_info
+(
+    id                     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    device_type            VARCHAR(50)  NOT NULL COMMENT '设备类型，如：开关保护、线路保护',
+    device_principle       VARCHAR(100) NOT NULL COMMENT '设备原理，如：带过压远跳功能',
+    info_name              TEXT         NOT NULL COMMENT '信息名称，格式为：[电压等级][间隔名称][设备编号][保护（型号）] 光纤通道一软压板',
+    voltage_level          VARCHAR(50)  DEFAULT NULL COMMENT '通用电压等级，如：550/220kV',
+    alarm_status           VARCHAR(20)  DEFAULT NULL COMMENT '告警状态，如：告警、动作、异常',
+    alarm_level            varchar(10)  DEFAULT NULL COMMENT '告警等级，如：4级',
+    send_to_monitor        varchar(10)  DEFAULT '0' COMMENT '是否上送监控（0否，1是）',
+    reference_basis        VARCHAR(50)  DEFAULT NULL COMMENT '参考依据，如：新一代、2020企标',
+    collection_requirement VARCHAR(100) DEFAULT NULL COMMENT '采集要求，如：实时采集、定时采集',
+    target_device          VARCHAR(100) DEFAULT NULL COMMENT '指向设备，如：线路保护装置、开关',
+    source_device          VARCHAR(100) DEFAULT NULL COMMENT '采集源设备，如：线路保护装置',
+    integration_device     VARCHAR(100) DEFAULT NULL COMMENT '数据集成设备，如：线路保护装置',
+    update_time            DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    create_by              VARCHAR(64)  DEFAULT '' COMMENT '创建者',
+    create_time            DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by              VARCHAR(64)  DEFAULT '' COMMENT '更新者',
+    remark                 VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    KEY idx_device_type (device_type),
+    KEY idx_voltage_level (voltage_level),
+    KEY idx_alarm_level (alarm_level),
+    KEY idx_info_name (info_name(255)),
+    KEY idx_update_time (update_time)
+) ENGINE = InnoDB COMMENT = '典型监控信息管理表';
+
+
+INSERT INTO sys_typical_monitor_info (device_type, device_principle, info_name, voltage_level, alarm_status,
+                                      alarm_level,
+                                      send_to_monitor, reference_basis, collection_requirement, target_device,
+                                      source_device, integration_device, create_by)
+VALUES ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道一软压板', '550/220kV', '告警', 4, 1,
+        '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
+       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道二软压板',
+        '500kV', '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
+       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '220kV',
+        '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
+       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护出口', '550/220kV', '告警', 4, 1, '2020企标',
+        '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
+       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）远方其他保护出口', '550/220kV', '告警', 4, 1,
+        '2020企标', '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
+       ('线路保护（220kV及以上）', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '550/220kV',
+        '告警', 4, 1, '2020企标', '实时采集', '开关', '线路保护装置', '线路保护装置', 'admin');
+
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理', '1', '1', 'monitor', 'system/monitor/index', 1, 0, 'C', '0', '0', 'system:monitor:list', 'build', 'admin', sysdate(), '', null, '典型监控信息管理菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('典型监控信息管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+

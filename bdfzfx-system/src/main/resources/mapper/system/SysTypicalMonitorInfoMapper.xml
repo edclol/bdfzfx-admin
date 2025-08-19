@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysTypicalMonitorInfoMapper">
+    
+    <resultMap type="SysTypicalMonitorInfo" id="SysTypicalMonitorInfoResult">
+        <result property="id"    column="id"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="devicePrinciple"    column="device_principle"    />
+        <result property="infoName"    column="info_name"    />
+        <result property="voltageLevel"    column="voltage_level"    />
+        <result property="alarmStatus"    column="alarm_status"    />
+        <result property="alarmLevel"    column="alarm_level"    />
+        <result property="sendToMonitor"    column="send_to_monitor"    />
+        <result property="referenceBasis"    column="reference_basis"    />
+        <result property="collectionRequirement"    column="collection_requirement"    />
+        <result property="targetDevice"    column="target_device"    />
+        <result property="sourceDevice"    column="source_device"    />
+        <result property="integrationDevice"    column="integration_device"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysTypicalMonitorInfoVo">
+        select id, device_type, device_principle, info_name, voltage_level, alarm_status, alarm_level, send_to_monitor, reference_basis, collection_requirement, target_device, source_device, integration_device, update_time, create_by, create_time, update_by, remark from sys_typical_monitor_info
+    </sql>
+
+    <select id="selectSysTypicalMonitorInfoList" parameterType="SysTypicalMonitorInfo" resultMap="SysTypicalMonitorInfoResult">
+        <include refid="selectSysTypicalMonitorInfoVo"/>
+        <where>  
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="devicePrinciple != null  and devicePrinciple != ''"> and device_principle = #{devicePrinciple}</if>
+            <if test="infoName != null  and infoName != ''"> and info_name like concat('%', #{infoName}, '%')</if>
+            <if test="voltageLevel != null  and voltageLevel != ''"> and voltage_level = #{voltageLevel}</if>
+            <if test="alarmStatus != null  and alarmStatus != ''"> and alarm_status = #{alarmStatus}</if>
+            <if test="alarmLevel != null  and alarmLevel != ''"> and alarm_level = #{alarmLevel}</if>
+            <if test="sendToMonitor != null  and sendToMonitor != ''"> and send_to_monitor = #{sendToMonitor}</if>
+            <if test="referenceBasis != null  and referenceBasis != ''"> and reference_basis = #{referenceBasis}</if>
+            <if test="collectionRequirement != null  and collectionRequirement != ''"> and collection_requirement = #{collectionRequirement}</if>
+            <if test="targetDevice != null  and targetDevice != ''"> and target_device = #{targetDevice}</if>
+            <if test="sourceDevice != null  and sourceDevice != ''"> and source_device = #{sourceDevice}</if>
+            <if test="integrationDevice != null  and integrationDevice != ''"> and integration_device = #{integrationDevice}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysTypicalMonitorInfoById" parameterType="Long" resultMap="SysTypicalMonitorInfoResult">
+        <include refid="selectSysTypicalMonitorInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysTypicalMonitorInfo" parameterType="SysTypicalMonitorInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_typical_monitor_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceType != null and deviceType != ''">device_type,</if>
+            <if test="devicePrinciple != null and devicePrinciple != ''">device_principle,</if>
+            <if test="infoName != null and infoName != ''">info_name,</if>
+            <if test="voltageLevel != null">voltage_level,</if>
+            <if test="alarmStatus != null">alarm_status,</if>
+            <if test="alarmLevel != null">alarm_level,</if>
+            <if test="sendToMonitor != null">send_to_monitor,</if>
+            <if test="referenceBasis != null">reference_basis,</if>
+            <if test="collectionRequirement != null">collection_requirement,</if>
+            <if test="targetDevice != null">target_device,</if>
+            <if test="sourceDevice != null">source_device,</if>
+            <if test="integrationDevice != null">integration_device,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceType != null and deviceType != ''">#{deviceType},</if>
+            <if test="devicePrinciple != null and devicePrinciple != ''">#{devicePrinciple},</if>
+            <if test="infoName != null and infoName != ''">#{infoName},</if>
+            <if test="voltageLevel != null">#{voltageLevel},</if>
+            <if test="alarmStatus != null">#{alarmStatus},</if>
+            <if test="alarmLevel != null">#{alarmLevel},</if>
+            <if test="sendToMonitor != null">#{sendToMonitor},</if>
+            <if test="referenceBasis != null">#{referenceBasis},</if>
+            <if test="collectionRequirement != null">#{collectionRequirement},</if>
+            <if test="targetDevice != null">#{targetDevice},</if>
+            <if test="sourceDevice != null">#{sourceDevice},</if>
+            <if test="integrationDevice != null">#{integrationDevice},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysTypicalMonitorInfo" parameterType="SysTypicalMonitorInfo">
+        update sys_typical_monitor_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceType != null and deviceType != ''">device_type = #{deviceType},</if>
+            <if test="devicePrinciple != null and devicePrinciple != ''">device_principle = #{devicePrinciple},</if>
+            <if test="infoName != null and infoName != ''">info_name = #{infoName},</if>
+            <if test="voltageLevel != null">voltage_level = #{voltageLevel},</if>
+            <if test="alarmStatus != null">alarm_status = #{alarmStatus},</if>
+            <if test="alarmLevel != null">alarm_level = #{alarmLevel},</if>
+            <if test="sendToMonitor != null">send_to_monitor = #{sendToMonitor},</if>
+            <if test="referenceBasis != null">reference_basis = #{referenceBasis},</if>
+            <if test="collectionRequirement != null">collection_requirement = #{collectionRequirement},</if>
+            <if test="targetDevice != null">target_device = #{targetDevice},</if>
+            <if test="sourceDevice != null">source_device = #{sourceDevice},</if>
+            <if test="integrationDevice != null">integration_device = #{integrationDevice},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysTypicalMonitorInfoById" parameterType="Long">
+        delete from sys_typical_monitor_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSysTypicalMonitorInfoByIds" parameterType="String">
+        delete from sys_typical_monitor_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
