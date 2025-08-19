@@ -109,7 +109,7 @@ spring:
   cache:
     type: redis
     redis:
-      time-to-live: 300000
+      time-to-live: 300000000
       key-prefix: sys_
   # redis 配置
   redis:
