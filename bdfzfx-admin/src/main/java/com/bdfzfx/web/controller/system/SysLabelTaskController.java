@@ -32,7 +32,7 @@ import com.bdfzfx.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/task")
-@Api("样本标注任务管理")
+@Api(tags = "样本标注任务管理")
 public class SysLabelTaskController extends BaseController
 {
     @Autowired

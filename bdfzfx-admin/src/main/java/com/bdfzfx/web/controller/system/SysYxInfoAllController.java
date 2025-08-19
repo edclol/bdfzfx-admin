@@ -3,6 +3,9 @@ package com.bdfzfx.web.controller.system;
 import java.util.*;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bdfzfx.common.core.domain.model.LoginUser;
+import com.bdfzfx.common.utils.ServletUtils;
+import com.bdfzfx.framework.web.service.TokenService;
 import com.bdfzfx.system.domain.StatItem;
 import com.bdfzfx.system.domain.SysYxInfoStatResult;
 import io.swagger.annotations.Api;
@@ -26,6 +29,7 @@ import com.bdfzfx.system.domain.SysYxInfoAll;
 import com.bdfzfx.system.service.ISysYxInfoAllService;
 import com.bdfzfx.common.utils.poi.ExcelUtil;
 import com.bdfzfx.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 样本库Controller
@@ -35,12 +39,58 @@ import com.bdfzfx.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/all")
-@Api("样本库管理")
+@Api(tags = "样本库管理")
 public class SysYxInfoAllController extends BaseController
 {
     @Autowired
     private ISysYxInfoAllService sysYxInfoAllService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    /**
+     *  样本版本管理
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:list')")
+    @ApiOperation("样本版本管理")
+    @GetMapping("/version")
+    public AjaxResult getVersion()
+    {
+        return success(sysYxInfoAllService.getVersion());
+    }
+
+
+    /**
+     * 样本上传导入接口
+     *
+     */
+    @Log(title = "样本上传导入", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('system:all:edit')")
+    @PostMapping("/importData")
+    @ApiOperation("样本上传导入")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<SysYxInfoAll> util = new ExcelUtil<SysYxInfoAll>(SysYxInfoAll.class);
+        List<SysYxInfoAll> userList = util.importExcel(file.getInputStream());
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        String operName = loginUser.getUsername();
+        String message = sysYxInfoAllService.importYxInfo(userList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
+
+    /**
+     * 导入模板下载
+     *
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:list')")
+    @GetMapping("/importTemplate")
+    @ApiOperation("样本导入模板下载")
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<SysYxInfoAll> util = new ExcelUtil<SysYxInfoAll>(SysYxInfoAll.class);
+        return util.importTemplateExcel("样本数据");
+    }
+    
     /**
      * 获取样本库数据统计信息
      */

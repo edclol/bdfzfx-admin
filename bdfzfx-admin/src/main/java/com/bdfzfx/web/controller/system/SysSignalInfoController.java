@@ -32,7 +32,7 @@ import com.bdfzfx.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/info")
-@Api("信号信息管理")
+@Api(tags = "信号信息管理")
 public class SysSignalInfoController extends BaseController
 {
     @Autowired

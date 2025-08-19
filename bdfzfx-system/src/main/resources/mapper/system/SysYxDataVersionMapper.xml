@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysYxDataVersionMapper">
+    
+    <resultMap type="SysYxDataVersion" id="SysYxDataVersionResult">
+        <result property="id"    column="id"    />
+        <result property="versionNumber"    column="version_number"    />
+        <result property="changeTime"    column="change_time"    />
+        <result property="changeContent"    column="change_content"    />
+        <result property="operation"    column="operation"    />
+    </resultMap>
+
+    <sql id="selectSysYxDataVersionVo">
+        select id, version_number, change_time, change_content, operation from sys_yx_data_version
+    </sql>
+
+    <select id="selectSysYxDataVersionList" parameterType="SysYxDataVersion" resultMap="SysYxDataVersionResult">
+        <include refid="selectSysYxDataVersionVo"/>
+        <where>  
+            <if test="versionNumber != null  and versionNumber != ''"> and version_number = #{versionNumber}</if>
+            <if test="changeTime != null "> and change_time = #{changeTime}</if>
+            <if test="changeContent != null  and changeContent != ''"> and change_content = #{changeContent}</if>
+            <if test="operation != null  and operation != ''"> and operation = #{operation}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysYxDataVersionById" parameterType="Long" resultMap="SysYxDataVersionResult">
+        <include refid="selectSysYxDataVersionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysYxDataVersion" parameterType="SysYxDataVersion" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_yx_data_version
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="versionNumber != null and versionNumber != ''">version_number,</if>
+            <if test="changeTime != null">change_time,</if>
+            <if test="changeContent != null">change_content,</if>
+            <if test="operation != null">operation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="versionNumber != null and versionNumber != ''">#{versionNumber},</if>
+            <if test="changeTime != null">#{changeTime},</if>
+            <if test="changeContent != null">#{changeContent},</if>
+            <if test="operation != null">#{operation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysYxDataVersion" parameterType="SysYxDataVersion">
+        update sys_yx_data_version
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="versionNumber != null and versionNumber != ''">version_number = #{versionNumber},</if>
+            <if test="changeTime != null">change_time = #{changeTime},</if>
+            <if test="changeContent != null">change_content = #{changeContent},</if>
+            <if test="operation != null">operation = #{operation},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysYxDataVersionById" parameterType="Long">
+        delete from sys_yx_data_version where id = #{id}
+    </delete>
+
+    <delete id="deleteSysYxDataVersionByIds" parameterType="String">
+        delete from sys_yx_data_version where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

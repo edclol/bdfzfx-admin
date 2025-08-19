@@ -68,3 +68,47 @@ values('样本标注任务删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0'
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('样本标注任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:task:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+drop table if exists sys_yx_data_version;
+CREATE TABLE `sys_yx_data_version`
+(
+    `id`             int         NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `version_number` varchar(10) NOT NULL COMMENT '版本号',
+    `change_time`    datetime    NOT NULL COMMENT '变更时间',
+    `change_content` varchar(255) DEFAULT NULL COMMENT '变更内容',
+    `operation`      varchar(50)  DEFAULT NULL COMMENT '操作',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB COMMENT ='样本数据版本管理表';
+
+insert into sys_yx_data_version values(1, 'v1.0.0', sysdate(), '初始化版本', '初始化');
+insert into sys_yx_data_version values(2, 'v1.0.1', sysdate(), '修复bug', '修复bug');
+insert into sys_yx_data_version values(3, 'v1.0.2', sysdate(), '修复bug', '修复bug');
+insert into sys_yx_data_version values(4, 'v1.0.3', sysdate(), '修复bug', '修复bug');
+insert into sys_yx_data_version values(5, 'v1.0.4', sysdate(), '修复bug', '修复bug');
+insert into sys_yx_data_version values(6, 'v1.0.5', sysdate(), '修复bug', '修复bug');
+insert into sys_yx_data_version values(7, 'v1.0.6', sysdate(), '修复bug', '修复bug');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理', '1', '1', 'version', 'system/version/index', 1, 0, 'C', '0', '0', 'system:version:list', 'build', 'admin', sysdate(), '', null, '样本数据版本管理菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:version:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:version:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:version:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:version:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('样本数据版本管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:version:export',       '#', 'admin', sysdate(), '', null, '');
+

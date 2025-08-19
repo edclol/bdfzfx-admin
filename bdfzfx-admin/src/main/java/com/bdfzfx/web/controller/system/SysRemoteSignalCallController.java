@@ -32,7 +32,7 @@ import com.bdfzfx.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/system/call")
-@Api("遥信调用记录管理")
+@Api(tags = "遥信调用记录管理")
 public class SysRemoteSignalCallController extends BaseController
 {
     @Autowired

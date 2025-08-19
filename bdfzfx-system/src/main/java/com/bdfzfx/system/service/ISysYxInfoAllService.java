@@ -64,4 +64,8 @@ public interface ISysYxInfoAllService
      * @return 结果
      */
     public int deleteSysYxInfoAllById(Long id);
+
+    String importYxInfo(List<SysYxInfoAll> sysYxInfoAlls, boolean updateSupport, String operName);
+
+    String getVersion();
 }
