@@ -112,3 +112,54 @@ values('样本数据版本管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('样本数据版本管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:version:export',       '#', 'admin', sysdate(), '', null, '');
 
+
+-- ----------------------------
+-- 同义词库表
+-- ----------------------------
+DROP TABLE IF EXISTS sys_synonym;
+CREATE TABLE sys_synonym
+(
+    id          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    word        VARCHAR(100) NOT NULL COMMENT '原始词汇（如：过流Ⅰ段）',
+    synonym     VARCHAR(100) NOT NULL COMMENT '统一理解为的标准词（如：过流 I 段）',
+    create_by   varchar(64)  default '' comment '创建者',
+    create_time datetime comment '创建时间',
+    update_by   varchar(64)  default '' comment '更新者',
+    update_time datetime comment '更新时间',
+    remark      varchar(500) default null comment '备注信息',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_word (word)
+) ENGINE = InnoDB COMMENT = '同义词库表';
+
+
+-- 插入示例数据
+INSERT INTO sys_synonym (word, synonym, create_by, create_time)
+VALUES ('过流 I 段', '过流 I 段', '李四', '2024-12-12 10:00:00'),
+       ('过流1段', '过流 I 段', '张三', '2024-12-12 10:00:00'),
+       ('同义词2', '同义词2', '李四', '2024-12-12 10:00:00'),
+       ('同义词3', '同义词3', '李四', '2024-12-12 10:00:00'),
+       ('同义词4', '同义词4', '李四', '2024-12-12 10:00:00'),
+       ('同义词5', '同义词5', '李四', '2024-12-12 10:00:00');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库', '1', '1', 'synonym', 'system/synonym/index', 1, 0, 'C', '0', '0', 'system:synonym:list', 'build', 'admin', sysdate(), '', null, '同义词库菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('同义词库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:export',       '#', 'admin', sysdate(), '', null, '');
