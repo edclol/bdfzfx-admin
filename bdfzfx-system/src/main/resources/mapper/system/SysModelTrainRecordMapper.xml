@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysModelTrainRecordMapper">
+    
+    <resultMap type="SysModelTrainRecord" id="SysModelTrainRecordResult">
+        <result property="id"    column="id"    />
+        <result property="trainDate"    column="train_date"    />
+        <result property="workflowVersion"    column="workflow_version"    />
+        <result property="result"    column="result"    />
+        <result property="gpuCount"    column="gpu_count"    />
+        <result property="initModelParams"    column="init_model_params"    />
+        <result property="executionProcess"    column="execution_process"    />
+        <result property="lossCurveData"    column="loss_curve_data"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysModelTrainRecordVo">
+        select id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark from sys_model_train_record
+    </sql>
+
+    <select id="selectSysModelTrainRecordList" parameterType="SysModelTrainRecord" resultMap="SysModelTrainRecordResult">
+        <include refid="selectSysModelTrainRecordVo"/>
+        <where>  
+            <if test="params.beginTrainDate != null and params.beginTrainDate != '' and params.endTrainDate != null and params.endTrainDate != ''"> and train_date between #{params.beginTrainDate} and #{params.endTrainDate}</if>
+            <if test="workflowVersion != null  and workflowVersion != ''"> and workflow_version = #{workflowVersion}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysModelTrainRecordById" parameterType="Long" resultMap="SysModelTrainRecordResult">
+        <include refid="selectSysModelTrainRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysModelTrainRecord" parameterType="SysModelTrainRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_model_train_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trainDate != null">train_date,</if>
+            <if test="workflowVersion != null and workflowVersion != ''">workflow_version,</if>
+            <if test="result != null and result != ''">result,</if>
+            <if test="gpuCount != null">gpu_count,</if>
+            <if test="initModelParams != null">init_model_params,</if>
+            <if test="executionProcess != null">execution_process,</if>
+            <if test="lossCurveData != null">loss_curve_data,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trainDate != null">#{trainDate},</if>
+            <if test="workflowVersion != null and workflowVersion != ''">#{workflowVersion},</if>
+            <if test="result != null and result != ''">#{result},</if>
+            <if test="gpuCount != null">#{gpuCount},</if>
+            <if test="initModelParams != null">#{initModelParams},</if>
+            <if test="executionProcess != null">#{executionProcess},</if>
+            <if test="lossCurveData != null">#{lossCurveData},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysModelTrainRecord" parameterType="SysModelTrainRecord">
+        update sys_model_train_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="trainDate != null">train_date = #{trainDate},</if>
+            <if test="workflowVersion != null and workflowVersion != ''">workflow_version = #{workflowVersion},</if>
+            <if test="result != null and result != ''">result = #{result},</if>
+            <if test="gpuCount != null">gpu_count = #{gpuCount},</if>
+            <if test="initModelParams != null">init_model_params = #{initModelParams},</if>
+            <if test="executionProcess != null">execution_process = #{executionProcess},</if>
+            <if test="lossCurveData != null">loss_curve_data = #{lossCurveData},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysModelTrainRecordById" parameterType="Long">
+        delete from sys_model_train_record where id = #{id}
+    </delete>
+
+    <delete id="deleteSysModelTrainRecordByIds" parameterType="String">
+        delete from sys_model_train_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

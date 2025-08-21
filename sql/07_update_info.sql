@@ -419,5 +419,66 @@ insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame
 values('停用语料库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:word:export',       '#', 'admin', sysdate(), '', null, '');
 
 
+-- 模型训练记录表
+DROP TABLE IF EXISTS sys_model_train_record;
+CREATE TABLE sys_model_train_record
+(
+    id                BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    train_date        DATE        NOT NULL COMMENT '训练日期',
+    workflow_version  VARCHAR(50) NOT NULL COMMENT '工作流版本号',
+    result            VARCHAR(10) NOT NULL COMMENT '训练结果（成功/失败）',
+    gpu_count         INT(11)      DEFAULT 0 COMMENT 'GPU数量',
+    init_model_params TEXT         DEFAULT NULL COMMENT '初始化模型参数（如：XXXX, YYYY, ZZZZ）',
+    execution_process TEXT         DEFAULT NULL COMMENT '执行训练过程（如：AAAAA, BBBBB, CCCCC）',
+    loss_curve_data   TEXT         DEFAULT NULL COMMENT '损失函数的变化数据（TEXT格式，包含多个系列）',
+    create_by         VARCHAR(64)  DEFAULT '' COMMENT '创建人',
+    create_time       DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by         VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+    update_time       DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark            VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    KEY idx_train_date (train_date),
+    KEY idx_workflow_version (workflow_version),
+    KEY idx_result (result),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB  COMMENT = '模型训练记录表';
 
+INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
+                                    init_model_params, execution_process, loss_curve_data,
+                                    create_by, remark)
+VALUES ('2024-08-01', '6M0jYz', '成功', 4,
+        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
+        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
+        'admin', '首次训练');
+
+INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
+                                    init_model_params, execution_process, loss_curve_data,
+                                    create_by, remark)
+VALUES ('2024-08-01', '6M0jYz', '失败', 4,
+        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
+        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
+        'admin', '训练中断');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录', '1', '1', 'record', 'system/record/index', 1, 0, 'C', '0', '0', 'system:record:list', 'build', 'admin', sysdate(), '', null, '模型训练记录菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:record:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:record:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:record:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:record:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:record:export',       '#', 'admin', sysdate(), '', null, '');
 
