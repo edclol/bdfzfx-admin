@@ -371,5 +371,53 @@ values('典型监控信息管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('典型监控信息管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:export',       '#', 'admin', sysdate(), '', null, '');
 
+-- 停用词表
+DROP TABLE IF EXISTS sys_stop_word;
+CREATE TABLE sys_stop_word
+(
+    id          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    stop_word   VARCHAR(100) NOT NULL COMMENT '停用词内容（如：的、-4、空格、& 等）',
+    create_by   VARCHAR(64)  DEFAULT '' COMMENT '添加人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark      VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_stop_word (stop_word),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB COMMENT = '停用语料库表';
+
+
+INSERT INTO sys_stop_word (stop_word, create_by, remark)
+VALUES ('的', '李四', '常见虚词'),
+       ('-4', '张三', '无效数值'),
+       ('空格', '李四', '空白字符'),
+       ('&', '李四', '特殊符号'),
+       ('...', '李四', '省略号');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库', '1', '1', 'word', 'system/word/index', 1, 0, 'C', '0', '0', 'system:word:list', 'build', 'admin', sysdate(), '', null, '停用语料库菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:word:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:word:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:word:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:word:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:word:export',       '#', 'admin', sysdate(), '', null, '');
+
+
 
 
