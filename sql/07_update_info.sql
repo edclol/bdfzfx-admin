@@ -482,3 +482,67 @@ values('模型训练记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0'
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('模型训练记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:record:export',       '#', 'admin', sysdate(), '', null, '');
 
+
+-- 模型信息表
+DROP TABLE IF EXISTS sys_model_info;
+CREATE TABLE sys_model_info
+(
+    id             BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    model_name     VARCHAR(100) NOT NULL COMMENT '模型名称（如：故障诊断模型）',
+    version_number VARCHAR(50)  NOT NULL COMMENT '版本号（如：V20.24.22）',
+    upload_time    DATETIME     NOT NULL COMMENT '上传时间',
+    call_count     INT(11)       DEFAULT 0 COMMENT '调用次数',
+    precision_rate DECIMAL(5, 2) DEFAULT NULL COMMENT '精准率（百分比，如：85.00）',
+    recall_rate    DECIMAL(5, 2) DEFAULT NULL COMMENT '召回率（百分比，如：80.00）',
+    model_size     VARCHAR(50)   DEFAULT NULL COMMENT '模型大小',
+    model_path     VARCHAR(50)   DEFAULT NULL COMMENT '部署路径',
+    f1_score       DECIMAL(5, 2) DEFAULT NULL COMMENT 'F1分数（可选）',
+    description    TEXT          DEFAULT NULL COMMENT '模型描述或用途说明',
+    is_used        VARCHAR(1)    DEFAULT '0' COMMENT '是否启用（0：未启用，1：已启用）',
+    create_by      VARCHAR(64)   DEFAULT '' COMMENT '创建人',
+    create_time    DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by      VARCHAR(64)   DEFAULT '' COMMENT '更新人',
+    update_time    DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark         VARCHAR(500)  DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_version_number (version_number),
+    KEY idx_upload_time (upload_time),
+    KEY idx_call_count (call_count),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB COMMENT = '模型信息表';
+
+
+INSERT INTO sys_model_info (model_name, version_number, upload_time, call_count,
+                            precision_rate, recall_rate, model_size, model_path, description, is_used,
+                            create_by, remark)
+VALUES ('故障诊断模型', 'V20.24.22', '2024-08-05 12:44:15', 3351,
+        85.00, 80.00, '120G', '/models/fault_diagnosis_v20.24.22.h5',
+        '用于电力设备故障识别的深度学习模型，基于CNN+LSTM架构。', '1',
+        'admin', '首次发布');
+
+
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息', '1', '1', 'model', 'system/model/index', 1, 0, 'C', '0', '0', 'system:model:list', 'build', 'admin', sysdate(), '', null, '模型信息菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:model:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:model:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:model:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:model:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:model:export',       '#', 'admin', sysdate(), '', null, '');
+
+
