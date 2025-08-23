@@ -371,5 +371,178 @@ values('典型监控信息管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('典型监控信息管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:export',       '#', 'admin', sysdate(), '', null, '');
 
+-- 停用词表
+DROP TABLE IF EXISTS sys_stop_word;
+CREATE TABLE sys_stop_word
+(
+    id          BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    stop_word   VARCHAR(100) NOT NULL COMMENT '停用词内容（如：的、-4、空格、& 等）',
+    create_by   VARCHAR(64)  DEFAULT '' COMMENT '添加人',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark      VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_stop_word (stop_word),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB COMMENT = '停用语料库表';
+
+
+INSERT INTO sys_stop_word (stop_word, create_by, remark)
+VALUES ('的', '李四', '常见虚词'),
+       ('-4', '张三', '无效数值'),
+       ('空格', '李四', '空白字符'),
+       ('&', '李四', '特殊符号'),
+       ('...', '李四', '省略号');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库', '1', '1', 'word', 'system/word/index', 1, 0, 'C', '0', '0', 'system:word:list', 'build', 'admin', sysdate(), '', null, '停用语料库菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:word:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:word:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:word:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:word:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('停用语料库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:word:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+-- 模型训练记录表
+DROP TABLE IF EXISTS sys_model_train_record;
+CREATE TABLE sys_model_train_record
+(
+    id                BIGINT(20)  NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    train_date        DATE        NOT NULL COMMENT '训练日期',
+    workflow_version  VARCHAR(50) NOT NULL COMMENT '工作流版本号',
+    result            VARCHAR(10) NOT NULL COMMENT '训练结果（成功/失败）',
+    gpu_count         INT(11)      DEFAULT 0 COMMENT 'GPU数量',
+    init_model_params TEXT         DEFAULT NULL COMMENT '初始化模型参数（如：XXXX, YYYY, ZZZZ）',
+    execution_process TEXT         DEFAULT NULL COMMENT '执行训练过程（如：AAAAA, BBBBB, CCCCC）',
+    loss_curve_data   TEXT         DEFAULT NULL COMMENT '损失函数的变化数据（TEXT格式，包含多个系列）',
+    create_by         VARCHAR(64)  DEFAULT '' COMMENT '创建人',
+    create_time       DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by         VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+    update_time       DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark            VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    KEY idx_train_date (train_date),
+    KEY idx_workflow_version (workflow_version),
+    KEY idx_result (result),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB  COMMENT = '模型训练记录表';
+
+INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
+                                    init_model_params, execution_process, loss_curve_data,
+                                    create_by, remark)
+VALUES ('2024-08-01', '6M0jYz', '成功', 4,
+        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
+        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
+        'admin', '首次训练');
+
+INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
+                                    init_model_params, execution_process, loss_curve_data,
+                                    create_by, remark)
+VALUES ('2024-08-01', '6M0jYz', '失败', 4,
+        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
+        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
+        'admin', '训练中断');
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录', '1', '1', 'record', 'system/record/index', 1, 0, 'C', '0', '0', 'system:record:list', 'build', 'admin', sysdate(), '', null, '模型训练记录菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:record:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:record:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:record:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:record:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型训练记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:record:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+-- 模型信息表
+DROP TABLE IF EXISTS sys_model_info;
+CREATE TABLE sys_model_info
+(
+    id             BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    model_name     VARCHAR(100) NOT NULL COMMENT '模型名称（如：故障诊断模型）',
+    version_number VARCHAR(50)  NOT NULL COMMENT '版本号（如：V20.24.22）',
+    upload_time    DATETIME     NOT NULL COMMENT '上传时间',
+    call_count     INT(11)       DEFAULT 0 COMMENT '调用次数',
+    precision_rate DECIMAL(5, 2) DEFAULT NULL COMMENT '精准率（百分比，如：85.00）',
+    recall_rate    DECIMAL(5, 2) DEFAULT NULL COMMENT '召回率（百分比，如：80.00）',
+    model_size     VARCHAR(50)   DEFAULT NULL COMMENT '模型大小',
+    model_path     VARCHAR(50)   DEFAULT NULL COMMENT '部署路径',
+    f1_score       DECIMAL(5, 2) DEFAULT NULL COMMENT 'F1分数（可选）',
+    description    TEXT          DEFAULT NULL COMMENT '模型描述或用途说明',
+    is_used        VARCHAR(1)    DEFAULT '0' COMMENT '是否启用（0：未启用，1：已启用）',
+    create_by      VARCHAR(64)   DEFAULT '' COMMENT '创建人',
+    create_time    DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by      VARCHAR(64)   DEFAULT '' COMMENT '更新人',
+    update_time    DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark         VARCHAR(500)  DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_version_number (version_number),
+    KEY idx_upload_time (upload_time),
+    KEY idx_call_count (call_count),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB COMMENT = '模型信息表';
+
+
+INSERT INTO sys_model_info (model_name, version_number, upload_time, call_count,
+                            precision_rate, recall_rate, model_size, model_path, description, is_used,
+                            create_by, remark)
+VALUES ('故障诊断模型', 'V20.24.22', '2024-08-05 12:44:15', 3351,
+        85.00, 80.00, '120G', '/models/fault_diagnosis_v20.24.22.h5',
+        '用于电力设备故障识别的深度学习模型，基于CNN+LSTM架构。', '1',
+        'admin', '首次发布');
+
+
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息', '1', '1', 'model', 'system/model/index', 1, 0, 'C', '0', '0', 'system:model:list', 'build', 'admin', sysdate(), '', null, '模型信息菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:model:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:model:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:model:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:model:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型信息导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:model:export',       '#', 'admin', sysdate(), '', null, '');
 
 

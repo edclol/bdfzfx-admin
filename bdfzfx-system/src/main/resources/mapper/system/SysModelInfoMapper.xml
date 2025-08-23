@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysModelInfoMapper">
+    
+    <resultMap type="SysModelInfo" id="SysModelInfoResult">
+        <result property="id"    column="id"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="versionNumber"    column="version_number"    />
+        <result property="uploadTime"    column="upload_time"    />
+        <result property="callCount"    column="call_count"    />
+        <result property="precisionRate"    column="precision_rate"    />
+        <result property="recallRate"    column="recall_rate"    />
+        <result property="modelSize"    column="model_size"    />
+        <result property="modelPath"    column="model_path"    />
+        <result property="f1Score"    column="f1_score"    />
+        <result property="description"    column="description"    />
+        <result property="isUsed"    column="is_used"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysModelInfoVo">
+        select id, model_name, version_number, upload_time, call_count, precision_rate, recall_rate, model_size, model_path, f1_score, description, is_used, create_by, create_time, update_by, update_time, remark from sys_model_info
+    </sql>
+
+    <select id="selectSysModelInfoList" parameterType="SysModelInfo" resultMap="SysModelInfoResult">
+        <include refid="selectSysModelInfoVo"/>
+        <where>  
+            <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+            <if test="versionNumber != null  and versionNumber != ''"> and version_number = #{versionNumber}</if>
+            <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
+            <if test="callCount != null "> and call_count = #{callCount}</if>
+            <if test="precisionRate != null "> and precision_rate = #{precisionRate}</if>
+            <if test="recallRate != null "> and recall_rate = #{recallRate}</if>
+            <if test="modelSize != null  and modelSize != ''"> and model_size = #{modelSize}</if>
+            <if test="modelPath != null  and modelPath != ''"> and model_path = #{modelPath}</if>
+            <if test="f1Score != null "> and f1_score = #{f1Score}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="isUsed != null  and isUsed != ''"> and is_used = #{isUsed}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysModelInfoById" parameterType="Long" resultMap="SysModelInfoResult">
+        <include refid="selectSysModelInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysModelInfo" parameterType="SysModelInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_model_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">model_name,</if>
+            <if test="versionNumber != null and versionNumber != ''">version_number,</if>
+            <if test="uploadTime != null">upload_time,</if>
+            <if test="callCount != null">call_count,</if>
+            <if test="precisionRate != null">precision_rate,</if>
+            <if test="recallRate != null">recall_rate,</if>
+            <if test="modelSize != null">model_size,</if>
+            <if test="modelPath != null">model_path,</if>
+            <if test="f1Score != null">f1_score,</if>
+            <if test="description != null">description,</if>
+            <if test="isUsed != null">is_used,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">#{modelName},</if>
+            <if test="versionNumber != null and versionNumber != ''">#{versionNumber},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="callCount != null">#{callCount},</if>
+            <if test="precisionRate != null">#{precisionRate},</if>
+            <if test="recallRate != null">#{recallRate},</if>
+            <if test="modelSize != null">#{modelSize},</if>
+            <if test="modelPath != null">#{modelPath},</if>
+            <if test="f1Score != null">#{f1Score},</if>
+            <if test="description != null">#{description},</if>
+            <if test="isUsed != null">#{isUsed},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysModelInfo" parameterType="SysModelInfo">
+        update sys_model_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelName != null and modelName != ''">model_name = #{modelName},</if>
+            <if test="versionNumber != null and versionNumber != ''">version_number = #{versionNumber},</if>
+            <if test="uploadTime != null">upload_time = #{uploadTime},</if>
+            <if test="callCount != null">call_count = #{callCount},</if>
+            <if test="precisionRate != null">precision_rate = #{precisionRate},</if>
+            <if test="recallRate != null">recall_rate = #{recallRate},</if>
+            <if test="modelSize != null">model_size = #{modelSize},</if>
+            <if test="modelPath != null">model_path = #{modelPath},</if>
+            <if test="f1Score != null">f1_score = #{f1Score},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isUsed != null">is_used = #{isUsed},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysModelInfoById" parameterType="Long">
+        delete from sys_model_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSysModelInfoByIds" parameterType="String">
+        delete from sys_model_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
