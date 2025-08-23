@@ -112,17 +112,25 @@
     />
 
     <!-- 样本批量上传对话框 -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="520px" append-to-body>
+    <el-dialog 
+      :title="upload.title" 
+      :visible.sync="upload.open" 
+      width="520px" 
+      append-to-body
+      @close="closeUploadDialog"
+    >
       <el-upload
         ref="upload"
         :limit="10"
         multiple
         accept=".xlsx, .xls"
         :headers="upload.headers"
-        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        action="#"
+        :http-request="customUpload"
         :disabled="upload.isUploading"
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
+        :on-error="handleFileError"
         :auto-upload="false"
         drag
       >
@@ -138,7 +146,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFileForm" :loading="upload.isUploading">确定</el-button>
-        <el-button @click="upload.open = false" :disabled="upload.isUploading">取 消</el-button>
+        <el-button @click="closeUploadDialog" :disabled="upload.isUploading">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -201,6 +209,7 @@
 <script>
 import { listAll, getAll, getAllStat, getVersion, getRandomExport,importTemplate } from "@/api/system/all"
 import { getToken } from "@/utils/auth"
+import request from "@/utils/request"
 import * as echarts from 'echarts'
 require('echarts/theme/macarons')
 
@@ -266,7 +275,7 @@ export default {
         progress: 0,
         updateSupport: false,
         headers: { Authorization: 'Bearer ' + getToken() },
-        url: process.env.VUE_APP_BASE_API + '/system/all/importData'
+        url: '/system/all/importData'
       },
       // 统计
       stat: {
@@ -356,9 +365,22 @@ export default {
     },
     /** 样本批量上传 */
     handleSampleUpload() {
-      this.upload.title = '样本数据批量上传'
-      this.upload.open = true
-      this.upload.progress = 0
+      console.log('打开上传对话框');
+      console.log('上传URL:', this.upload.url);
+      console.log('环境变量:', process.env.VUE_APP_BASE_API);
+      
+      // 重置所有上传状态
+      this.upload.title = '样本数据批量上传';
+      this.upload.open = true;
+      this.upload.progress = 0;
+      this.upload.isUploading = false;
+      
+      // 确保下次打开时清空之前的文件
+      this.$nextTick(() => {
+        if (this.$refs.upload) {
+          this.$refs.upload.clearFiles();
+        }
+      });
     },
     async importTemplate() {
       //使用a标签下载模板
@@ -367,19 +389,55 @@ export default {
       this.$download.name(res.msg)
     },
     handleFileUploadProgress(event, file, fileList) {
+      console.log(event, file, fileList)
       this.upload.isUploading = true
       this.upload.progress = Math.floor(event.percent)
     },
     handleFileSuccess(response, file, fileList) {
-      // 当所有文件完成后，给出提示
-      if (fileList.every(f => f.status === 'success')) {
-        this.$notify({ title: '上传完成', message: '样本集上传已完成。', type: 'success' })
-        this.upload.open = false
-        this.upload.isUploading = false
-        this.upload.progress = 100
-        this.$refs.upload && this.$refs.upload.clearFiles()
-        this.getList()
+      console.log('文件上传成功:', response, file, fileList);
+      
+      // 检查响应状态
+      if (response.code === 200) {
+        this.$notify({ 
+          title: '上传成功', 
+          message: `文件 ${file.name} 上传成功`, 
+          type: 'success' 
+        });
+        
+        // 检查是否所有文件都上传完成
+        const allFiles = this.$refs.upload.uploadFiles;
+        const completedFiles = allFiles.filter(f => f.status === 'success');
+        
+        if (completedFiles.length === allFiles.length) {
+          // 所有文件上传完成
+          this.$notify({ 
+            title: '上传完成', 
+            message: '所有文件上传已完成', 
+            type: 'success' 
+          });
+          this.upload.open = false;
+          this.upload.isUploading = false;
+          this.upload.progress = 100;
+          this.$refs.upload.clearFiles();
+          this.getList(); // 刷新列表
+        }
+      } else {
+        this.$notify({ 
+          title: '上传失败', 
+          message: response.msg || '文件上传失败，请重试', 
+          type: 'error' 
+        });
       }
+    },
+    handleFileError(err, file, fileList) {
+      console.error('文件上传失败:', err, file);
+      this.$notify({ 
+        title: '上传失败', 
+        message: `文件 ${file.name} 上传失败，请重试`, 
+        type: 'error' 
+      });
+      this.upload.isUploading = false;
+      this.upload.progress = 0;
     },
     submitFileForm() {
       this.$refs.upload && this.$refs.upload.submit()
@@ -446,6 +504,47 @@ export default {
     handleBackup() {
       this.$message.success('备份成功')
     },
+    customUpload(options) {
+      const formData = new FormData();
+      formData.append('file', options.file);
+      formData.append('updateSupport', this.upload.updateSupport);
+      
+      console.log('开始自定义上传文件:', options.file.name);
+      this.upload.isUploading = true;
+      this.upload.progress = 0;
+      
+      // 使用request工具进行上传
+      request({
+        url: this.upload.url,
+        method: 'post',
+        data: formData,
+        headers: {
+          ...this.upload.headers,
+          'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            this.upload.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          }
+        }
+      }).then(response => {
+        console.log('上传成功:', response);
+        // 调用成功回调，传递响应数据
+        options.onSuccess(response, options.file);
+      }).catch(err => {
+        console.error('上传失败:', err);
+        // 调用失败回调
+        options.onError(err, options.file);
+      }).finally(() => {
+        this.upload.isUploading = false;
+      });
+    },
+    closeUploadDialog() {
+      this.upload.open = false;
+      this.upload.isUploading = false;
+      this.upload.progress = 0;
+      this.$refs.upload.clearFiles();
+    }
   }
 }
 </script>
