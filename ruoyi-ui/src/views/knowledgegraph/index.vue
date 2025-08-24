@@ -804,7 +804,7 @@ export default {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "knowledge-graph-demo.json";
+      a.download = "图谱数据.json";
       a.click();
       URL.revokeObjectURL(url);
       

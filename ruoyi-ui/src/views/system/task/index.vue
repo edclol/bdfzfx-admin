@@ -52,7 +52,13 @@
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleCreateTask">创建标注任务</el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleExport">导出</el-button>
+      </el-col>
+      <el-col :span="1.5">
         <el-button type="warning" plain icon="el-icon-collection" size="mini" @click="openSynonymDialog">同义词库配置</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" plain icon="el-icon-plus" size="mini">数据统计</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="success" plain icon="el-icon-magic-stick" size="mini" @click="handleTokenize">一键分词</el-button>
@@ -71,20 +77,9 @@
       <el-table-column label="备注信息" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:task:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:task:remove']"
-          >删除</el-button>
+          <el-button type="text" size="mini" @click="handleUpdate(scope.row)">开始标注</el-button>
+          <el-button type="text" size="mini" @click="handleUpdate(scope.row)">继续标注</el-button>
+          <el-button type="text" size="mini" @click="handleUpdate(scope.row)">回收</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -121,13 +116,22 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 同义词库配置对话框 -->
+    <el-dialog title="同义词库配置" :visible.sync="synonymOpen" width="800px" append-to-body>
+      <Synonym />
+    </el-dialog>
+    
   </div>
 </template>
 
 <script>
 import { listTask, getTask, delTask, addTask, updateTask } from "@/api/system/task"
+import Synonym from "../synonym/index.vue"
 
 export default {
+  components: {
+    Synonym
+  },
   name: "Task",
   data() {
     return {
@@ -148,6 +152,7 @@ export default {
       // 弹出层标题
       title: "",
       // 是否显示弹出层
+      synonymOpen: false,
       open: false,
       // 查询参数
       queryParams: {
@@ -275,6 +280,9 @@ export default {
       this.download('system/task/export', {
         ...this.queryParams
       }, `task_${new Date().getTime()}.xlsx`)
+    },
+    openSynonymDialog() {
+      this.synonymOpen = true
     }
   }
 }

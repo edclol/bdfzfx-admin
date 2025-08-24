@@ -42,3 +42,13 @@ export function delTask(taskId) {
     method: 'delete'
   })
 }
+
+
+// 导出样本标注任务
+export function exportTask(query) {
+  return request({
+    url: '/system/task/export',
+    method: 'get',
+    params: query
+  })
+}
