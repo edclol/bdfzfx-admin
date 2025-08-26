@@ -25,6 +25,7 @@
             action="#"
             :show-file-list="false"
             :before-upload="beforeImport"
+            accept=".json"
           >
             <el-button type="primary">导入</el-button>
           </el-upload>
@@ -92,6 +93,7 @@
 
 <script>
 import * as echarts from "echarts";
+import { getKG,updateKG } from "@/api/kg";
 require("echarts/theme/macarons");
 
 export default {
@@ -149,12 +151,23 @@ export default {
         "#61a0a8",
       ],
       recDrawerVisible: false,
+      graphData: null, // 存储从API获取的图谱数据
+      importLoading: false, // 导入加载状态
     };
   },
   mounted() {
-    this.initChart();
-    this.loadDemo();
-    window.addEventListener("resize", this.resizeChart);
+    getKG().then(({data}) => {
+     const {graphData} = data
+      this.graphData = JSON.parse(graphData); // 保存API数据
+      this.initChart();
+      if (this.graphData) {
+        this.ingestJSON(this.graphData);
+        this.setViewFromRaw();
+      } else {
+        this.loadDemo();
+      }
+      window.addEventListener("resize", this.resizeChart);
+    });
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.resizeChart);
@@ -434,20 +447,46 @@ export default {
     },
 
     // Import/Export JSON
-    beforeImport(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const json = JSON.parse(reader.result);
-          this.ingestJSON(json);
-          this.$message.success("导入成功");
-        } catch (e) {
-          console.error(e);
-          this.$message.error("JSON 解析失败");
+    async beforeImport(file) {
+      // 文件类型校验
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        this.$message.error("请选择JSON格式的文件");
+        return false;
+      }
+      
+      // 文件大小校验（限制为10MB）
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        this.$message.error("文件大小不能超过10MB");
+        return false;
+      }
+
+      this.importLoading = true;
+      
+      try {
+        const json = await this.readAndValidateFile(file);
+        if (!json) return false;
+        
+        // 更新到后端
+        await updateKG(JSON.stringify(json));
+        
+        // 更新本地数据
+        this.graphData = json;
+        this.ingestJSON(json);
+        
+        this.$message.success("导入成功");
+        return false; // 阻止默认上传行为
+      } catch (error) {
+        console.error('导入失败:', error);
+        if (error.message) {
+          this.$message.error(error.message);
+        } else {
+          this.$message.error("导入失败，请检查文件格式");
         }
-      };
-      reader.readAsText(file);
-      return false;
+        return false;
+      } finally {
+        this.importLoading = false;
+      }
     },
     ingestJSON(json) {
       if (Array.isArray(json)) {
@@ -586,219 +625,21 @@ export default {
       }));
     },
     exportJSON() {
-      // 直接导出 demo 数据
-      const demo = [
-        {
-          设备: [
-            {
-              index: "1",
-              name: "变压器",
-              value: "电力系统电压变换的核心设备。",
-            },
-            {
-              index: "2",
-              name: "断路器",
-              value: "通断电路并隔离故障的保护装置。",
-            },
-            {
-              index: "3",
-              name: "保护装置",
-              value: "自动检测故障并触发保护动作的设备。",
-            },
-            {
-              index: "4",
-              name: "监控终端",
-              value: "实时采集设备运行数据的智能终端。",
-            },
-            { index: "5", name: "母线", value: "汇集和分配电能的导体节点。" },
-            {
-              index: "6",
-              name: "输电线路",
-              value: "输送电能的架空线或电缆通道。",
-            },
-            {
-              index: "7",
-              name: "智能电表",
-              value: "记录用户用电量并支持远程抄表的终端。",
-            },
-            {
-              index: "8",
-              name: "传感器",
-              value: "监测温度、电流等物理量的感知设备。",
-            },
-          ],
-        },
-        {
-          数据与状态: [
-            {
-              index: "1",
-              name: "遥测数据",
-              value: "远程采集的电压、电流等实时量测值。",
-            },
-            {
-              index: "2",
-              name: "遥信数据",
-              value: "设备开关状态或告警信号的远程上报。",
-            },
-            {
-              index: "3",
-              name: "过载告警",
-              value: "设备负荷超过安全阈值的预警信号。",
-            },
-            {
-              index: "4",
-              name: "跳闸事件",
-              value: "保护装置触发断路器断开电路的记录。",
-            },
-            { index: "5", name: "运行状态", value: "设备正常供电的工作模式。" },
-            { index: "6", name: "检修状态", value: "设备停机维护的标记状态。" },
-            {
-              index: "7",
-              name: "电压越限",
-              value: "电压超出允许范围的异常数据。",
-            },
-            {
-              index: "8",
-              name: "谐波畸变",
-              value: "电流/电压波形失真的质量问题。",
-            },
-          ],
-        },
-        {
-          故障事件: [
-            {
-              index: "1",
-              name: "短路故障",
-              value: "相间或对地异常低阻接通的故障。",
-            },
-            {
-              index: "2",
-              name: "接地故障",
-              value: "线路或设备对地绝缘失效的事件。",
-            },
-            { index: "3", name: "停电事件", value: "供电中断的系统记录。" },
-            {
-              index: "4",
-              name: "孤岛运行",
-              value: "局部电网脱离主网独立运行的状态。",
-            },
-            {
-              index: "5",
-              name: "重合闸动作",
-              value: "断路器跳闸后自动尝试合闸的操作。",
-            },
-          ],
-        },
-        {
-          分析与控制: [
-            {
-              index: "1",
-              name: "SCADA系统",
-              value: "电网数据采集与监控的核心平台。",
-            },
-            {
-              index: "2",
-              name: "故障定位",
-              value: "快速确定线路故障点位置的技术。",
-            },
-            {
-              index: "3",
-              name: "负荷预测",
-              value: "基于历史数据预估未来用电需求。",
-            },
-            {
-              index: "4",
-              name: "拓扑分析",
-              value: "动态计算电网连接关系的算法。",
-            },
-            {
-              index: "5",
-              name: "自动电压控制",
-              value: "优化电网电压稳定的闭环调节。",
-            },
-          ],
-        },
-        {
-          运维策略: [
-            { index: "1", name: "调度指令", value: "调度中心下发的操作命令。" },
-            {
-              index: "2",
-              name: "巡检计划",
-              value: "定期检查设备状态的维护方案。",
-            },
-            {
-              index: "3",
-              name: "N-1准则",
-              value: "单一设备故障不影响供电的安全标准。",
-            },
-            { index: "4", name: "黑启动", value: "大停电后系统自恢复的预案。" },
-          ],
-        },
-        {
-          标准与装置: [
-            {
-              index: "1",
-              name: "IEC 61850",
-              value: "电力自动化通信国际标准。",
-            },
-            {
-              index: "2",
-              name: "RTU",
-              value: "远程终端单元，数据上传与指令执行设备。",
-            },
-            {
-              index: "3",
-              name: "PMU",
-              value: "同步相量测量单元，高精度动态监测装置。",
-            },
-          ],
-        },
-        {
-          保护与机制: [
-            {
-              index: "1",
-              name: "继电保护",
-              value: "故障时快速隔离设备的防御体系。",
-            },
-            {
-              index: "2",
-              name: "备自投",
-              value: "备用电源自动投入的切换逻辑。",
-            },
-            {
-              index: "3",
-              name: "防误操作",
-              value: "强制约束错误操作的联锁机制。",
-            },
-          ],
-        },
-        {
-          运行指标: [
-            {
-              index: "1",
-              name: "供电可靠性",
-              value: "用户年均停电时间的评价指标。",
-            },
-            {
-              index: "2",
-              name: "线损率",
-              value: "输电过程中电能损耗的百分比。",
-            },
-            {
-              index: "3",
-              name: "频率偏差",
-              value: "电网实际频率与标准值的差值。",
-            },
-            {
-              index: "4",
-              name: "功率因数",
-              value: "有功功率与视在功率的比值。",
-            },
-          ],
-        },
-      ];
+      // 优先导出API数据，如果没有则导出当前处理后的数据
+      let exportData = this.graphData;
+      
+      if (!exportData || exportData.length === 0) {
+        // 如果没有API数据，则导出当前处理后的数据
+        exportData = this.raw;
+      }
+      
+      if (!exportData || (Array.isArray(exportData) && exportData.length === 0) || 
+          (!Array.isArray(exportData) && (!exportData.nodes || exportData.nodes.length === 0))) {
+        this.$message.warning("没有可导出的数据");
+        return;
+      }
 
-      const blob = new Blob([JSON.stringify(demo, null, 2)], {
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
@@ -808,7 +649,140 @@ export default {
       a.click();
       URL.revokeObjectURL(url);
       
-      this.$message.success("已导出 demo 数据");
+      this.$message.success("已导出图谱数据");
+    },
+
+    // 验证图谱数据格式
+    validateGraphData(json) {
+      // 检查是否为数组格式（分组格式）
+      if (Array.isArray(json)) {
+        if (json.length === 0) {
+          return { isValid: false, message: "数据不能为空" };
+        }
+        
+        for (let i = 0; i < json.length; i++) {
+          const groupObj = json[i];
+          if (typeof groupObj !== 'object' || groupObj === null) {
+            return { isValid: false, message: `第${i + 1}个分组必须是对象` };
+          }
+          
+          const groupKeys = Object.keys(groupObj);
+          if (groupKeys.length === 0) {
+            return { isValid: false, message: `第${i + 1}个分组不能为空` };
+          }
+          
+          for (const groupName of groupKeys) {
+            if (typeof groupName !== 'string' || groupName.trim() === '') {
+              return { isValid: false, message: `第${i + 1}个分组的名称必须是有效的字符串` };
+            }
+            
+            const items = groupObj[groupName];
+            if (!Array.isArray(items)) {
+              return { isValid: false, message: `分组"${groupName}"的数据必须是数组` };
+            }
+            
+            for (let j = 0; j < items.length; j++) {
+              const item = items[j];
+              if (typeof item !== 'object' || item === null) {
+                return { isValid: false, message: `分组"${groupName}"第${j + 1}项必须是对象` };
+              }
+              
+              // 检查必需字段
+              if (!item.name || typeof item.name !== 'string' || item.name.trim() === '') {
+                return { isValid: false, message: `分组"${groupName}"第${j + 1}项缺少有效的name字段` };
+              }
+              
+              if (!item.value || typeof item.value !== 'string' || item.value.trim() === '') {
+                return { isValid: false, message: `分组"${groupName}"第${j + 1}项缺少有效的value字段` };
+              }
+              
+              // 检查index字段（可选）
+              if (item.index !== undefined && (typeof item.index !== 'string' && typeof item.index !== 'number')) {
+                return { isValid: false, message: `分组"${groupName}"第${j + 1}项的index字段必须是字符串或数字` };
+              }
+            }
+          }
+        }
+        
+        return { isValid: true, message: "分组格式验证通过" };
+      }
+      
+      // 检查是否为节点-链接格式
+      if (json && typeof json === 'object') {
+        if (!json.nodes || !Array.isArray(json.nodes)) {
+          return { isValid: false, message: "缺少nodes数组字段" };
+        }
+        
+        if (!json.links || !Array.isArray(json.links)) {
+          return { isValid: false, message: "缺少links数组字段" };
+        }
+        
+        // 验证节点
+        for (let i = 0; i < json.nodes.length; i++) {
+          const node = json.nodes[i];
+          if (typeof node !== 'object' || node === null) {
+            return { isValid: false, message: `第${i + 1}个节点必须是对象` };
+          }
+          
+          if (!node.id || (typeof node.id !== 'string' && typeof node.id !== 'number')) {
+            return { isValid: false, message: `第${i + 1}个节点缺少有效的id字段` };
+          }
+          
+          if (!node.name || typeof node.name !== 'string' || node.name.trim() === '') {
+            return { isValid: false, message: `第${i + 1}个节点缺少有效的name字段` };
+          }
+        }
+        
+        // 验证链接
+        for (let i = 0; i < json.links.length; i++) {
+          const link = json.links[i];
+          if (typeof link !== 'object' || link === null) {
+            return { isValid: false, message: `第${i + 1}个链接必须是对象` };
+          }
+          
+          if (!link.source || (typeof link.source !== 'string' && typeof link.source !== 'number')) {
+            return { isValid: false, message: `第${i + 1}个链接缺少有效的source字段` };
+          }
+          
+          if (!link.target || (typeof link.target !== 'string' && typeof link.target !== 'number')) {
+            return { isValid: false, message: `第${i + 1}个链接缺少有效的target字段` };
+          }
+        }
+        
+        return { isValid: true, message: "节点-链接格式验证通过" };
+      }
+      
+      return { isValid: false, message: "不支持的数据格式，请使用分组格式或节点-链接格式" };
+    },
+
+    // 读取并验证文件
+    readAndValidateFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+          try {
+            const json = JSON.parse(reader.result);
+            
+            // 格式校验
+            const validationResult = this.validateGraphData(json);
+            if (!validationResult.isValid) {
+              reject(new Error(`数据格式错误: ${validationResult.message}`));
+              return;
+            }
+            
+            resolve(json);
+          } catch (e) {
+            reject(new Error("JSON 解析失败，请检查文件内容"));
+          }
+        };
+        
+        reader.onerror = () => {
+          reject(new Error("文件读取失败"));
+        };
+        
+        reader.readAsText(file);
+      });
     },
 
     // Demo dataset based on provided domain terms
@@ -1023,6 +997,7 @@ export default {
           ],
         },
       ];
+      console.log(JSON.stringify(demo));
       this.ingestJSON(demo);
 
       this.setViewFromRaw();
@@ -1122,5 +1097,30 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+// 上传组件样式
+:deep(.el-upload-dragger) {
+  border: 2px dashed #d9d9d9;
+  border-radius: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  
+  &:hover {
+    border-color: #409eff;
+  }
+}
+
+:deep(.el-upload__tip) {
+  font-size: 12px;
+  color: #606266;
+  margin-top: 8px;
+  text-align: center;
 }
 </style>
