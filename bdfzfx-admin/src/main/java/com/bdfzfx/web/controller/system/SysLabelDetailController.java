@@ -96,6 +96,8 @@ public class SysLabelDetailController extends BaseController
     @ApiOperation("修改样本标注详情")
     public AjaxResult edit(@RequestBody SysLabelDetail sysLabelDetail)
     {
+        // 修改后标注为已标注
+        sysLabelDetail.setIsLabeled("1");
         return toAjax(sysLabelDetailService.updateSysLabelDetail(sysLabelDetail));
     }
 
