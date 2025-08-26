@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.bdfzfx.common.annotation.Log;
-import com.bdfzfx.common.config.RuoYiConfig;
+import com.bdfzfx.common.config.BdfzfxConfig;
 import com.bdfzfx.common.core.controller.BaseController;
 import com.bdfzfx.common.core.domain.AjaxResult;
 import com.bdfzfx.common.core.domain.entity.SysUser;
@@ -126,7 +126,7 @@ public class SysProfileController extends BaseController
         if (!file.isEmpty())
         {
             LoginUser loginUser = getLoginUser();
-            String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+            String avatar = FileUploadUtils.upload(BdfzfxConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
             if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
             {
                 AjaxResult ajax = AjaxResult.success();

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.bdfzfx.common.config.RuoYiConfig;
+import com.bdfzfx.common.config.BdfzfxConfig;
 import com.bdfzfx.common.constant.Constants;
 import com.bdfzfx.common.utils.StringUtils;
 import com.bdfzfx.common.utils.http.HttpUtils;
@@ -31,7 +31,7 @@ public class AddressUtils
         {
             return "内网IP";
         }
-        if (RuoYiConfig.isAddressEnabled())
+        if (BdfzfxConfig.isAddressEnabled())
         {
             try
             {
