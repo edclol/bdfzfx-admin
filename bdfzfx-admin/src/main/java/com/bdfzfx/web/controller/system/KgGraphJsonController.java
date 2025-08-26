@@ -96,6 +96,7 @@ public class KgGraphJsonController extends BaseController
     @ApiOperation("修改知识图谱JSON存储")
     public AjaxResult edit(@RequestBody KgGraphJson kgGraphJson)
     {
+        kgGraphJson.setId(1L);
         return toAjax(kgGraphJsonService.updateKgGraphJson(kgGraphJson));
     }
 
