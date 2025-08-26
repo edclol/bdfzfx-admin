@@ -9,6 +9,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+/ruoyi-ui/.env.development
 ######################################################################
 # IDE
 
