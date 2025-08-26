@@ -25,29 +25,6 @@ create table if not exists sys_remote_signal_call
     update_time    datetime comment '更新时间'
 ) engine = innodb comment ='遥信调用记录表';
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录', '1', '1', 'call', 'system/call/index', 1, 0, 'C', '0', '0', 'system:call:edit', 'build', 'admin', sysdate(), '', null, '遥信调用记录菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:call:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:call:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:call:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:call:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('遥信调用记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:call:export',       '#', 'admin', sysdate(), '', null, '');
-
 INSERT INTO sys_remote_signal_call
 (call_time, interface_name, call_result, response_time, station_id, station_name, device_name, device_type,
  voltage_level, operation, create_by, create_time, update_by, update_time)
@@ -103,25 +80,3 @@ CREATE TABLE sys_yx_info_all
     is_include_curly_braces VARCHAR(20) COMMENT '是否包含花括号'
 ) ENGINE = InnoDB COMMENT ='遥信信息数据表';
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库', '1', '1', 'all', 'system/all/index', 1, 0, 'C', '0', '0', 'system:all:edit', 'build', 'admin', sysdate(), '', null, '样本库菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:all:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:all:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:all:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:all:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:all:export',       '#', 'admin', sysdate(), '', null, '');

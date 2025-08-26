@@ -46,28 +46,6 @@ insert into sys_label_task values(5, '样本标注任务5', 200, 0, null, '0', '
 insert into sys_label_task values(6, '样本标注任务5', 100, 0, null, '0', 'admin', sysdate(), '', null, '');
 
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务', '1', '1', 'task', 'system/task/index', 1, 0, 'C', '0', '0', 'system:task:edit', 'build', 'admin', sysdate(), '', null, '样本标注任务菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:task:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:task:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:task:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:task:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本标注任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:task:export',       '#', 'admin', sysdate(), '', null, '');
 
 
 drop table if exists sys_yx_data_version;
@@ -89,28 +67,6 @@ insert into sys_yx_data_version values(5, 'v1.0.4', sysdate(), '修复bug', '修
 insert into sys_yx_data_version values(6, 'v1.0.5', sysdate(), '修复bug', '修复bug');
 insert into sys_yx_data_version values(7, 'v1.0.6', sysdate(), '修复bug', '修复bug');
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理', '1', '1', 'version', 'system/version/index', 1, 0, 'C', '0', '0', 'system:version:list', 'build', 'admin', sysdate(), '', null, '样本数据版本管理菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:version:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:version:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:version:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:version:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('样本数据版本管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:version:export',       '#', 'admin', sysdate(), '', null, '');
 
 
 -- ----------------------------
@@ -276,28 +232,6 @@ INSERT INTO sys_synonym (word, synonym, create_by, create_time) VALUES
 ('弹簧未储能', '储能超时', '系统管理员', '2024-12-12 10:00:00'),
 ('储能超时', '储能超时', '系统管理员', '2024-12-12 10:00:00');
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库', '1', '1', 'synonym', 'system/synonym/index', 1, 0, 'C', '0', '0', 'system:synonym:list', 'build', 'admin', sysdate(), '', null, '同义词库菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('同义词库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:synonym:export',       '#', 'admin', sysdate(), '', null, '');
 
 
 DROP TABLE IF EXISTS sys_typical_monitor_info;
@@ -348,28 +282,6 @@ VALUES ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 
         '告警', 4, 1, '2020企标', '实时采集', '开关', '线路保护装置', '线路保护装置', 'admin');
 
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理', '1', '1', 'monitor', 'system/monitor/index', 1, 0, 'C', '0', '0', 'system:monitor:list', 'build', 'admin', sysdate(), '', null, '典型监控信息管理菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('典型监控信息管理导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:monitor:export',       '#', 'admin', sysdate(), '', null, '');
 
 -- 停用词表
 DROP TABLE IF EXISTS sys_stop_word;
@@ -394,29 +306,6 @@ VALUES ('的', '李四', '常见虚词'),
        ('空格', '李四', '空白字符'),
        ('&', '李四', '特殊符号'),
        ('...', '李四', '省略号');
-
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库', '1', '1', 'word', 'system/word/index', 1, 0, 'C', '0', '0', 'system:word:list', 'build', 'admin', sysdate(), '', null, '停用语料库菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:word:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:word:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:word:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:word:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('停用语料库导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:word:export',       '#', 'admin', sysdate(), '', null, '');
 
 
 -- 模型训练记录表
@@ -459,28 +348,6 @@ VALUES ('2024-08-01', '6M0jYz', '失败', 4,
         '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
         'admin', '训练中断');
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录', '1', '1', 'record', 'system/record/index', 1, 0, 'C', '0', '0', 'system:record:list', 'build', 'admin', sysdate(), '', null, '模型训练记录菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:record:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:record:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:record:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:record:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型训练记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:record:export',       '#', 'admin', sysdate(), '', null, '');
 
 
 -- 模型信息表
@@ -522,27 +389,5 @@ VALUES ('故障诊断模型', 'V20.24.22', '2024-08-05 12:44:15', 3351,
 
 
 
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息', '1', '1', 'model', 'system/model/index', 1, 0, 'C', '0', '0', 'system:model:list', 'build', 'admin', sysdate(), '', null, '模型信息菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:model:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:model:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:model:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:model:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('模型信息导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:model:export',       '#', 'admin', sysdate(), '', null, '');
 
 
