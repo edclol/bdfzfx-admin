@@ -1,8 +1,13 @@
 package com.bdfzfx.web.controller.system;
 
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bdfzfx.system.domain.SysLabelDetail;
+import com.bdfzfx.system.domain.SysYxInfoAll;
+import com.bdfzfx.system.service.ISysLabelDetailService;
+import com.bdfzfx.system.service.ISysYxInfoAllService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +42,13 @@ public class SysLabelTaskController extends BaseController
 {
     @Autowired
     private ISysLabelTaskService sysLabelTaskService;
+
+
+    @Autowired
+    private ISysLabelDetailService sysLabelDetailService;
+
+    @Autowired
+    private ISysYxInfoAllService sysYxInfoAllService;
 
     /**
      * 查询样本标注任务列表
@@ -85,7 +97,33 @@ public class SysLabelTaskController extends BaseController
     @ApiOperation("新增样本标注任务")
     public AjaxResult add(@RequestBody SysLabelTask sysLabelTask)
     {
-        return toAjax(sysLabelTaskService.insertSysLabelTask(sysLabelTask));
+        sysLabelTaskService.insertSysLabelTaskAndGetId(sysLabelTask);
+        // 添加数据
+        List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(new SysYxInfoAll());
+        // 随机获取50个样本
+        if (list.size() >= 50) {
+            Collections.shuffle(list);
+            list = list.subList(0, 50);
+        }
+        for (SysYxInfoAll sysYxInfoAll : list){
+            SysLabelDetail sysLabelDetail = new SysLabelDetail();
+            sysLabelDetail.setTaskId(sysLabelTask.getTaskId());
+            sysLabelDetail.setRemoteSignalId(sysYxInfoAll.getYxId());
+            sysLabelDetail.setMonitorId(sysYxInfoAll.getYxId());
+            sysLabelDetail.setInfoName(sysYxInfoAll.getInfoName());
+            sysLabelDetail.setSubstationId(sysYxInfoAll.getSubstationId());
+            sysLabelDetail.setDeviceType(sysYxInfoAll.getDeviceType());
+            sysLabelDetail.setDevicePrinciple(sysYxInfoAll.getDevicePrinciple());
+            sysLabelDetail.setAlarmLevel(sysYxInfoAll.getAlarmLevel());
+            sysLabelDetail.setIsLabeled("0");
+            sysLabelDetail.setLabelUser("admin");
+            sysLabelDetail.setSignalType("1");
+            sysLabelDetail.setEntryTime(sysYxInfoAll.getCreateTime());
+            sysLabelDetail.setMonitorContent("无");
+            sysLabelDetailService.insertSysLabelDetail(sysLabelDetail);
+        }
+
+        return toAjax(1);
     }
 
     /**

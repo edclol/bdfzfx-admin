@@ -58,4 +58,11 @@ public interface ISysLabelTaskService
      * @return 结果
      */
     public int deleteSysLabelTaskByTaskId(Long taskId);
+
+    /**
+     * 插入样本标注任务返回主键
+     * @param sysLabelTask
+     * @return
+     */
+    public  Long insertSysLabelTaskAndGetId(SysLabelTask sysLabelTask);
 }

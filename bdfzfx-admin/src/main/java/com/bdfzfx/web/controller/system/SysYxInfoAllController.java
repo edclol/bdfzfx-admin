@@ -159,6 +159,24 @@ public class SysYxInfoAllController extends BaseController
     }
 
     /**
+     * 创建标注任务生成样本
+     */
+    @PreAuthorize("@ss.hasPermi('system:all:list')")
+    @GetMapping("/list/random/label")
+    @ApiOperation("创建标注任务生成样本")
+    public TableDataInfo listRandomLabel(SysYxInfoAll sysYxInfoAll)
+    {
+        startPage();
+        List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(sysYxInfoAll);
+        // 随机获取50个样本
+        if (list.size() >= 50) {
+            Collections.shuffle(list);
+            list = list.subList(0, 50);
+        }
+        return getDataTable(list);
+    }
+
+    /**
      * 导出样本库列表
      */
     @PreAuthorize("@ss.hasPermi('system:all:export')")

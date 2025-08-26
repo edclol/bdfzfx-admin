@@ -15,7 +15,7 @@ import com.bdfzfx.system.service.ISysLabelTaskService;
  * @date 2025-08-18
  */
 @Service
-public class SysLabelTaskServiceImpl implements ISysLabelTaskService 
+public class SysLabelTaskServiceImpl implements ISysLabelTaskService
 {
     @Autowired
     private SysLabelTaskMapper sysLabelTaskMapper;
@@ -93,4 +93,20 @@ public class SysLabelTaskServiceImpl implements ISysLabelTaskService
     {
         return sysLabelTaskMapper.deleteSysLabelTaskByTaskId(taskId);
     }
+
+    /**
+     * 插入样本标注任务返回主键
+     *
+     * @param sysLabelTask
+     * @return
+     */
+    @Override
+    public Long insertSysLabelTaskAndGetId(SysLabelTask sysLabelTask) {
+        sysLabelTask.setCreateTime(DateUtils.getNowDate());
+        sysLabelTaskMapper.insertSysLabelTask(sysLabelTask);
+        return sysLabelTask.getTaskId();
+
+    }
+
+
 }
