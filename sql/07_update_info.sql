@@ -76,9 +76,24 @@ CREATE TABLE sys_label_detail
     KEY idx_info_name (info_name(255))
 ) ENGINE = InnoDB COMMENT = '样本标注详情表';
 
+-- ----------------------------
+-- 知识图谱JSON存储表
+-- ----------------------------
+DROP TABLE IF EXISTS kg_graph_json;
+CREATE TABLE kg_graph_json
+(
+    id          BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    graph_data  TEXT       NOT NULL COMMENT '知识图谱JSON数据',
+    create_by   VARCHAR(64)  DEFAULT '' COMMENT '创建者',
+    create_time DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   VARCHAR(64)  DEFAULT '' COMMENT '更新者',
+    update_time DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark      VARCHAR(500) DEFAULT NULL COMMENT '备注',
+    PRIMARY KEY (id),
+    KEY idx_create_time (create_time)
+) ENGINE = InnoDB COMMENT ='知识图谱JSON存储表';
 
-
-
+insert into kg_graph_json values(1, '{"nodes": [{"id": "1", "label": "节点1"}, {"id": "2", "label": "节点2"}], "edges": [{"source": "1", "target": "2"}]}', 'admin', sysdate(), '', null, '');
 
 drop table if exists sys_yx_data_version;
 CREATE TABLE `sys_yx_data_version`
