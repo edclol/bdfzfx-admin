@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysLabelDetailMapper">
+    
+    <resultMap type="SysLabelDetail" id="SysLabelDetailResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="substationId"    column="substation_id"    />
+        <result property="remoteSignalId"    column="remote_signal_id"    />
+        <result property="monitorId"    column="monitor_id"    />
+        <result property="signalType"    column="signal_type"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="monitorContent"    column="monitor_content"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="devicePrinciple"    column="device_principle"    />
+        <result property="infoName"    column="info_name"    />
+        <result property="voltageLevel"    column="voltage_level"    />
+        <result property="alarmStatus"    column="alarm_status"    />
+        <result property="alarmLevel"    column="alarm_level"    />
+        <result property="isPositiveSample"    column="is_positive_sample"    />
+        <result property="labelUser"    column="label_user"    />
+        <result property="labelTime"    column="label_time"    />
+        <result property="isLabeled"    column="is_labeled"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysLabelDetailVo">
+        select id, task_id, substation_id, remote_signal_id, monitor_id, signal_type, entry_time, monitor_content, device_type, device_principle, info_name, voltage_level, alarm_status, alarm_level, is_positive_sample, label_user, label_time, is_labeled, remark from sys_label_detail
+    </sql>
+
+    <select id="selectSysLabelDetailList" parameterType="SysLabelDetail" resultMap="SysLabelDetailResult">
+        <include refid="selectSysLabelDetailVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="substationId != null  and substationId != ''"> and substation_id = #{substationId}</if>
+            <if test="remoteSignalId != null  and remoteSignalId != ''"> and remote_signal_id = #{remoteSignalId}</if>
+            <if test="monitorId != null  and monitorId != ''"> and monitor_id = #{monitorId}</if>
+            <if test="signalType != null  and signalType != ''"> and signal_type = #{signalType}</if>
+            <if test="entryTime != null "> and entry_time = #{entryTime}</if>
+            <if test="monitorContent != null  and monitorContent != ''"> and monitor_content = #{monitorContent}</if>
+            <if test="deviceType != null  and deviceType != ''"> and device_type = #{deviceType}</if>
+            <if test="devicePrinciple != null  and devicePrinciple != ''"> and device_principle = #{devicePrinciple}</if>
+            <if test="infoName != null  and infoName != ''"> and info_name like concat('%', #{infoName}, '%')</if>
+            <if test="voltageLevel != null  and voltageLevel != ''"> and voltage_level = #{voltageLevel}</if>
+            <if test="alarmStatus != null  and alarmStatus != ''"> and alarm_status = #{alarmStatus}</if>
+            <if test="alarmLevel != null  and alarmLevel != ''"> and alarm_level = #{alarmLevel}</if>
+            <if test="isPositiveSample != null  and isPositiveSample != ''"> and is_positive_sample = #{isPositiveSample}</if>
+            <if test="labelUser != null  and labelUser != ''"> and label_user = #{labelUser}</if>
+            <if test="labelTime != null "> and label_time = #{labelTime}</if>
+            <if test="isLabeled != null  and isLabeled != ''"> and is_labeled = #{isLabeled}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysLabelDetailById" parameterType="Long" resultMap="SysLabelDetailResult">
+        <include refid="selectSysLabelDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysLabelDetail" parameterType="SysLabelDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_label_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="substationId != null">substation_id,</if>
+            <if test="remoteSignalId != null">remote_signal_id,</if>
+            <if test="monitorId != null">monitor_id,</if>
+            <if test="signalType != null">signal_type,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="monitorContent != null">monitor_content,</if>
+            <if test="deviceType != null">device_type,</if>
+            <if test="devicePrinciple != null">device_principle,</if>
+            <if test="infoName != null">info_name,</if>
+            <if test="voltageLevel != null">voltage_level,</if>
+            <if test="alarmStatus != null">alarm_status,</if>
+            <if test="alarmLevel != null">alarm_level,</if>
+            <if test="isPositiveSample != null">is_positive_sample,</if>
+            <if test="labelUser != null">label_user,</if>
+            <if test="labelTime != null">label_time,</if>
+            <if test="isLabeled != null">is_labeled,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="substationId != null">#{substationId},</if>
+            <if test="remoteSignalId != null">#{remoteSignalId},</if>
+            <if test="monitorId != null">#{monitorId},</if>
+            <if test="signalType != null">#{signalType},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="monitorContent != null">#{monitorContent},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="devicePrinciple != null">#{devicePrinciple},</if>
+            <if test="infoName != null">#{infoName},</if>
+            <if test="voltageLevel != null">#{voltageLevel},</if>
+            <if test="alarmStatus != null">#{alarmStatus},</if>
+            <if test="alarmLevel != null">#{alarmLevel},</if>
+            <if test="isPositiveSample != null">#{isPositiveSample},</if>
+            <if test="labelUser != null">#{labelUser},</if>
+            <if test="labelTime != null">#{labelTime},</if>
+            <if test="isLabeled != null">#{isLabeled},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysLabelDetail" parameterType="SysLabelDetail">
+        update sys_label_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="substationId != null">substation_id = #{substationId},</if>
+            <if test="remoteSignalId != null">remote_signal_id = #{remoteSignalId},</if>
+            <if test="monitorId != null">monitor_id = #{monitorId},</if>
+            <if test="signalType != null">signal_type = #{signalType},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="monitorContent != null">monitor_content = #{monitorContent},</if>
+            <if test="deviceType != null">device_type = #{deviceType},</if>
+            <if test="devicePrinciple != null">device_principle = #{devicePrinciple},</if>
+            <if test="infoName != null">info_name = #{infoName},</if>
+            <if test="voltageLevel != null">voltage_level = #{voltageLevel},</if>
+            <if test="alarmStatus != null">alarm_status = #{alarmStatus},</if>
+            <if test="alarmLevel != null">alarm_level = #{alarmLevel},</if>
+            <if test="isPositiveSample != null">is_positive_sample = #{isPositiveSample},</if>
+            <if test="labelUser != null">label_user = #{labelUser},</if>
+            <if test="labelTime != null">label_time = #{labelTime},</if>
+            <if test="isLabeled != null">is_labeled = #{isLabeled},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysLabelDetailById" parameterType="Long">
+        delete from sys_label_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteSysLabelDetailByIds" parameterType="String">
+        delete from sys_label_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

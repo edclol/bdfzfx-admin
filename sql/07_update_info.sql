@@ -45,6 +45,38 @@ insert into sys_label_task values(4, '样本标注任务4', 100, 0, null, '0', '
 insert into sys_label_task values(5, '样本标注任务5', 200, 0, null, '0', 'admin', sysdate(), '', null, '');
 insert into sys_label_task values(6, '样本标注任务5', 100, 0, null, '0', 'admin', sysdate(), '', null, '');
 
+DROP TABLE IF EXISTS sys_label_detail;
+CREATE TABLE sys_label_detail
+(
+    id                 BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    task_id            BIGINT(20) NOT NULL COMMENT '所属任务ID，关联sys_label_task.task_id',
+    substation_id      VARCHAR(100) DEFAULT NULL COMMENT '变电站ID，如：四川草坝',
+    remote_signal_id   VARCHAR(100) DEFAULT NULL COMMENT '遥信ID，如：断路器表四川草坝四川/草坝/10kV 901开关遥信值',
+    monitor_id         VARCHAR(100) DEFAULT NULL COMMENT '监控ID，如：XXXXXXXXXX',
+    signal_type        VARCHAR(50)  DEFAULT NULL COMMENT '遥信类型：遥测/遥信/遥控/遥调',
+    entry_time         DATETIME     DEFAULT NULL COMMENT '入库时间，如：2024-12-12 10:00:00',
+    monitor_content    TEXT         DEFAULT NULL COMMENT '监控信息内容，描述性文本',
+    -- 标注信息部分
+    device_type        VARCHAR(50)  DEFAULT NULL COMMENT '设备类型，如：主变保护',
+    device_principle   VARCHAR(100) DEFAULT NULL COMMENT '设备原理，如：通用',
+    info_name          TEXT         DEFAULT NULL COMMENT '信息名称，格式为：[主变编号] [设备编号] 保护 [型号] 远方操作硬压板',
+    voltage_level      VARCHAR(50)  DEFAULT NULL COMMENT '适用电压等级(kW)，如：500',
+    alarm_status       VARCHAR(20)  DEFAULT NULL COMMENT '告警/状态，如：告警',
+    alarm_level        VARCHAR(10)  DEFAULT NULL COMMENT '告警等级，如：1级',
+    is_positive_sample CHAR(1)      DEFAULT '1' COMMENT '是否正样例：1=正样例，0=负样例',
+    label_user         VARCHAR(64)  DEFAULT NULL COMMENT '标注人姓名',
+    label_time         DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '标注时间',
+    is_labeled         CHAR(1)      DEFAULT '0' COMMENT '是否已标注：1=已标注，0=未标注',
+    remark             VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+
+    PRIMARY KEY (id),
+    KEY idx_task_id (task_id),
+    KEY idx_monitor_id (monitor_id),
+    KEY idx_label_time (label_time),
+    KEY idx_info_name (info_name(255))
+) ENGINE = InnoDB COMMENT = '样本标注详情表';
+
+
 
 
 
