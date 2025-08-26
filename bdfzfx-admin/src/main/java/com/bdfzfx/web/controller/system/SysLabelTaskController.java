@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bdfzfx.common.utils.DateUtils;
 import com.bdfzfx.system.domain.SysLabelDetail;
 import com.bdfzfx.system.domain.SysYxInfoAll;
 import com.bdfzfx.system.service.ISysLabelDetailService;
@@ -97,6 +98,8 @@ public class SysLabelTaskController extends BaseController
     @ApiOperation("新增样本标注任务")
     public AjaxResult add(@RequestBody SysLabelTask sysLabelTask)
     {
+        add_para(sysLabelTask);
+
         sysLabelTaskService.insertSysLabelTaskAndGetId(sysLabelTask);
         // 添加数据
         List<SysYxInfoAll> list = sysYxInfoAllService.selectSysYxInfoAllList(new SysYxInfoAll());
@@ -106,24 +109,57 @@ public class SysLabelTaskController extends BaseController
             list = list.subList(0, 50);
         }
         for (SysYxInfoAll sysYxInfoAll : list){
-            SysLabelDetail sysLabelDetail = new SysLabelDetail();
-            sysLabelDetail.setTaskId(sysLabelTask.getTaskId());
-            sysLabelDetail.setRemoteSignalId(sysYxInfoAll.getYxId());
-            sysLabelDetail.setMonitorId(sysYxInfoAll.getYxId());
-            sysLabelDetail.setInfoName(sysYxInfoAll.getInfoName());
-            sysLabelDetail.setSubstationId(sysYxInfoAll.getSubstationId());
-            sysLabelDetail.setDeviceType(sysYxInfoAll.getDeviceType());
-            sysLabelDetail.setDevicePrinciple(sysYxInfoAll.getDevicePrinciple());
-            sysLabelDetail.setAlarmLevel(sysYxInfoAll.getAlarmLevel());
-            sysLabelDetail.setIsLabeled("0");
-            sysLabelDetail.setLabelUser("admin");
-            sysLabelDetail.setSignalType("1");
-            sysLabelDetail.setEntryTime(sysYxInfoAll.getCreateTime());
-            sysLabelDetail.setMonitorContent("无");
+            SysLabelDetail sysLabelDetail = getSysLabelDetail(sysLabelTask, sysYxInfoAll);
             sysLabelDetailService.insertSysLabelDetail(sysLabelDetail);
         }
 
         return toAjax(1);
+    }
+
+    private void add_para(SysLabelTask sysLabelTask) {
+        // 只有当字段为空时才设置默认值
+        if (sysLabelTask.getCompletedCount() == null) {
+            sysLabelTask.setCompletedCount(0L);
+        }
+        if (sysLabelTask.getSampleCount() == null) {
+            sysLabelTask.setSampleCount(50L);
+        }
+        if (sysLabelTask.getStatus() == null || sysLabelTask.getStatus().isEmpty()) {
+            sysLabelTask.setStatus("1");
+        }
+        if (sysLabelTask.getCreateBy() == null || sysLabelTask.getCreateBy().isEmpty()) {
+            sysLabelTask.setCreateBy(getUsername());
+        }
+        if (sysLabelTask.getUpdateBy() == null || sysLabelTask.getUpdateBy().isEmpty()) {
+            sysLabelTask.setUpdateBy(getUsername());
+        }
+        if (sysLabelTask.getCreateTime() == null) {
+            sysLabelTask.setCreateTime(DateUtils.getNowDate());
+        }
+        if (sysLabelTask.getHandler() == null || sysLabelTask.getHandler().isEmpty()) {
+            sysLabelTask.setHandler(getUsername());
+        }
+        if (sysLabelTask.getRemark() == null || sysLabelTask.getRemark().isEmpty()) {
+            sysLabelTask.setRemark("无");
+        }
+    }
+
+    private static SysLabelDetail getSysLabelDetail(SysLabelTask sysLabelTask, SysYxInfoAll sysYxInfoAll) {
+        SysLabelDetail sysLabelDetail = new SysLabelDetail();
+        sysLabelDetail.setTaskId(sysLabelTask.getTaskId());
+        sysLabelDetail.setRemoteSignalId(sysYxInfoAll.getYxId());
+        sysLabelDetail.setMonitorId(sysYxInfoAll.getYxId());
+        sysLabelDetail.setInfoName(sysYxInfoAll.getInfoName());
+        sysLabelDetail.setSubstationId(sysYxInfoAll.getSubstationId());
+        sysLabelDetail.setDeviceType(sysYxInfoAll.getDeviceType());
+        sysLabelDetail.setDevicePrinciple(sysYxInfoAll.getDevicePrinciple());
+        sysLabelDetail.setAlarmLevel(sysYxInfoAll.getAlarmLevel());
+        sysLabelDetail.setIsLabeled("0");
+        sysLabelDetail.setLabelUser("admin");
+        sysLabelDetail.setSignalType("1");
+        sysLabelDetail.setEntryTime(sysYxInfoAll.getCreateTime());
+        sysLabelDetail.setMonitorContent("无");
+        return sysLabelDetail;
     }
 
     /**
