@@ -179,7 +179,7 @@
       <el-table-column label="模型描述或用途说明" align="center" prop="description" />
       <el-table-column label="是否启用" align="center" prop="isUsed" />
       <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -198,19 +198,16 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-plus"
             @click="openThreshold(scope.row)"
           >阈值设置</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-plus"
             @click="openReport(scope.row)"
           >评估报告</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-plus"
             @click="openModelSwitch(scope.row)"
           >模型切换</el-button>
         </template>
@@ -344,8 +341,15 @@
     <!-- 推理示例对话框 -->
     <el-dialog title="推理示例" :visible.sync="inferenceOpen" width="820px" append-to-body @closed="onInferenceClosed">
       <div class="inference-stage">
-        <img class="inference-img" :class="{ 'fade-in': inferenceAnimating }" :src="tlgcSrc" alt="推理示例" />
-        <div class="inference-mask" :class="{ 'animate': inferenceAnimating }"></div>
+        <img 
+          v-for="(img, index) in tlgcImages" 
+          :key="index"
+          class="inference-img" 
+          :class="{ 'active': index < revealedCount }" 
+          :style="{ width: (100 / tlgcImages.length) + '%' }"
+          :src="img.src" 
+          :alt="img.alt" 
+        />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="inferenceOpen = false">关 闭</el-button>
@@ -387,7 +391,15 @@ export default {
       // 推理示例弹窗
       inferenceOpen: false,
       inferenceTimer: null,
-      tlgcSrc: require('./tlgc.png'),
+      tlgcImages: [
+        { src: require('./tlgc.png'), alt: 'tlgc' },
+        { src: require('./tlgc1.png'), alt: 'tlgc 1' },
+        { src: require('./tlgc2.png'), alt: 'tlgc 2' },
+        { src: require('./tlgc3.png'), alt: 'tlgc 3' },
+        { src: require('./tlgc4.png'), alt: 'tlgc 4' }
+      ],
+      currentImageIndex: 0,
+      revealedCount: 0,
       inferenceAnimating: false,
       // 模型切换弹窗
       modelSwitchOpen: false,
@@ -423,7 +435,7 @@ export default {
         uploadTime: [
           { required: true, message: "上传时间不能为空", trigger: "blur" }
         ],
-      }
+      },
     }
   },
   created() {
@@ -487,16 +499,27 @@ export default {
     // 打开推理示例
     openInference() {
       this.inferenceOpen = true
+      this.revealedCount = 0
       this.inferenceAnimating = false
-      // 下一帧开启动画，确保类切换生效
-      this.$nextTick(() => {
-        requestAnimationFrame(() => {
-          this.inferenceAnimating = true
-        })
-      })
+      this.startImageSequence()
+    },
+    startImageSequence() {
+      this.inferenceTimer = setInterval(() => {
+        if (this.revealedCount < this.tlgcImages.length) {
+          this.revealedCount += 1
+        } else {
+          clearInterval(this.inferenceTimer)
+          this.inferenceTimer = null
+        }
+      }, 1000) // 每1秒显示下一张，直到全部显示
     },
     onInferenceClosed() {
+      if (this.inferenceTimer) {
+        clearInterval(this.inferenceTimer)
+        this.inferenceTimer = null
+      }
       this.inferenceAnimating = false
+      this.revealedCount = 0
     },
     // 取消按钮
     cancel() {
@@ -602,37 +625,22 @@ export default {
 .inference-stage {
   position: relative;
   width: 100%;
-  height: 480px;
+  height: 300px;
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid #ebeef5;
+  display: flex;
 }
 .inference-img {
-  width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
   background: #fff;
-}
-.inference-img.fade-in {
   opacity: 0;
-  animation: fadeIn 1.2s ease forwards;
+  transition: opacity 0.5s ease-in-out;
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.inference-img.active {
+  opacity: 1;
 }
-.inference-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255,255,255,0.9));
-  transform: translateX(0%);
-  transition: transform 3s ease;
-}
-.inference-mask.animate {
-  transform: translateX(100%);
-}
+.inference-mask { display: none; }
 </style>
