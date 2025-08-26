@@ -74,7 +74,7 @@ import com.bdfzfx.common.annotation.Excel;
 import com.bdfzfx.common.annotation.Excel.ColumnType;
 import com.bdfzfx.common.annotation.Excel.Type;
 import com.bdfzfx.common.annotation.Excels;
-import com.bdfzfx.common.config.RuoYiConfig;
+import com.bdfzfx.common.config.BdfzfxConfig;
 import com.bdfzfx.common.core.domain.AjaxResult;
 import com.bdfzfx.common.core.text.Convert;
 import com.bdfzfx.common.exception.UtilException;
@@ -1463,7 +1463,7 @@ public class ExcelUtil<T>
      */
     public String getAbsoluteFile(String filename)
     {
-        String downloadPath = RuoYiConfig.getDownloadPath() + filename;
+        String downloadPath = BdfzfxConfig.getDownloadPath() + filename;
         File desc = new File(downloadPath);
         if (!desc.getParentFile().exists())
         {

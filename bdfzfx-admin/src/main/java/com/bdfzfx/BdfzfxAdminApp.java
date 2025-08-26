@@ -16,6 +16,8 @@ public class BdfzfxAdminApp
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(BdfzfxAdminApp.class, args);
+        System.out.println("JDK 版本: " + System.getProperty("java.version"));
         System.out.println("启动成功！👌👌👌");
+
     }
 }

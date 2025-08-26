@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import com.bdfzfx.common.config.RuoYiConfig;
+import com.bdfzfx.common.config.BdfzfxConfig;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -32,7 +32,7 @@ public class SwaggerConfig
 {
     /** 系统基础配置 */
     @Autowired
-    private RuoYiConfig ruoyiConfig;
+    private BdfzfxConfig bdfzfxConfig;
 
     /** 是否开启swagger */
     @Value("${swagger.enabled}")
@@ -117,9 +117,9 @@ public class SwaggerConfig
                 // 描述
                 .description("接口文档")
                 // 作者信息
-                .contact(new Contact(ruoyiConfig.getName(), null, null))
+                .contact(new Contact(bdfzfxConfig.getName(), null, null))
                 // 版本
-                .version("版本号:" + ruoyiConfig.getVersion())
+                .version("版本号:" + bdfzfxConfig.getVersion())
                 .build();
     }
 }
