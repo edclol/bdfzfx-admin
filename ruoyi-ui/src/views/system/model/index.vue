@@ -130,6 +130,33 @@
           v-hasPermi="['system:model:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-document"
+          size="mini"
+          @click="openReport"
+        >评估报告</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="openAlgoIntro"
+        >算法矩阵介绍</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="openInference"
+        >推理示例</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -168,6 +195,24 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:model:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="openThreshold(scope.row)"
+          >阈值设置</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="openReport(scope.row)"
+          >评估报告</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="openModelSwitch(scope.row)"
+          >模型切换</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -230,6 +275,82 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 算法矩阵介绍对话框 -->
+    <el-dialog title="算法矩阵介绍" :visible.sync="algoIntroOpen" width="720px" append-to-body>
+      <div style="line-height: 1.8;">
+        <h4>一、语义相似度计算</h4>
+        <p>基于词嵌入模型将文本转化为向量空间表示，通过余弦相似度或编辑距离算法量化信号名称间的语义关联度，解决术语表述差异问题，实现标准信号与实际信号的自动归并。</p>
+        <h4>二、语义分析</h4>
+        <p>采用依存句法解析和实体识别技术，拆解信号名称的语法结构并提取核心要素（设备主体、信号类型、参数），构建结构化特征以支撑标准化映射。</p>
+        <h4>三、知识推理</h4>
+        <p>利用电力知识图谱的层级关系和预定义规则引擎，推导信号间的隐含逻辑关联，实现信号层级扩展与逻辑冲突检测。</p>
+        <h4>四、知识服务</h4>
+        <p>通过结构化知识库存储标准信号元数据，提供API接口实现原始信号到标准ID的自动化映射，并基于反馈机制动态优化智能匹配机制。</p>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="algoIntroOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 阈值设置对话框 -->
+    <el-dialog title="阈值设置" :visible.sync="thresholdOpen" width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="模型">
+          <el-select v-model="thresholdForm.model" placeholder="选择模型版本" style="width: 100%;">
+            <el-option label="model v1" value="v1" />
+            <el-option label="model v2" value="v2" />
+            <el-option label="model v3" value="v3" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="阈值">
+          <el-input v-model="thresholdForm.value" placeholder="请输入阈值，例如 0.85" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="confirmThreshold">确 认</el-button>
+        <el-button @click="thresholdOpen = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 评估报告对话框 -->
+    <el-dialog title="评估报告" :visible.sync="reportOpen" width="720px" append-to-body>
+      <div style="min-height: 240px; border: 1px dashed #e5e5e5; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">
+        暂无内容
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" icon="el-icon-download" @click="downloadEvaluationReport">下 载</el-button>
+        <el-button @click="reportOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 模型切换对话框 -->
+    <el-dialog title="模型切换" :visible.sync="modelSwitchOpen" width="420px" append-to-body>
+      <el-form label-width="90px">
+        <el-form-item label="选择版本">
+          <el-select v-model="modelSwitchForm.version" placeholder="选择模型版本" style="width: 100%;">
+            <el-option label="model v1" value="v1" />
+            <el-option label="model v2" value="v2" />
+            <el-option label="model v3" value="v3" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="confirmModelSwitch">确 认</el-button>
+        <el-button @click="modelSwitchOpen = false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 推理示例对话框 -->
+    <el-dialog title="推理示例" :visible.sync="inferenceOpen" width="820px" append-to-body @closed="onInferenceClosed">
+      <div class="inference-stage">
+        <img class="inference-img" :class="{ 'fade-in': inferenceAnimating }" :src="tlgcSrc" alt="推理示例" />
+        <div class="inference-mask" :class="{ 'animate': inferenceAnimating }"></div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="inferenceOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -258,6 +379,21 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 阈值设置弹窗
+      thresholdOpen: false,
+      thresholdForm: { model: 'v1', value: '' },
+      // 评估报告弹窗
+      reportOpen: false,
+      // 推理示例弹窗
+      inferenceOpen: false,
+      inferenceTimer: null,
+      tlgcSrc: require('./tlgc.png'),
+      inferenceAnimating: false,
+      // 模型切换弹窗
+      modelSwitchOpen: false,
+      modelSwitchForm: { version: 'v1' },
+      // 算法矩阵介绍弹窗
+      algoIntroOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -302,6 +438,65 @@ export default {
         this.total = response.total
         this.loading = false
       })
+    },
+    // 打开评估报告
+    openReport() {
+      this.reportOpen = true
+    },
+    // 下载评估报告（空白占位文件）
+    downloadEvaluationReport() {
+      const blob = new Blob([''], { type: 'text/plain;charset=utf-8' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `evaluation-report-${Date.now()}.txt`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    },
+    // 确认阈值
+    confirmThreshold() {
+      const value = (this.thresholdForm.value || '').trim()
+      if (!value) {
+        this.$message.warning('请输入阈值')
+        return
+      }
+      this.$message.success(`已设置 ${this.thresholdForm.model} 阈值为：${value}`)
+      this.thresholdOpen = false
+    },
+    // 打开阈值设置
+    openThreshold(row) {
+      this.thresholdForm = {
+        model: this.thresholdForm.model || 'v1',
+        value: this.thresholdForm.value || '',
+      }
+      this.thresholdOpen = true
+    },
+    // 打开算法矩阵介绍
+    openAlgoIntro() {
+      this.algoIntroOpen = true;
+    },
+    // 打开模型切换
+    openModelSwitch(row) {
+      this.modelSwitchOpen = true
+    },
+    // 确认模型切换
+    confirmModelSwitch() {
+      this.$message.success(`已切换到 ${this.modelSwitchForm.version}`)
+      this.modelSwitchOpen = false
+    },
+    // 打开推理示例
+    openInference() {
+      this.inferenceOpen = true
+      this.inferenceAnimating = false
+      // 下一帧开启动画，确保类切换生效
+      this.$nextTick(() => {
+        requestAnimationFrame(() => {
+          this.inferenceAnimating = true
+        })
+      })
+    },
+    onInferenceClosed() {
+      this.inferenceAnimating = false
     },
     // 取消按钮
     cancel() {
@@ -402,3 +597,42 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.inference-stage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #ebeef5;
+}
+.inference-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #fff;
+}
+.inference-img.fade-in {
+  opacity: 0;
+  animation: fadeIn 1.2s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.inference-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255,255,255,0.9));
+  transform: translateX(0%);
+  transition: transform 3s ease;
+}
+.inference-mask.animate {
+  transform: translateX(100%);
+}
+</style>
