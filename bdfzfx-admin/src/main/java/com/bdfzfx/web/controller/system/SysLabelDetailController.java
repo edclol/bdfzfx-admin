@@ -1,5 +1,7 @@
 package com.bdfzfx.web.controller.system;
 
+import com.bdfzfx.system.domain.SysLabelTask;
+import com.bdfzfx.system.service.ISysLabelTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -36,6 +38,9 @@ public class SysLabelDetailController extends BaseController
 {
     @Autowired
     private ISysLabelDetailService sysLabelDetailService;
+
+    @Autowired
+    private ISysLabelTaskService sysLabelTaskService;
 
     /**
      * 查询样本标注详情列表
@@ -96,8 +101,27 @@ public class SysLabelDetailController extends BaseController
     @ApiOperation("修改样本标注详情")
     public AjaxResult edit(@RequestBody SysLabelDetail sysLabelDetail)
     {
-        // 修改后标注为已标注
-        sysLabelDetail.setIsLabeled("1");
+        // 修改后更新标注任务表中已完成数量
+        Long taskId = sysLabelDetail.getTaskId();
+        if (taskId != null) {
+            SysLabelDetail queryDetail = new SysLabelDetail();
+            queryDetail.setTaskId(taskId);
+            List<SysLabelDetail> sysLabelDetails = sysLabelDetailService.selectSysLabelDetailList(queryDetail);
+            // 统计已完成数量 1 和 2 都认为是已完成
+            long completedCount = sysLabelDetails.stream()
+                    .filter(detail -> "1".equals(detail.getIsLabeled()) || "2".equals(detail.getIsLabeled()))
+                    .count();
+            SysLabelTask labelTask = sysLabelTaskService.selectSysLabelTaskByTaskId(taskId);
+            if (labelTask != null) {
+                labelTask.setCompletedCount(completedCount);
+                labelTask.setSampleCount((long) sysLabelDetails.size());
+                if (completedCount >= labelTask.getSampleCount()) {
+                    labelTask.setStatus("2");
+                }
+                sysLabelTaskService.updateSysLabelTask(labelTask);
+            }
+        }
+
         return toAjax(sysLabelDetailService.updateSysLabelDetail(sysLabelDetail));
     }
 

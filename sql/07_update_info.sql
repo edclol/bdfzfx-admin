@@ -66,7 +66,7 @@ CREATE TABLE sys_label_detail
     is_positive_sample CHAR(1)      DEFAULT '1' COMMENT '是否正样例：1=正样例，0=负样例',
     label_user         VARCHAR(64)  DEFAULT NULL COMMENT '标注人姓名',
     label_time         DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '标注时间',
-    is_labeled         CHAR(1)      DEFAULT '0' COMMENT '是否已标注：1=已标注，0=未标注',
+    is_labeled         CHAR(1)      DEFAULT '0' COMMENT '是否已标注：2=异常样本，1=已标注，0=未标注',
     remark             VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
 
     PRIMARY KEY (id),

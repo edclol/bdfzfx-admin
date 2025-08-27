@@ -86,8 +86,8 @@ public class SysLabelDetail extends BaseEntity
     @Excel(name = "标注时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date labelTime;
 
-    /** 是否已标注：1=已标注，0=未标注 */
-    @Excel(name = "是否已标注：1=已标注，0=未标注")
+    /** 是否已标注：2=异常样本，1=已标注，0=未标注 */
+    @Excel(name = "是否已标注：2=异常样本，1=已标注，0=未标注")
     private String isLabeled;
 
     public void setId(Long id) 
