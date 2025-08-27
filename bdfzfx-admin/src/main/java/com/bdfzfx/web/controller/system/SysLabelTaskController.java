@@ -188,8 +188,10 @@ public class SysLabelTaskController extends BaseController
             SysLabelDetail sysLabelDetail = new SysLabelDetail();
             sysLabelDetail.setTaskId(taskId);
             List<SysLabelDetail> sysLabelDetails = sysLabelDetailService.selectSysLabelDetailList(sysLabelDetail);
-            for (SysLabelDetail detail : sysLabelDetails) {
-                sysLabelDetailService.deleteSysLabelDetailById(detail.getId());
+            // 如果没有查询到标注详情则跳过不删除
+            if (sysLabelDetails != null && !sysLabelDetails.isEmpty()) {
+                Long[] ids = sysLabelDetails.stream().map(SysLabelDetail::getId).toArray(Long[]::new);
+                sysLabelDetailService.deleteSysLabelDetailByIds(ids);
             }
         }
         return toAjax(sysLabelTaskService.deleteSysLabelTaskByTaskIds(taskIds));
