@@ -185,16 +185,58 @@
     />
 
     <!-- 添加或修改样本标注任务对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-    
+    <el-dialog :title="title" :visible.sync="open" width="820px" append-to-body>
+      <el-table :data="sampleList" height="800" v-loading="sampleLoading">
+            <el-table-column prop="id"  width="55" label="序号"  />
+            <el-table-column prop="yxId" label="遥信ID" />
+            <el-table-column prop="substationId" label="变电站ID" />
+            <el-table-column prop="intervalId" label="间隔ID"  />
+            <el-table-column prop="vLevel" label="电压等级" />
+          </el-table>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px" style="margin-top: 20px;">
+        <el-form-item label="任务名称" prop="taskName">
+          <el-input v-model="form.taskName" placeholder="请输入任务名称" />
+        </el-form-item>
+        <el-form-item label="备注信息">
+          <el-input
+            type="textarea"
+            :rows="3"
+            v-model="form.remark"
+            placeholder="请输入备注信息"
+          />
+        </el-form-item>
+         
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 开始/继续标注对话框 -->
-    <el-dialog title="标注" :visible.sync="startOpen" width="500px" append-to-body>
-      <el-form label-width="100px">
+    <el-dialog title="标注" :visible.sync="startOpen" width="820px" append-to-body>
+      <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px;">标注明细</div>
+      <el-table :data="startDetails" height="800" v-loading="startLoading" ref="startTable" @selection-change="onStartSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column prop="id" label="明细ID" width="90" />
+        <el-table-column prop="taskId" label="任务ID" width="90" />
+        <el-table-column prop="substationId" label="变电站ID" width="140" />
+        <el-table-column prop="remoteSignalId" label="遥信ID" min-width="220" />
+        <el-table-column prop="monitorId" label="监控ID" min-width="220" />
+        <el-table-column prop="monitorContent" label="监控信息内容" min-width="160" />
+        <el-table-column prop="labelTime" label="标注时间" width="140" />
+        <el-table-column prop="isLabeled" label="是否标注" width="100" >
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isLabeled == 1" type="success">已标注</el-tag>
+            <el-tag v-else-if="scope.row.isLabeled == 2" type="warning">异常样本</el-tag>
+            <el-tag v-else type="danger">未标注</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="devicePrinciple" label="设备原理" width="120" />
+        <el-table-column prop="infoName" label="信息名称" min-width="220" />
+        <el-table-column prop="isPositiveSample" label="正样本" width="90" />
+        <el-table-column prop="labelUser" label="标注人" width="100" />
+      </el-table>
+      <el-form label-width="100px" style="margin-top: 16px;">
         <el-form-item label="标注选项">
           <el-radio-group v-model="labelChoice">
             <el-radio label="correct">标注正确</el-radio>
@@ -202,12 +244,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="异常说明" v-if="labelChoice === 'exception'">
-          <el-input
-            type="textarea"
-            :rows="3"
-            v-model="exceptionRemark"
-            placeholder="请输入异常说明"
-          />
+          <el-input type="textarea" :rows="3" v-model="exceptionRemark" placeholder="请输入异常说明" />
         </el-form-item>
         <el-form-item v-if="labelChoice !== 'exception'">
           <el-alert title="将标记为：标注正确" type="success" :closable="false" />
@@ -264,14 +301,8 @@
 </template>
 
 <script>
-import {
-  listTask,
-  getTask,
-  delTask,
-  addTask,
-  updateTask,
-} from "@/api/system/task";
-
+import { listTask, getTask, delTask, addTask, updateTask, getRandomSample, listDetail } from "@/api/system/task";
+import { updateDetail } from "@/api/system/detail";
 export default {
   name: "Task",
   data() {
@@ -298,6 +329,9 @@ export default {
       // 开始/继续标注弹窗
       startOpen: false,
       currentTaskId: null,
+      startLoading: false,
+      startDetails: [],
+      startSelectedId: null,
       labelChoice: 'correct', // 'correct' | 'exception'
       exceptionRemark: '',
       // 标注结果映射
@@ -324,6 +358,9 @@ export default {
       },
       // 表单参数
       form: {},
+      // 随机样本
+      sampleList: [],
+      sampleLoading: false,
       // 表单校验
       rules: {
         taskName: [
@@ -391,6 +428,19 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加样本标注任务";
+      this.loadRandomSamples();
+    },
+    // 加载随机样本（50条）
+    loadRandomSamples() {
+      this.sampleLoading = true;
+      getRandomSample({ pageSize: 50 }).then((res) => {
+        const rows = (res && (res.rows || res.data || res)) ? (res.rows || res.data || res) : [];
+        this.sampleList = Array.isArray(rows) ? rows.slice(0, 50) : [];
+        // 回填样本数量
+        this.$set(this.form, 'sampleCount', this.sampleList.length);
+      }).finally(() => {
+        this.sampleLoading = false;
+      });
     },
     /** 修改按钮操作 */
     handleStart(row) {
@@ -398,18 +448,33 @@ export default {
       this.labelChoice = 'correct';
       this.exceptionRemark = '';
       this.startOpen = true;
+      this.fetchTaskDetails();
     },
     handleContinue(row) {
       this.currentTaskId = row.taskId;
       this.labelChoice = 'correct';
       this.exceptionRemark = '';
       this.startOpen = true;
+      this.fetchTaskDetails();
+    },
+    // 查询标注详情列表
+    fetchTaskDetails() {
+      if (!this.currentTaskId) return;
+      this.startLoading = true;
+      listDetail({ taskId: this.currentTaskId, pageNum: 1, pageSize: 50 })
+        .then(res => {
+          const rows = (res && (res.rows || res.data || res)) ? (res.rows || res.data || res) : [];
+          this.startDetails = Array.isArray(rows) ? rows : [];
+        })
+        .finally(() => { this.startLoading = false; });
     },
     handleRecycle(row) {
-      this.$modal.confirm('是否确认回收样本标注任务编号为"' + row.taskId + '"的数据项？').then(function() {
-          
+      this.$modal
+        .confirm('是否确认回收样本标注任务编号为"' + row.taskId + '"的数据项？')
+        .then(() => {
           this.$modal.msgSuccess("回收成功")
-        }).catch(() => {})
+        })
+        .catch(() => {})
     },
     // 打开一键分词弹窗
     handleTokenize() {
@@ -426,7 +491,12 @@ export default {
               this.getList();
             });
           } else {
-            addTask(this.form).then((response) => {
+            const payload = {
+              ...this.form,
+              status: 0,
+              sampleCount: (this.sampleList && this.sampleList.length) ? this.sampleList.length : 50,
+            }
+            addTask(payload).then((response) => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -526,22 +596,37 @@ export default {
         this.statsChartInstance = null;
       }
     },
-    // 确认标注
-    confirmLabel() {
+    // 明细列表单选
+    onStartSelectionChange(selection) {
+      if (!Array.isArray(selection)) return;
+      const first = selection[0];
+      this.startSelectedId = first ? first.id : null;
+      // 强制只保留第一条
+      this.$nextTick(() => {
+        const table = this.$refs.startTable;
+        if (!table) return;
+        selection.slice(1).forEach(row => table.toggleRowSelection(row, false));
+      });
+    },
+    // 确认标注：调用后端更新明细状态
+    async confirmLabel() {
       if (!this.currentTaskId) {
         this.startOpen = false;
         return;
       }
-      const resultType = this.labelChoice === 'exception' ? 'exception' : 'correct';
-      this.$set(this.labelResults, this.currentTaskId, {
-        type: resultType,
-        remark: this.exceptionRemark || ''
-      });
-      this.startOpen = false;
-      if (resultType === 'correct') {
-        this.$message.success('已标记为：标注正确');
-      } else {
-        this.$message.error('已标记为：异常上报');
+      if (!this.startSelectedId) {
+        this.$message.warning('请先选择一条明细');
+        return;
+      }
+      const isLabeled = this.labelChoice === 'exception' ? 2 : 1;
+      try {
+        await updateDetail({ id: this.startSelectedId, isLabeled });
+        this.$modal.msgSuccess('标注完成');
+        this.fetchTaskDetails();
+        this.getList();
+        this.startOpen = false;
+      } catch (e) {
+        this.$message.error('提交失败');
       }
     },
     /** 删除按钮操作 */
@@ -568,6 +653,7 @@ export default {
         `task_${new Date().getTime()}.xlsx`
       );
     },
+    
   },
 };
 </script>

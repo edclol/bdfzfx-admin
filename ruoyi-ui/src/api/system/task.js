@@ -52,3 +52,22 @@ export function exportTask(query) {
     params: query
   })
 }
+
+
+//获取随机样本
+export function getRandomSample(query) {
+  return request({
+    url: '/system/all/list/random/label',
+    method: 'get',
+    params: query
+  })
+}
+
+//查询标注任务详情
+export function listDetail(query) {
+  return request({
+    url: '/system/detail/list',
+    method: 'get',
+    params: query
+  })
+}
