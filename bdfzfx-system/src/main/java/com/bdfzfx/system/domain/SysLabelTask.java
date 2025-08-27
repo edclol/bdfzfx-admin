@@ -35,8 +35,8 @@ public class SysLabelTask extends BaseEntity
     @Excel(name = "处理人姓名")
     private String handler;
 
-    /** 任务状态（0已发布 1进行中 2已完成 3已回收） */
-    @Excel(name = "任务状态", readConverterExp = "0=已发布,1=进行中,2=已完成,3=已回收")
+    /** 任务状态（0待标注 1进行中 2已完成 3已回收 4已发布） */
+    @Excel(name = "任务状态", readConverterExp = "0=待标注,1=进行中,2=已完成,3=已回收,4=已发布")
     private String status;
 
     public void setTaskId(Long taskId) 

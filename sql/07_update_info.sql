@@ -22,7 +22,7 @@ create table sys_label_task
     sample_count    int(11)      default 0 comment '样本总数',
     completed_count int(11)      default 0 comment '已完成标注数量',
     handler         varchar(50)  default null comment '处理人姓名',
-    status          char(1)      default '1' not null comment '任务状态（0已发布 1进行中 2已完成 3已回收）',
+    status          char(1)      default '0' not null comment '任务状态（0待标注 1进行中 2已完成 3已回收 4已发布）',
     create_by       varchar(64)  default '' comment '创建者',
     create_time     datetime comment '创建时间',
     update_by       varchar(64)  default '' comment '更新者',
