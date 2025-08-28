@@ -183,6 +183,17 @@ public class SysLabelTaskController extends BaseController
     @ApiOperation("删除样本标注任务")
     public AjaxResult remove(@PathVariable Long[] taskIds)
     {
+        // 同时删除标注详情数据
+        for (Long taskId : taskIds) {
+            SysLabelDetail sysLabelDetail = new SysLabelDetail();
+            sysLabelDetail.setTaskId(taskId);
+            List<SysLabelDetail> sysLabelDetails = sysLabelDetailService.selectSysLabelDetailList(sysLabelDetail);
+            // 如果没有查询到标注详情则跳过不删除
+            if (sysLabelDetails != null && !sysLabelDetails.isEmpty()) {
+                Long[] ids = sysLabelDetails.stream().map(SysLabelDetail::getId).toArray(Long[]::new);
+                sysLabelDetailService.deleteSysLabelDetailByIds(ids);
+            }
+        }
         return toAjax(sysLabelTaskService.deleteSysLabelTaskByTaskIds(taskIds));
     }
 }

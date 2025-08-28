@@ -22,7 +22,7 @@ create table sys_label_task
     sample_count    int(11)      default 0 comment '样本总数',
     completed_count int(11)      default 0 comment '已完成标注数量',
     handler         varchar(50)  default null comment '处理人姓名',
-    status          char(1)      not null comment '任务状态（0已发布 1进行中 2已完成 3已回收）',
+    status          char(1)      default '0' not null comment '任务状态（0待标注 1进行中 2已完成 3已回收 4已发布）',
     create_by       varchar(64)  default '' comment '创建者',
     create_time     datetime comment '创建时间',
     update_by       varchar(64)  default '' comment '更新者',
@@ -66,7 +66,7 @@ CREATE TABLE sys_label_detail
     is_positive_sample CHAR(1)      DEFAULT '1' COMMENT '是否正样例：1=正样例，0=负样例',
     label_user         VARCHAR(64)  DEFAULT NULL COMMENT '标注人姓名',
     label_time         DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '标注时间',
-    is_labeled         CHAR(1)      DEFAULT '0' COMMENT '是否已标注：1=已标注，0=未标注',
+    is_labeled         CHAR(1)      DEFAULT '0' COMMENT '是否已标注：2=异常样本，1=已标注，0=未标注',
     remark             VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
 
     PRIMARY KEY (id),
