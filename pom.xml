@@ -34,6 +34,7 @@
         <logback.version>1.2.13</logback.version>
         <spring-security.version>5.7.12</spring-security.version>
         <spring-framework.version>5.3.39</spring-framework.version>
+        <jieba.version>1.0.2</jieba.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -215,6 +216,12 @@
                 <groupId>com.bdfzfx</groupId>
                 <artifactId>bdfzfx-common</artifactId>
                 <version>${bdfzfx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.huaban</groupId>
+                <artifactId>jieba-analysis</artifactId>
+                <version>${jieba.version}</version>
             </dependency>
 
         </dependencies>

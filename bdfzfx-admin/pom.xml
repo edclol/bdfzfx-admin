@@ -61,6 +61,11 @@
             <artifactId>bdfzfx-generator</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.huaban</groupId>
+            <artifactId>jieba-analysis</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

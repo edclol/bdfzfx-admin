@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.bdfzfx.common.utils.DateUtils;
 import com.bdfzfx.system.domain.SysLabelDetail;
 import com.bdfzfx.system.domain.SysYxInfoAll;
+import com.bdfzfx.system.domain.WordSegment;
 import com.bdfzfx.system.service.ISysLabelDetailService;
 import com.bdfzfx.system.service.ISysYxInfoAllService;
+import com.huaban.analysis.jieba.JiebaSegmenter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -195,5 +197,17 @@ public class SysLabelTaskController extends BaseController
             }
         }
         return toAjax(sysLabelTaskService.deleteSysLabelTaskByTaskIds(taskIds));
+    }
+
+    /**
+     * 一键分词
+     */
+    @PostMapping("/split")
+    @ApiOperation("一键分词")
+    public AjaxResult split(@RequestBody WordSegment wordSegment) {
+        JiebaSegmenter segmenter = new JiebaSegmenter();
+        List<String> list = segmenter.sentenceProcess(wordSegment.getWords());
+        wordSegment.setWordList( list);
+        return success(wordSegment);
     }
 }
