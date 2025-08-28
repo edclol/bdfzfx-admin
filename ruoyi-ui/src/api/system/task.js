@@ -71,3 +71,12 @@ export function listDetail(query) {
     params: query
   })
 }
+
+//一键分词
+export function oneKeySegment(data) {
+  return request({
+    url: '/system/task/split',
+    method: 'post',
+    data: data
+  })
+}

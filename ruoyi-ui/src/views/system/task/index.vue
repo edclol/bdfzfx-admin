@@ -280,6 +280,14 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-scissors" @click="tokenizeNow">分 词</el-button>
           <el-button @click="tokenizeInput = ''; tokenizeResult = []">清 空</el-button>
+          <el-button
+            type="success"
+            icon="el-icon-document-copy"
+            :disabled="!tokenizeResult || !tokenizeResult.length"
+            v-clipboard:copy="getTokenizeCopyText()"
+            v-clipboard:success="onCopySuccess"
+            v-clipboard:error="onCopyError"
+          >复制结果</el-button>
         </el-form-item>
         <el-form-item label="分词结果" v-if="tokenizeResult && tokenizeResult.length">
           <div>
@@ -308,7 +316,7 @@
 </template>
 
 <script>
-import { listTask, getTask, delTask, addTask, updateTask, getRandomSample, listDetail } from "@/api/system/task";
+import { listTask, getTask, delTask, addTask, updateTask, getRandomSample, listDetail,oneKeySegment} from "@/api/system/task";
 import { updateDetail } from "@/api/system/detail";
 export default {
   name: "Task",
@@ -391,6 +399,17 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 复制相关
+    getTokenizeCopyText() {
+      if (!this.tokenizeResult || !this.tokenizeResult.length) return '';
+      return this.tokenizeResult.join(' ');
+    },
+    onCopySuccess() {
+      this.$message.success('已复制到剪贴板');
+    },
+    onCopyError() {
+      this.$message.error('复制失败，请手动选择复制');
     },
     // 取消按钮
     cancel() {
@@ -516,41 +535,21 @@ export default {
         }
       });
     },
-    // 简易前端分词逻辑（演示用）
-    tokenizeNow() {
+    // 调用后端一键分词接口
+    async tokenizeNow() {
       const text = (this.tokenizeInput || '').trim();
       if (!text) {
         this.tokenizeResult = [];
         return;
       }
-      // 规则：
-      // - 连续的英文字母/数字作为一个词
-      // - 中文字符逐字分开（去除空白和常见标点）
-      // - 其它空白或标点作为分隔
-      const tokens = [];
-      let buffer = '';
-      const flushBuffer = () => {
-        if (buffer) {
-          tokens.push(buffer);
-          buffer = '';
-        }
-      };
-      for (let i = 0; i < text.length; i++) {
-        const ch = text[i];
-        if (/^[A-Za-z0-9_]$/.test(ch)) {
-          buffer += ch;
-          continue;
-        }
-        flushBuffer();
-        // 中文字符范围（基本区）
-        if (/^[\u4e00-\u9fa5]$/.test(ch)) {
-          tokens.push(ch);
-          continue;
-        }
-        // 其它符号/空白作为分隔，忽略
+      try {
+        const res = await oneKeySegment({ words: text });
+        const data = res && (res.data || res);
+        this.tokenizeResult = (data && data.wordList) ? data.wordList : [];
+      } catch (e) {
+        console.log(e);
+        this.$message.error('分词失败');
       }
-      flushBuffer();
-      this.tokenizeResult = tokens;
     },
     // 打开数据统计并渲染饼图
     openStats() {
