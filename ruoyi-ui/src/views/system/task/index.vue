@@ -233,8 +233,15 @@
         </el-table-column>
         <el-table-column prop="devicePrinciple" label="设备原理" width="120" />
         <el-table-column prop="infoName" label="信息名称" min-width="220" />
-        <el-table-column prop="isPositiveSample" label="正样本" width="90" />
+        <el-table-column prop="isPositiveSample" label="正样本" width="90" >
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.isPositiveSample == 1" type="success">正样本</el-tag>
+            <el-tag v-else-if="scope.row.isPositiveSample == 2" type="warning">负样本</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="labelUser" label="标注人" width="100" />
+        <el-table-column prop="labelTime" label="标注时间" width="140" />
+        <el-table-column prop="remark" label="备注" width="140" />
       </el-table>
       <el-form label-width="100px" style="margin-top: 16px;">
         <el-form-item label="标注选项">
@@ -472,7 +479,11 @@ export default {
       this.$modal
         .confirm('是否确认回收样本标注任务编号为"' + row.taskId + '"的数据项？')
         .then(() => {
-          this.$modal.msgSuccess("回收成功")
+          updateTask({taskId: row.taskId, status: 3}).then((response) => {
+            this.$modal.msgSuccess("回收成功");
+            this.getList();
+          });
+          // this.$modal.msgSuccess("回收成功")
         })
         .catch(() => {})
     },

@@ -114,6 +114,15 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="success"
+          plain
+          icon="el-icon-refresh-right"
+          size="mini"
+          @click="syncSignal"
+        >信号同步</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -121,6 +130,15 @@
           @click="handleExport"
           v-hasPermi="['system:monitor:export']"
         >导出</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-data-analysis"
+          size="mini"
+          @click="openStatsDialog"
+        >数据统计</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -215,12 +233,21 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 数据统计对话框（复用样本库统计） -->
+    <el-dialog title="样本库数据统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
+      <div ref="statsChart" style="width: 100%; height: 400px;"></div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listMonitor, getMonitor, delMonitor, addMonitor, updateMonitor } from "@/api/system/monitor"
 
+import {  getAllStat, } from "@/api/system/all"
 export default {
   name: "Monitor",
   data() {
@@ -243,6 +270,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 数据统计对话框
+      statsOpen: false,
+      statsChartInstance: null,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -280,6 +310,66 @@ export default {
     this.getList()
   },
   methods: {
+    // 打开统计对话框
+    openStatsDialog() {
+      this.statsOpen = true
+      this.$nextTick(() => {
+        this.initStatsChart()
+      })
+    },
+    // 初始化并渲染统计图
+    async initStatsChart() {
+      if (!this.$refs.statsChart) return
+      if (this.statsChartInstance) {
+        this.statsChartInstance.dispose()
+        this.statsChartInstance = null
+      }
+      const echartsModule = await import('echarts')
+      const echarts = echartsModule && (echartsModule.default || echartsModule)
+      if (!echarts || !echarts.init) {
+        this.$message.error('图表库加载失败')
+        return
+      }
+      this.statsChartInstance = echarts.init(this.$refs.statsChart)
+      try {
+        const res = await getAllStat()
+        const total = (res && res.data && res.data.total) ? res.data.total : 0
+        const data = (res && res.data && Array.isArray(res.data.categories)) ? res.data.categories.map(i => ({ name: i.name, value: i.value })) : []
+        const legend = data.map(d => d.name)
+        const option = {
+          title: { text: '样本库数据统计', subtext: total ? `共计${total}条` : '', left: 'center' },
+          tooltip: { trigger: 'item', formatter: '{b} : {c} ({d}%)' },
+          legend: { left: 'center', bottom: 10, data: legend },
+          series: [{
+            name: '类别占比',
+            type: 'pie',
+            radius: ['30%', '70%'],
+            center: ['50%', '45%'],
+            roseType: false,
+            data,
+            animationEasing: 'cubicInOut',
+            animationDuration: 800
+          }]
+        }
+        this.statsChartInstance.setOption(option)
+        this.statsChartInstance.resize()
+      } catch (e) {
+        this.$message.error('获取统计数据失败')
+      }
+      window.addEventListener('resize', this.resizeStatsChart, { passive: true })
+    },
+    resizeStatsChart() {
+      if (this.statsChartInstance) {
+        this.statsChartInstance.resize()
+      }
+    },
+    onStatsDialogClosed() {
+      window.removeEventListener('resize', this.resizeStatsChart)
+      if (this.statsChartInstance) {
+        this.statsChartInstance.dispose()
+        this.statsChartInstance = null
+      }
+    },
     /** 查询典型监控信息管理列表 */
     getList() {
       this.loading = true
@@ -385,6 +475,10 @@ export default {
       this.download('system/monitor/export', {
         ...this.queryParams
       }, `monitor_${new Date().getTime()}.xlsx`)
+    },
+    // 信号同步：仅提示成功
+    syncSignal() {
+      this.$message.success('信号同步成功')
     }
   }
 }

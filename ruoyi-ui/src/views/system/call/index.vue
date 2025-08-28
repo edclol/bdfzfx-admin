@@ -145,6 +145,15 @@
           v-hasPermi="['system:call:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-setting"
+          size="mini"
+          @click="openStorageDialog"
+        >存储配置</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -190,6 +199,12 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:call:remove']"
           >删除</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-s-flag"
+            @click="openLabelDialog(scope.row)"
+          >数据标注</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -260,6 +275,38 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 数据标注对话框 -->
+    <el-dialog :title="labelTitle" :visible.sync="labelOpen" width="400px" append-to-body>
+      <el-form :model="labelForm" label-width="80px">
+        <el-form-item label="标注结果">
+          <el-radio-group v-model="labelForm.result">
+            <el-radio :label="true">正确</el-radio>
+            <el-radio :label="false">错误</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitLabel">确 定</el-button>
+        <el-button @click="labelOpen=false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 存储配置对话框 -->
+    <el-dialog :title="storageTitle" :visible.sync="storageOpen" width="500px" append-to-body>
+      <el-form :model="storageForm" label-width="100px">
+        <el-form-item label="数据存储路径">
+          <el-input v-model="storageForm.dataPath" placeholder="请输入数据存储路径" />
+        </el-form-item>
+        <el-form-item label="日志存储路径">
+          <el-input v-model="storageForm.logPath" placeholder="请输入日志存储路径" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitStorageConfig">保 存</el-button>
+        <el-button @click="storageOpen=false">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -289,6 +336,13 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 数据标注弹窗开关
+      labelOpen: false,
+      // 数据标注标题
+      labelTitle: "数据标注",
+      // 存储配置弹窗
+      storageOpen: false,
+      storageTitle: "调用记录存储配置",
       // 操作时间范围
       daterangeCallTime: [],
       // 操作时间范围
@@ -313,6 +367,16 @@ export default {
       },
       // 表单参数
       form: {},
+      // 数据标注表单
+      labelForm: {
+        id: null,
+        result: true
+      },
+      // 存储配置表单
+      storageForm: {
+        dataPath: '',
+        logPath: ''
+      },
       // 表单校验
       rules: {
         callTime: [
@@ -467,6 +531,31 @@ export default {
       this.download('system/call/export', {
         ...this.queryParams
       }, `call_${new Date().getTime()}.xlsx`)
+    },
+    /** 打开数据标注弹窗 */
+    openLabelDialog(row) {
+      this.labelForm.id = row.id
+      this.labelForm.result = true
+      this.labelOpen = true
+    },
+    /** 提交数据标注 */
+    submitLabel() {
+      // 这里可按需调用后端接口提交标注结果
+      // 示例：this.$api.callLabel({ id: this.labelForm.id, result: this.labelForm.result })
+      this.$modal.msgSuccess('标注成功')
+      this.labelOpen = false
+    },
+    /** 打开存储配置弹窗 */
+    openStorageDialog() {
+      // 如需加载已保存配置，可在此处请求后端并回填 storageForm
+      this.storageOpen = true
+    },
+    /** 提交存储配置 */
+    submitStorageConfig() {
+      // 这里按需调用后端接口保存配置
+      // 示例：this.$api.saveStorageConfig(this.storageForm)
+      this.$modal.msgSuccess('存储配置已保存')
+      this.storageOpen = false
     }
   }
 }

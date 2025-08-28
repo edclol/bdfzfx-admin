@@ -73,6 +73,13 @@ export const constantRoutes = [
       //   name: 'Index',
       //   meta: { title: '首页', icon: 'dashboard', affix: true }
       // }
+      {
+        path: 'all',
+        component: () => import('@/views/system/all/index'),
+        name: 'All',
+        hidden: true,
+        meta: { title: '首页', icon: 'dashboard', affix: true,hidden: true }
+      }
     ]
   },
   {
