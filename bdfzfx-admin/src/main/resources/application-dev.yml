@@ -94,8 +94,8 @@ spring:
         allow:
         url-pattern: /druid/*
         # 控制台管理用户名和密码
-        login-username: ruoyi
-        login-password: 123456
+        login-username: admin
+        login-password: fLgASicenMVjysIE
       filter:
         stat:
           enabled: true
@@ -120,7 +120,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: redis123456
+    password: KasTO6AfZJCINWYM
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -155,7 +155,7 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: X7bQ9pZ2rT4sY6dF8gH1jK3m
   # 令牌有效期（默认30分钟）
   expireTime: 30
 
