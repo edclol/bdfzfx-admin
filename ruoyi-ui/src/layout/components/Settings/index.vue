@@ -264,7 +264,7 @@ export default {
           height: 100%;
           padding-top: 15px;
           padding-left: 24px;
-          color: #1890ff;
+          color: #58957f;
           font-weight: 700;
           font-size: 14px;
         }
