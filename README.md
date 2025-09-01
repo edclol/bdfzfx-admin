@@ -27,4 +27,5 @@
 18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
 ## 账号密码
-- admin/admin123
+- admin/W41XsAftTYp90ayhg8P
+- test/W41XsAftTYp90ayhg8P

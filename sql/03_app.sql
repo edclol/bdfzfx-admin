@@ -70,8 +70,8 @@ create table sys_user (
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user values(1,  103, 'admin','XX', '00', 'xx@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', sysdate(), sysdate(), 'admin', sysdate(), '', null, '管理员');
-insert into sys_user values(2,  105, 'test','XX', '00', 'xx@qq.com',  '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', sysdate(), sysdate(), 'admin', sysdate(), '', null, '测试员');
+insert into sys_user values(1,  103, 'admin','XX', '00', 'xx@163.com', '15888888888', '1', '', '$2a$10$bPN3m9ayxA.OMbqPmv30lO9EpIlsuTQQ2CdOsFbZM5ZDRYbm5eNBa', '0', '0', '127.0.0.1', sysdate(), sysdate(), 'admin', sysdate(), '', null, '管理员');
+insert into sys_user values(2,  105, 'test','XX', '00', 'xx@qq.com',  '15666666666', '1', '', '$2a$10$bPN3m9ayxA.OMbqPmv30lO9EpIlsuTQQ2CdOsFbZM5ZDRYbm5eNBa', '0', '0', '127.0.0.1', sysdate(), sysdate(), 'admin', sysdate(), '', null, '测试员');
 
 
 -- ----------------------------
