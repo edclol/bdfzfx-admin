@@ -43,13 +43,13 @@
         </el-dropdown-menu>
       </el-dropdown>
 
-      <div
+      <!-- <div
         class="right-menu-item hover-effect setting"
         @click="setLayout"
         v-if="setting"
       >
         <svg-icon icon-class="more-up" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -196,6 +196,7 @@ export default {
           bottom: 10px;
           font-size: 14px;
           font-weight: bold;
+          margin-right: 8px;
         }
 
         .el-icon-caret-bottom {
