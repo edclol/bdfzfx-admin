@@ -91,4 +91,13 @@ public class CaptchaController
         ajax.put("img", Base64.encode(os.toByteArray()));
         return ajax;
     }
+
+    /**
+     * 健康接口
+     */
+    @GetMapping("/health")
+    public AjaxResult health()
+    {
+        return AjaxResult.success();
+    }
 }
