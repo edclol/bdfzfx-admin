@@ -38,12 +38,12 @@ create table sys_label_task
 -- ----------------------------
 -- 初始化-样本标注任务表数据
 -- ----------------------------
-insert into sys_label_task values(1, '样本标注任务1', 200, 0, null, '0', 'admin', sysdate(), '', null, '');
-insert into sys_label_task values(2, '样本标注任务2', 100, 50, '张三', '1', 'admin', sysdate(), '', null, '');
-insert into sys_label_task values(3, '样本标注任务3', 200, 200, '李四', '2', 'admin', sysdate(), '', null, '');
-insert into sys_label_task values(4, '样本标注任务4', 100, 0, null, '0', 'admin', sysdate(), '', null, '');
-insert into sys_label_task values(5, '样本标注任务5', 200, 0, null, '0', 'admin', sysdate(), '', null, '');
-insert into sys_label_task values(6, '样本标注任务5', 100, 0, null, '0', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(1, '样本标注任务1', 200, 0, 'yunjian_5', '0', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(2, '样本标注任务2', 100, 50, 'yunjian_1', '1', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(3, '样本标注任务3', 200, 200, 'yunjian_2', '2', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(4, '样本标注任务4', 100, 0, 'yunjian_1', '0', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(5, '样本标注任务5', 200, 0, 'yunjian_4', '0', 'admin', sysdate(), '', null, '');
+insert into sys_label_task values(6, '样本标注任务6', 100, 0, 'yunjian_3', '0', 'admin', sysdate(), '', null, '');
 
 DROP TABLE IF EXISTS sys_label_detail;
 CREATE TABLE sys_label_detail
