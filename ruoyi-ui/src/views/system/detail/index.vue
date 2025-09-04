@@ -33,12 +33,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="入库时间，如：2024-12-12 10:00:00" prop="entryTime">
+      <el-form-item label="入库时间，如：2025-12-12 10:00:00" prop="entryTime">
         <el-date-picker clearable
           v-model="queryParams.entryTime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择入库时间，如：2024-12-12 10:00:00">
+          placeholder="请选择入库时间，如：2025-12-12 10:00:00">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="设备原理，如：通用" prop="devicePrinciple">
@@ -157,7 +157,7 @@
       <el-table-column label="遥信ID，如：断路器表四川草坝四川/草坝/10kV 901开关遥信值" align="center" prop="remoteSignalId" />
       <el-table-column label="监控ID，如：XXXXXXXXXX" align="center" prop="monitorId" />
       <el-table-column label="遥信类型：遥测/遥信/遥控/遥调" align="center" prop="signalType" />
-      <el-table-column label="入库时间，如：2024-12-12 10:00:00" align="center" prop="entryTime" width="180">
+      <el-table-column label="入库时间，如：2025-12-12 10:00:00" align="center" prop="entryTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.entryTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -197,7 +197,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -221,12 +221,12 @@
         <el-form-item label="监控ID，如：XXXXXXXXXX" prop="monitorId">
           <el-input v-model="form.monitorId" placeholder="请输入监控ID，如：XXXXXXXXXX" />
         </el-form-item>
-        <el-form-item label="入库时间，如：2024-12-12 10:00:00" prop="entryTime">
+        <el-form-item label="入库时间，如：2025-12-12 10:00:00" prop="entryTime">
           <el-date-picker clearable
             v-model="form.entryTime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择入库时间，如：2024-12-12 10:00:00">
+            placeholder="请选择入库时间，如：2025-12-12 10:00:00">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="监控信息内容，描述性文本">

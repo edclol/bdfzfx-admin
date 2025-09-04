@@ -28,4 +28,19 @@
 
 ## 账号密码
 - admin/W41XsAftTYp90ayhg8P
-- test/W41XsAftTYp90ayhg8P
+- shuzihua_1/shuzihua123
+- shuzihua_2/shuzihua123
+- shuzihua_3/shuzihua123
+- shuzihua_4/shuzihua123
+- shuzihua_5/shuzihua123
+- yunjian_1/yunjian123
+- yunjian_2/yunjian123
+- yunjian_3/yunjian123
+- yunjian_4/yunjian123
+- yunjian_5/yunjian123
+- yunjian_6/yunjian123
+- yunjian_7/yunjian123
+- yunjian_8/yunjian123
+- yunjian_9/yunjian123
+- yunjian_10/yunjian123
+

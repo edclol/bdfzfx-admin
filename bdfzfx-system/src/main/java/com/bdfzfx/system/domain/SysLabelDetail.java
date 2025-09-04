@@ -40,9 +40,9 @@ public class SysLabelDetail extends BaseEntity
     @Excel(name = "遥信类型：遥测/遥信/遥控/遥调")
     private String signalType;
 
-    /** 入库时间，如：2024-12-12 10:00:00 */
+    /** 入库时间，如：2025-12-12 10:00:00 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "入库时间，如：2024-12-12 10:00:00", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "入库时间，如：2025-12-12 10:00:00", width = 30, dateFormat = "yyyy-MM-dd")
     private Date entryTime;
 
     /** 监控信息内容，描述性文本 */
