@@ -200,7 +200,7 @@
             size="mini"
             type="text"
             @click="openModelSwitch(scope.row)"
-          >模型切换</el-button>
+          >切换</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -302,12 +302,25 @@
     </el-dialog>
 
     <!-- 评估报告对话框 -->
-    <el-dialog title="评估报告" :visible.sync="reportOpen" width="720px" append-to-body>
-      <div style="min-height: 240px; border: 1px dashed #e5e5e5; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">
-        暂无内容
+    <el-dialog title="评估报告" :visible.sync="reportOpen" width="900px" append-to-body>
+      <div class="evaluation-report">
+        <div class="chart-container">
+          <div class="chart-item">
+            <h4>损失曲线 (Loss Curve)</h4>
+            <div class="image-container">
+              <img :src="lossCurveSrc" alt="Loss Curve" class="chart-image" />
+            </div>
+          </div>
+          <div class="chart-item">
+            <h4>训练曲线 (Train Curve)</h4>
+            <div class="image-container">
+              <img :src="trainCurveSrc" alt="Train Curve" class="chart-image" />
+            </div>
+          </div>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" icon="el-icon-download" @click="downloadEvaluationReport">下 载</el-button>
+        <el-button type="primary" icon="el-icon-download" @click="downloadEvaluationReport">下载两张图片</el-button>
         <el-button @click="reportOpen = false">关 闭</el-button>
       </div>
     </el-dialog>
@@ -397,6 +410,9 @@ export default {
       modelSwitchForm: { version: 'v1' },
       // 算法矩阵介绍弹窗
       algoIntroOpen: false,
+      // 评估报告图片路径
+      lossCurveSrc: require('./loss_curve.png'),
+      trainCurveSrc: require('./train_curve.png'),
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -446,16 +462,47 @@ export default {
     openReport() {
       this.reportOpen = true
     },
-    // 下载评估报告（空白占位文件）
+    // 下载评估报告（下载两张图片）
     downloadEvaluationReport() {
-      const blob = new Blob([''], { type: 'text/plain;charset=utf-8' })
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `evaluation-report-${Date.now()}.txt`
-      a.click()
-      window.URL.revokeObjectURL(url)
+      // 下载第一张图片（损失曲线）
+      this.downloadSingleImage(this.lossCurveSrc, 'loss_curve', () => {
+        // 下载第二张图片（训练曲线）
+        this.downloadSingleImage(this.trainCurveSrc, 'train_curve', () => {
+          this.$message.success('两张图片下载完成')
+        })
+      })
     },
+    
+    // 下载单张图片的辅助方法
+    downloadSingleImage(imgSrc, filename, callback) {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      const img = new Image()
+      
+      img.onload = () => {
+        canvas.width = img.width
+        canvas.height = img.height
+        ctx.drawImage(img, 0, 0)
+        
+        // 将canvas转换为blob并下载
+        canvas.toBlob((blob) => {
+          const url = window.URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `${filename}_${Date.now()}.png`
+          a.click()
+          window.URL.revokeObjectURL(url)
+          
+          // 执行回调函数
+          if (callback) {
+            callback()
+          }
+        }, 'image/png')
+      }
+      
+      img.src = imgSrc
+    },
+
     // 确认阈值
     confirmThreshold() {
       const value = (this.thresholdForm.value || '').trim()
@@ -634,4 +681,49 @@ export default {
   opacity: 1;
 }
 .inference-mask { display: none; }
+
+/* 评估报告样式 */
+.evaluation-report {
+  padding: 20px 0;
+}
+
+.chart-container {
+  display: flex;
+  gap: 30px;
+}
+
+.chart-item {
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-item h4 {
+  margin: 0 0 15px 0;
+  color: #303133;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-height: 300px;
+}
+
+.chart-image {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  display: block;
+}
 </style>

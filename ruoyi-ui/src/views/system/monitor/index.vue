@@ -84,6 +84,14 @@
         <el-button
           type="primary"
           plain
+          icon="el-icon-refresh-right"
+          size="mini"
+        >上传</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -138,7 +146,7 @@
           icon="el-icon-data-analysis"
           size="mini"
           @click="openStatsDialog"
-        >数据统计</el-button>
+        >实际信号分类统计</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>

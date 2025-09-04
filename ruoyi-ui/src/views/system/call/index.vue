@@ -154,6 +154,15 @@
           @click="openStorageDialog"
         >存储配置</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-magic-stick"
+          size="mini"
+          @click="handleEnhanceFunction"
+        >增强函数配置</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -304,7 +313,29 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitStorageConfig">保 存</el-button>
+        <el-button @click="resetStorageConfig">重置默认</el-button>
         <el-button @click="storageOpen=false">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 增强函数配置对话框 -->
+    <el-dialog title="增强函数配置" :visible.sync="enhanceFunctionOpen" width="800px" append-to-body>
+      <div class="enhance-function-container">
+      
+        <div class="function-editor">
+          <el-input
+            v-model="enhanceFunctionCode"
+            type="textarea"
+            :rows="15"
+            placeholder="请输入JavaScript函数代码"
+            class="code-editor"
+          />
+        </div>
+       
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="saveEnhanceFunction">保存配置</el-button>
+        <el-button @click="enhanceFunctionOpen = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -312,6 +343,8 @@
 
 <script>
 import { listCall, getCall, delCall, addCall, updateCall } from "@/api/system/call"
+import { getEnhanceFunctionCode, getDefaultFunctionCode, saveEnhanceFunctionCode } from "@/utils/enhanceFunction"
+import { getStorageConfig, saveStorageConfig, getDefaultStorageConfig, resetStorageConfig } from "@/utils/storageConfig"
 
 export default {
   name: "Call",
@@ -373,10 +406,12 @@ export default {
         result: true
       },
       // 存储配置表单
-      storageForm: {
-        dataPath: '',
-        logPath: ''
-      },
+      storageForm: getDefaultStorageConfig(),
+      // 增强函数配置相关
+      enhanceFunctionOpen: false,
+      enhanceFunctionCode: '',
+      testInput: '',
+      testResult: '',
       // 表单校验
       rules: {
         callTime: [
@@ -547,16 +582,128 @@ export default {
     },
     /** 打开存储配置弹窗 */
     openStorageDialog() {
-      // 如需加载已保存配置，可在此处请求后端并回填 storageForm
+      // 从localStorage加载已保存的配置
+      this.storageForm = getStorageConfig()
       this.storageOpen = true
     },
     /** 提交存储配置 */
     submitStorageConfig() {
-      // 这里按需调用后端接口保存配置
-      // 示例：this.$api.saveStorageConfig(this.storageForm)
-      this.$modal.msgSuccess('存储配置已保存')
-      this.storageOpen = false
+      if (saveStorageConfig(this.storageForm)) {
+        this.$modal.msgSuccess('存储配置已保存到本地')
+        this.storageOpen = false
+      } else {
+        this.$message.error('保存配置失败，请检查输入')
+      }
+    },
+    /** 重置存储配置为默认值 */
+    resetStorageConfig() {
+      this.storageForm = getDefaultStorageConfig()
+      this.$message.success('已重置为默认配置')
+    },
+    /** 打开增强函数配置弹窗 */
+    handleEnhanceFunction() {
+      this.loadEnhanceFunctionFromStorage()
+      this.enhanceFunctionOpen = true
+    },
+    /** 从localStorage加载增强函数配置 */
+    loadEnhanceFunctionFromStorage() {
+      this.enhanceFunctionCode = getEnhanceFunctionCode()
+    },
+    /** 测试增强函数 */
+    testFunction() {
+      if (!this.testInput.trim()) {
+        this.$message.warning('请输入测试字符串')
+        return
+      }
+      
+      try {
+        // 创建函数并执行
+        const functionCode = this.enhanceFunctionCode
+        const testFunction = new Function('input', functionCode + '\nreturn preProcess(input);')
+        this.testResult = testFunction(this.testInput)
+        this.$message.success('测试成功')
+      } catch (error) {
+        this.$message.error('函数执行错误: ' + error.message)
+        this.testResult = '错误: ' + error.message
+      }
+    },
+    /** 保存增强函数配置 */
+    saveEnhanceFunction() {
+      if (!this.enhanceFunctionCode.trim()) {
+        this.$message.warning('请输入函数代码')
+        return
+      }
+      
+      if (saveEnhanceFunctionCode(this.enhanceFunctionCode)) {
+        this.$modal.msgSuccess('配置保存成功')
+        this.enhanceFunctionOpen = false
+      } else {
+        this.$message.error('函数语法错误，请检查代码')
+      }
+    },
+    /** 重置增强函数为默认配置 */
+    resetEnhanceFunction() {
+      this.enhanceFunctionCode = getDefaultFunctionCode()
+      this.testInput = ''
+      this.testResult = ''
+      this.$message.success('已重置为默认配置')
     }
   }
 }
 </script>
+
+<style scoped>
+.enhance-function-container {
+  padding: 20px;
+}
+
+.function-description {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f5f7fa;
+  border-radius: 4px;
+  border-left: 4px solid #409eff;
+}
+
+.function-description h4 {
+  margin: 0 0 10px 0;
+  color: #303133;
+}
+
+.function-description p {
+  margin: 0;
+  color: #606266;
+}
+
+.function-editor {
+  margin-bottom: 20px;
+}
+
+.function-editor h4 {
+  margin: 0 0 10px 0;
+  color: #303133;
+}
+
+.code-editor {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.function-test {
+  margin-bottom: 20px;
+}
+
+.function-test h4 {
+  margin: 0 0 10px 0;
+  color: #303133;
+}
+
+.test-result {
+  margin-top: 15px;
+}
+
+.test-result h5 {
+  margin: 0 0 10px 0;
+  color: #303133;
+}
+</style>
