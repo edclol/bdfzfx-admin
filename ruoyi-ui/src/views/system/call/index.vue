@@ -38,14 +38,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="厂站ID" prop="stationId">
-        <el-input
-          v-model="queryParams.stationId"
-          placeholder="请输入厂站ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="厂站ID" prop="stationId">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.stationId"-->
+<!--          placeholder="请输入厂站ID"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="厂站名称" prop="stationName">
         <el-input
           v-model="queryParams.stationName"
@@ -54,14 +54,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="设备名称" prop="deviceName">
-        <el-input
-          v-model="queryParams.deviceName"
-          placeholder="请输入设备名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="设备名称" prop="deviceName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.deviceName"-->
+<!--          placeholder="请输入设备名称"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="设备类型" prop="deviceType">
         <el-select v-model="queryParams.deviceType" placeholder="请选择设备类型" clearable>
           <el-option
@@ -181,9 +181,9 @@
         </template>
       </el-table-column>
       <el-table-column label="响应时长" align="center" prop="responseTime" />
-      <el-table-column label="厂站ID" align="center" prop="stationId" />
+<!--      <el-table-column label="厂站ID" align="center" prop="stationId" />-->
       <el-table-column label="厂站名称" align="center" prop="stationName" />
-      <el-table-column label="设备名称" align="center" prop="deviceName" />
+<!--      <el-table-column label="设备名称" align="center" prop="deviceName" />-->
       <el-table-column label="设备类型" align="center" prop="deviceType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_device_type" :value="scope.row.deviceType"/>
@@ -321,7 +321,7 @@
     <!-- 增强函数配置对话框 -->
     <el-dialog title="增强函数配置" :visible.sync="enhanceFunctionOpen" width="800px" append-to-body>
       <div class="enhance-function-container">
-      
+
         <div class="function-editor">
           <el-input
             v-model="enhanceFunctionCode"
@@ -331,7 +331,7 @@
             class="code-editor"
           />
         </div>
-       
+
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="saveEnhanceFunction">保存配置</el-button>
@@ -615,7 +615,7 @@ export default {
         this.$message.warning('请输入测试字符串')
         return
       }
-      
+
       try {
         // 创建函数并执行
         const functionCode = this.enhanceFunctionCode
@@ -633,7 +633,7 @@ export default {
         this.$message.warning('请输入函数代码')
         return
       }
-      
+
       if (saveEnhanceFunctionCode(this.enhanceFunctionCode)) {
         this.$modal.msgSuccess('配置保存成功')
         this.enhanceFunctionOpen = false

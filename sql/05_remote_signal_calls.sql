@@ -25,34 +25,99 @@ create table if not exists sys_remote_signal_call
     update_time    datetime comment '更新时间'
 ) engine = innodb comment ='遥信调用记录表';
 
-INSERT INTO sys_remote_signal_call
-(call_time, interface_name, call_result, response_time, station_id, station_name, device_name, device_type,
- voltage_level, operation, create_by, create_time, update_by, update_time)
-VALUES
--- 场景1：自动装置，同步调用成功
-('2025-12-12 10:00:00', '单条遥信辅助分析同步调用', '0', '300ms', 'STATION_001', '厂站1', '装置A', '1',
- '550/220kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景2：公用设备，异步调用失败
-('2025-12-12 10:00:00', '单条遥信辅助分析异步调用', '1', '100ms', 'STATION_001', '厂站1', '设备B', '2',
- '550kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景3：一次设备，异步结果查询成功
-('2025-12-12 10:00:00', '遥信辅助分析异步调用结果查询', '0', '1s', 'STATION_001', '厂站1', '设备C', '3',
- '220kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景4：二次设备，批量文件调用成功
-('2025-12-12 10:00:00', '批量文件调用遥信辅助分析异步', '0', '100ms', 'STATION_001', '厂站1', '设备D', '4',
- '550/220kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景5：自动装置，批量调用失败
-('2025-12-12 10:00:00', '批量调用遥信辅助分析异步调用文件下载', '1', '220ms', 'STATION_001', '厂站1', '装置E',
- '1', '550kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景6：公用设备，同步调用成功（不同电压等级）
-('2025-12-12 10:00:00', '单条遥信辅助分析同步调用', '0', '100ms', 'STATION_001', '厂站1', '设备F', '2',
- '220kW', '数据处理', 'admin', NOW(), 'admin', NOW()),
--- 场景7：新厂站测试，模拟不同厂站数据
-('2025-12-13 09:30:00', '单条遥信辅助分析同步调用', '0', '200ms', 'STATION_002', '厂站2', '装置G', '1',
- '330/110kW', '数据处理', 'operator', NOW(), 'operator', NOW()),
--- 场景8：失败场景补充，长响应时间
-('2025-12-13 14:15:00', '遥信辅助分析异步调用结果查询', '1', '2s', 'STATION_001', '厂站1', '设备H', '3',
- '110kW', '数据处理', 'admin', NOW(), 'admin', NOW());
+
+-- 生成3000条随机数据
+INSERT INTO sys_remote_signal_call (
+    call_time,
+    interface_name,
+    call_result,
+    response_time,
+    station_id,
+    station_name,
+    device_name,
+    device_type,
+    voltage_level,
+    operation,
+    create_by,
+    create_time,
+    update_by,
+    update_time
+)
+SELECT
+    TIMESTAMPADD(
+            SECOND,
+            FLOOR(RAND() * 5256000),  -- 5256000秒 = 60天
+            DATE_SUB(CURDATE(), INTERVAL 2 MONTH)
+    ) AS call_time,
+
+    ELT(
+            FLOOR(RAND() * 4) + 1,
+            '单条遥信辅助分析同步调用',
+            '单条遥信辅助分析异步调用',
+            '遥信辅助分析异步调用结果查询',
+            '批量文件调用遥信辅助分析异步'
+    ) AS interface_name,
+
+    CASE WHEN RAND() < 0.1 THEN 1 ELSE 0 END AS call_result,
+
+    CASE
+        WHEN RAND() < 0.3 THEN CONCAT(FLOOR(RAND() * 5) + 1, 's')
+        ELSE CONCAT(FLOOR(RAND() * 500) + 500, 'ms')
+        END AS response_time,
+
+    ELT(
+            station_idx,
+            '草坝站', '汉源站', '黄岗站', '名山站', '顺河站',
+            '天全站', '下坪站', '新棉站', '荥经站', '竹马站', '七盘站'
+    ) AS station_id,
+    ELT(
+            station_idx,
+            '草坝站', '汉源站', '黄岗站', '名山站', '顺河站',
+            '天全站', '下坪站', '新棉站', '荥经站', '竹马站', '七盘站'
+    ) AS station_name,
+
+    ELT(
+            device_type_idx,
+            '自动装置', '公用设备', '一次设备', '二次设备', '站用交直流', '辅控装置'
+    ) AS device_name,
+
+    device_type_idx AS device_type,
+
+    ELT(
+            FLOOR(RAND() * 8) + 1,
+            '1000kV', '800kV', '750kV', '500kV', '220kV',
+            '110kV', '35kV', '10kV'
+    ) AS voltage_level,
+
+    '数据处理' AS operation,
+
+    ELT(FLOOR(RAND() * 2) + 1, 'admin', 'operator') AS create_by,
+    NOW() AS create_time,
+    ELT(FLOOR(RAND() * 2) + 1, 'admin', 'operator') AS update_by,
+    NOW() AS update_time
+
+FROM (
+         SELECT 1 AS station_idx UNION SELECT 2 UNION SELECT 3 UNION
+         SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION
+         SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11
+     ) AS stations
+         CROSS JOIN (
+    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION
+    SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+) AS nums1
+         CROSS JOIN (
+    SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION
+    SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+) AS nums2
+         CROSS JOIN (
+    SELECT 1 AS device_type_idx UNION SELECT 2 UNION SELECT 3 UNION
+    SELECT 4 UNION SELECT 5 UNION SELECT 6
+) AS device_types
+LIMIT 3000;
+
+
+
+
 
 drop table if exists sys_yx_info_all;
 CREATE TABLE sys_yx_info_all
