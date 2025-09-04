@@ -435,6 +435,51 @@ VALUES ('故障诊断模型', 'V20.24.22', '2024-08-05 12:44:15', 3351,
         'admin', '首次发布');
 
 
+-- ----------------------------
+-- 意见反馈表
+-- ----------------------------
+DROP TABLE IF EXISTS sys_feedback;
+CREATE TABLE sys_feedback
+(
+    id             BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    username       VARCHAR(50)  DEFAULT '匿名' COMMENT '用户名',
+    feedback_type  VARCHAR(20)  DEFAULT NULL COMMENT '反馈类型（如：功能问题、界面优化、性能问题等）',
+    content        TEXT         NOT NULL COMMENT '反馈内容（详细描述问题或建议）',
+    contact_info   VARCHAR(100) DEFAULT NULL COMMENT '联系方式（如邮箱、电话，便于后续沟通）',
+    status         CHAR(1)      DEFAULT '0' NOT NULL COMMENT '处理状态（0: 待处理, 1: 处理中, 2: 已解决, 3: 已关闭）',
+    priority       CHAR(1)      DEFAULT '2' NOT NULL COMMENT '优先级（1: 高, 2: 中, 3: 低）',
+    create_by      VARCHAR(64)  DEFAULT '' COMMENT '创建者',
+    create_time    DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by      VARCHAR(64)  DEFAULT '' COMMENT '更新者',
+    update_time    DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark         VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
+    PRIMARY KEY (id)
+) ENGINE = InnoDB COMMENT = '意见反馈表';
 
+INSERT INTO sys_feedback ( username, feedback_type, content, contact_info, status, priority, create_by)
+VALUES
+    ('张三', '功能问题', '系统在导出报表时经常卡顿，建议优化性能。', 'zhangsan@example.com', '0', '1', 'admin'),
+    ('李四', '界面优化', '首页布局不够清晰，希望增加导航栏。', 'lisi@example.com', '0', '2', 'admin');
 
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈', '0', '1', 'feedback', 'system/feedback/index', 1, 0, 'C', '0', '0', 'system:feedback:list', 'build', 'admin', sysdate(), '', null, '意见反馈菜单');
 
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:feedback:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:feedback:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:feedback:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:feedback:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('意见反馈导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:feedback:export',       '#', 'admin', sysdate(), '', null, '');
