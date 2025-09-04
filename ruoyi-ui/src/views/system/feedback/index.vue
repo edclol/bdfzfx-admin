@@ -106,7 +106,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -128,7 +128,7 @@
           <el-input v-model="form.contactInfo" placeholder="请输入联系方式" />
         </el-form-item>
         <el-form-item label="优先级" prop="priority">
-          <el-input v-model="form.priority" placeholder="请输入优先级" />
+          <el-input v-model="form.priority" placeholder="请输入优先级（1:高,2:中,3:低）" />
         </el-form-item>
         <el-form-item label="备注信息" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
