@@ -521,7 +521,7 @@ insert into sys_dict_type values(9,  '操作类型', 'sys_oper_type',       '0',
 insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0', 'admin', sysdate(), '', null, '登录状态列表');
 INSERT INTO sys_dict_type VALUES (11, '调用结果', 'sys_remote_signal_call_result', '0', 'admin', sysdate(), '', null, '调用结果');
 INSERT INTO sys_dict_type VALUES (12, '设备类型', 'sys_device_type', '0', 'admin', sysdate(), '', null, '设备类型');
-INSERT INTO sys_dict_type VALUES (13, '电压等级', 'sys_voltage_level', '0', 'admin', sysdate(), '', null, '电压等级');
+INSERT INTO sys_dict_type VALUES (13, '系统电压等级', 'sys_voltage_level', '0', 'admin', sysdate(), '', null, '电压等级');
 INSERT INTO sys_dict_type VALUES (14, '标注任务状态', 'sys_label_task', '0', 'admin', sysdate(), '', null, '标注任务状态');
 INSERT INTO sys_dict_type VALUES (15, '告警状态', 'sys_alarm_status', '0', 'admin', sysdate(), '', null, '标注任务状态');
 INSERT INTO sys_dict_type VALUES (16, '告警等级', 'sys_alarm_level', '0', 'admin', sysdate(), '', null, '标注任务状态');
@@ -597,6 +597,64 @@ INSERT INTO sys_dict_data VALUES (43, 3, '已完成', '2', 'sys_label_task', nul
 INSERT INTO sys_dict_data VALUES (44, 3, '已回收', '3', 'sys_label_task', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (45, 3, '否', '0', 'send_to_monitor', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 INSERT INTO sys_dict_data VALUES (46, 3, '是', '1', 'send_to_monitor', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+
+-- 设备类型字典类型
+INSERT INTO sys_dict_type VALUES (18, '设备类型', 'sys_device_type_a', '0', 'admin', sysdate(), '', null, '设备类型');
+-- 设备类型字典数据
+INSERT INTO sys_dict_data VALUES (47, 18, '变压器', 'DT01', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (48, 18, '断路器', 'DT02', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (49, 18, '隔离开关', 'DT03', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (50, 18, '母线', 'DT04', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (51, 18, '输电线路', 'DT05', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (52, 18, '电容器/电抗器', 'DT06', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (53, 18, '保护装置', 'DT07', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (54, 18, '测控装置', 'DT08', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (55, 18, '合并单元', 'DT09', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (56, 18, '电能表', 'DT10', 'sys_device_type_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+
+-- 电压等级字典类型
+INSERT INTO sys_dict_type VALUES (19, '电压等级', 'sys_voltage_level_a', '0', 'admin', sysdate(), '', null, '电压等级');
+-- 电压等级字典数据
+INSERT INTO sys_dict_data VALUES (57, 19, '1000kV', 'VL01', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (58, 19, '±800kV', 'VL02', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (59, 19, '750kV', 'VL03', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (60, 19, '500kV', 'VL04', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (61, 19, '220kV', 'VL05', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (62, 19, '110kV', 'VL06', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (63, 19, '35kV', 'VL07', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (64, 19, '10kV', 'VL08', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (65, 19, '0.4kV', 'VL09', 'sys_voltage_level_a', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+
+-- 事故/事件类型字典类型
+INSERT INTO sys_dict_type VALUES (20, '事故/事件类型', 'sys_event_type', '0', 'admin', sysdate(), '', null, '事故/事件类型');
+-- 事故/事件类型字典数据
+INSERT INTO sys_dict_data VALUES (66, 20, '短路故障', 'ET01', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (67, 20, '保护动作', 'ET02', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (68, 20, '开关变位', 'ET03', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (69, 20, '越限告警', 'ET04', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (70, 20, '通信中断', 'ET05', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (71, 20, '设备异常', 'ET06', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (72, 20, '频率异常', 'ET07', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (73, 20, '拓扑变化', 'ET08', 'sys_event_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+
+-- 设备状态字典类型
+INSERT INTO sys_dict_type VALUES (21, '设备状态', 'sys_device_status', '0', 'admin', sysdate(), '', null, '设备状态');
+-- 设备状态字典数据
+INSERT INTO sys_dict_data VALUES (74, 21, '运行', 'DS01', 'sys_device_status', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (75, 21, '停运', 'DS02', 'sys_device_status', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (76, 21, '检修', 'DS03', 'sys_device_status', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (77, 21, '故障', 'DS04', 'sys_device_status', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (78, 21, '试验', 'DS05', 'sys_device_status', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+
+-- 遥测数据类型字典类型
+INSERT INTO sys_dict_type VALUES (22, '遥测数据类型', 'sys_telemetry_type', '0', 'admin', sysdate(), '', null, '遥测数据类型');
+-- 遥测数据类型字典数据
+INSERT INTO sys_dict_data VALUES (79, 22, '电流', 'TM01', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (80, 22, '电压', 'TM02', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (81, 22, '有功功率', 'TM03', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (82, 22, '无功功率', 'TM04', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (83, 22, '频率', 'TM05', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
+INSERT INTO sys_dict_data VALUES (84, 22, '温度', 'TM06', 'sys_telemetry_type', null, 'default', 'N', '0', 'admin', sysdate(), '', null, null);
 
 -- ----------------------------
 -- 13、参数配置表
