@@ -253,15 +253,15 @@
         <el-form-item label="响应时长" prop="responseTime">
           <el-input v-model="form.responseTime" placeholder="请输入响应时长" />
         </el-form-item>
-        <el-form-item label="厂站ID" prop="stationId">
-          <el-input v-model="form.stationId" placeholder="请输入厂站ID" />
-        </el-form-item>
+<!--        <el-form-item label="厂站ID" prop="stationId">-->
+<!--          <el-input v-model="form.stationId" placeholder="请输入厂站ID" />-->
+<!--        </el-form-item>-->
         <el-form-item label="厂站名称" prop="stationName">
           <el-input v-model="form.stationName" placeholder="请输入厂站名称" />
         </el-form-item>
-        <el-form-item label="设备名称" prop="deviceName">
-          <el-input v-model="form.deviceName" placeholder="请输入设备名称" />
-        </el-form-item>
+<!--        <el-form-item label="设备名称" prop="deviceName">-->
+<!--          <el-input v-model="form.deviceName" placeholder="请输入设备名称" />-->
+<!--        </el-form-item>-->
         <el-form-item label="设备类型" prop="deviceType">
           <el-select v-model="form.deviceType" placeholder="请选择设备类型">
             <el-option
