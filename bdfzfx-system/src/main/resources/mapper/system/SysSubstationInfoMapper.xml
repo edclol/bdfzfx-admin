@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysSubstationInfoMapper">
+    
+    <resultMap type="SysSubstationInfo" id="SysSubstationInfoResult">
+        <result property="id"    column="id"    />
+        <result property="substationName"    column="substation_name"    />
+        <result property="location"    column="location"    />
+        <result property="voltageLevel"    column="voltage_level"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysSubstationInfoVo">
+        select id, substation_name, location, voltage_level, create_by, create_time, update_by, update_time, remark from sys_substation_info
+    </sql>
+
+    <select id="selectSysSubstationInfoList" parameterType="SysSubstationInfo" resultMap="SysSubstationInfoResult">
+        <include refid="selectSysSubstationInfoVo"/>
+        <where>  
+            <if test="substationName != null  and substationName != ''"> and substation_name like concat('%', #{substationName}, '%')</if>
+            <if test="location != null  and location != ''"> and location like concat('%', #{location}, '%')</if>
+            <if test="voltageLevel != null  and voltageLevel != ''"> and voltage_level = #{voltageLevel}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSubstationInfoById" parameterType="Long" resultMap="SysSubstationInfoResult">
+        <include refid="selectSysSubstationInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysSubstationInfo" parameterType="SysSubstationInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_substation_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="substationName != null and substationName != ''">substation_name,</if>
+            <if test="location != null">location,</if>
+            <if test="voltageLevel != null">voltage_level,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="substationName != null and substationName != ''">#{substationName},</if>
+            <if test="location != null">#{location},</if>
+            <if test="voltageLevel != null">#{voltageLevel},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSubstationInfo" parameterType="SysSubstationInfo">
+        update sys_substation_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="substationName != null and substationName != ''">substation_name = #{substationName},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="voltageLevel != null">voltage_level = #{voltageLevel},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSubstationInfoById" parameterType="Long">
+        delete from sys_substation_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSubstationInfoByIds" parameterType="String">
+        delete from sys_substation_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
