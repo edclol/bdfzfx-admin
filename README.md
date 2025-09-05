@@ -44,3 +44,6 @@
 - yunjian_9/yunjian123
 - yunjian_10/yunjian123
 
+## 旧版UI账号密码
+- 管理员账号/密码: admin/1Q2w3e4r5t
+- 普通用户账号/密码: yunjian_1/1Q2w3e4r5t
