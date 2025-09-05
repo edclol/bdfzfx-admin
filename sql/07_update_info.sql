@@ -492,22 +492,4 @@ INSERT INTO sys_substation_info VALUES (10, '竹马站', 'xxxxxx', '220kV', 'adm
 INSERT INTO sys_substation_info VALUES (11, '七盘站', 'xxxxxx', '110kV', 'admin', '2024-11-30 10:50:00', 'admin', '2024-11-30 10:50:00', '');
 
 
--- ----------------------------
--- 映射结果表
--- ----------------------------
-DROP TABLE IF EXISTS sys_mapping_result;
-CREATE TABLE sys_mapping_result
-(
-    id              BIGINT(20)    NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    remote_signal_id VARCHAR(100)  NOT NULL COMMENT '遥信ID',
-    db_statement    TEXT          DEFAULT NULL COMMENT '条件语句',
-    score           DECIMAL(5,3)  DEFAULT NULL COMMENT '相似度',
-    elapsed_time    VARCHAR(64)     DEFAULT NULL COMMENT '匹配耗时',
-    create_by       VARCHAR(64)   DEFAULT '' COMMENT '创建者',
-    create_time     DATETIME      DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_by       VARCHAR(64)   DEFAULT '' COMMENT '更新者',
-    update_time     DATETIME      DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    remark          VARCHAR(500)  DEFAULT NULL COMMENT '备注信息',
-    PRIMARY KEY (id)
-) ENGINE = InnoDB COMMENT = '映射结果表';
 
