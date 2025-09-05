@@ -866,17 +866,5 @@ create table gen_table_column (
   primary key (column_id)
 ) engine=innodb auto_increment=1 comment = '代码生成业务表字段';
 
-drop table if exists sys_signal_info;
-create table if not exists sys_signal_info
-(
-    id          int auto_increment primary key comment '主键',
-    excel_id    int comment '序号',
-    station_id  varchar(100) not null comment '厂站ID',
-    signal_name varchar(255) not null comment '信号名称',
-    signal_type varchar(50)  not null comment '类型',
-    create_by   varchar(64) default '' comment '创建者',
-    create_time datetime comment '创建时间',
-    update_by   varchar(64) default '' comment '更新者',
-    update_time datetime comment '更新时间'
-) engine = innodb comment ='信号信息表';
+
 

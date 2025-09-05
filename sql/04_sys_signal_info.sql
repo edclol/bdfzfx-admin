@@ -3,6 +3,21 @@ SET NAMES utf8mb4;
 SET character_set_database = utf8mb4;
 SET collation_database = utf8mb4_0900_ai_ci;
 
+drop table if exists sys_signal_info;
+create table if not exists sys_signal_info
+(
+    id          int auto_increment primary key comment '主键',
+    excel_id    int comment '序号',
+    station_id  varchar(100) not null comment '厂站ID',
+    signal_name varchar(255) not null comment '信号名称',
+    signal_type varchar(50)  not null comment '类型',
+    create_by   varchar(64) default '' comment '创建者',
+    create_time datetime comment '创建时间',
+    update_by   varchar(64) default '' comment '更新者',
+    update_time datetime comment '更新时间'
+) engine = innodb comment ='信号信息表';
+
+
 BEGIN;
 INSERT INTO sys_signal_info (excel_id, station_id, signal_name, signal_type, create_by, create_time) VALUES ('1', '四川.草坝', '保护信号表 四川.草坝 全站事故总信号 值', '遥信', 'admin', SYSDATE());
 INSERT INTO sys_signal_info (excel_id, station_id, signal_name, signal_type, create_by, create_time) VALUES ('2', '四川.草坝', '保护信号表 四川.草坝 #1主变高压侧201开关间隔事故总 值', '遥信', 'admin', SYSDATE());
