@@ -461,4 +461,32 @@ VALUES
     ('张三', '功能问题', '系统在导出报表时经常卡顿，建议优化性能。', 'zhangsan@example.com', '0', '1', 'admin'),
     ('李四', '界面优化', '首页布局不够清晰，希望增加导航栏。', 'lisi@example.com', '0', '2', 'admin');
 
+-- 变电站信息表
+DROP TABLE IF EXISTS sys_substation_info;
+CREATE TABLE sys_substation_info
+(
+    id             BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    substation_name VARCHAR(100) NOT NULL COMMENT '变电站名称',
+    location        VARCHAR(200) DEFAULT NULL COMMENT '地理位置信息',
+    voltage_level   VARCHAR(50)  DEFAULT NULL COMMENT '电压等级，如：220kV',
+    create_by       VARCHAR(64)  DEFAULT '' COMMENT '创建者',
+    create_time     DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by       VARCHAR(64)  DEFAULT '' COMMENT '更新者',
+    update_time     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    remark          VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
 
+    PRIMARY KEY (id)
+) ENGINE = InnoDB COMMENT = '变电站信息表';
+
+-- 插入示例数据
+INSERT INTO sys_substation_info VALUES (1, '草坝站', 'xxxxxx', '220kV', 'admin', '2024-11-01 09:30:00', 'admin', '2024-11-01 09:30:00', '');
+INSERT INTO sys_substation_info VALUES (2, '汉源站', 'xxxxxx', '220kV', 'admin', '2024-11-05 14:15:00', 'admin', '2024-11-05 14:15:00', '');
+INSERT INTO sys_substation_info VALUES (3, '黄岗站', 'xxxxxx', '220kV', 'admin', '2024-11-08 10:00:00', 'admin', '2024-11-08 10:00:00', '');
+INSERT INTO sys_substation_info VALUES (4, '名山站', 'xxxxxx', '110kV', 'admin', '2024-11-12 16:45:00', 'admin', '2024-11-12 16:45:00', '');
+INSERT INTO sys_substation_info VALUES (5, '顺河站', 'xxxxxx', '220kV', 'admin', '2024-11-15 08:20:00', 'admin', '2024-11-15 08:20:00', '');
+INSERT INTO sys_substation_info VALUES (6, '天全站', 'xxxxxx', '110kV', 'admin', '2024-11-18 13:50:00', 'admin', '2024-11-18 13:50:00', '');
+INSERT INTO sys_substation_info VALUES (7, '下坪站', 'xxxxxx', '220kV', 'admin', '2024-11-20 11:30:00', 'admin', '2024-11-20 11:30:00', '');
+INSERT INTO sys_substation_info VALUES (8, '新棉站', 'xxxxxx', '220kV', 'admin', '2024-11-22 15:10:00', 'admin', '2024-11-22 15:10:00', '');
+INSERT INTO sys_substation_info VALUES (9, '荥经站', 'xxxxxx', '110kV', 'admin', '2024-11-25 09:40:00', 'admin', '2024-11-25 09:40:00', '');
+INSERT INTO sys_substation_info VALUES (10, '竹马站', 'xxxxxx', '220kV', 'admin', '2024-11-28 14:20:00', 'admin', '2024-11-28 14:20:00', '');
+INSERT INTO sys_substation_info VALUES (11, '七盘站', 'xxxxxx', '110kV', 'admin', '2024-11-30 10:50:00', 'admin', '2024-11-30 10:50:00', '');
