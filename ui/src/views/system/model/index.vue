@@ -9,14 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="版本号" prop="versionNumber">
-        <el-input
-          v-model="queryParams.versionNumber"
-          placeholder="请输入版本号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="版本号" prop="versionNumber">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.versionNumber"-->
+<!--          placeholder="请输入版本号"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="上传时间" prop="uploadTime">
         <el-date-picker clearable
           v-model="queryParams.uploadTime"
@@ -155,7 +155,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键ID" align="center" prop="id" />
       <el-table-column label="模型名称" align="center" prop="modelName" />
-      <el-table-column label="版本号" align="center" prop="versionNumber" />
+<!--      <el-table-column label="版本号" align="center" prop="versionNumber" />-->
       <el-table-column label="上传时间" align="center" prop="uploadTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.uploadTime, '{y}-{m}-{d}') }}</span>
@@ -167,7 +167,7 @@
       <el-table-column label="模型大小" align="center" prop="modelSize" />
       <el-table-column label="部署路径" align="center" prop="modelPath" />
       <el-table-column label="F1分数" align="center" prop="f1Score" />
-      <el-table-column label="模型描述或用途说明" align="center" prop="description" />
+<!--      <el-table-column label="模型描述或用途说明" align="center" prop="description" />-->
       <el-table-column label="是否启用" align="center" prop="isUsed" />
       <el-table-column label="备注信息" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
@@ -204,7 +204,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -219,9 +219,9 @@
         <el-form-item label="模型名称" prop="modelName">
           <el-input v-model="form.modelName" placeholder="请输入模型名称" />
         </el-form-item>
-        <el-form-item label="版本号" prop="versionNumber">
-          <el-input v-model="form.versionNumber" placeholder="请输入版本号" />
-        </el-form-item>
+<!--        <el-form-item label="版本号" prop="versionNumber">-->
+<!--          <el-input v-model="form.versionNumber" placeholder="请输入版本号" />-->
+<!--        </el-form-item>-->
         <el-form-item label="上传时间" prop="uploadTime">
           <el-date-picker clearable
             v-model="form.uploadTime"
@@ -345,14 +345,14 @@
     <!-- 推理示例对话框 -->
     <el-dialog title="推理示例" :visible.sync="inferenceOpen" width="820px" append-to-body @closed="onInferenceClosed">
       <div class="inference-stage">
-        <img 
-          v-for="(img, index) in tlgcImages" 
+        <img
+          v-for="(img, index) in tlgcImages"
           :key="index"
-          class="inference-img" 
-          :class="{ 'active': index < revealedCount }" 
+          class="inference-img"
+          :class="{ 'active': index < revealedCount }"
           :style="{ width: (100 / tlgcImages.length) + '%' }"
-          :src="img.src" 
-          :alt="img.alt" 
+          :src="img.src"
+          :alt="img.alt"
         />
       </div>
       <div slot="footer" class="dialog-footer">
@@ -436,9 +436,9 @@ export default {
         modelName: [
           { required: true, message: "模型名称不能为空", trigger: "blur" }
         ],
-        versionNumber: [
-          { required: true, message: "版本号不能为空", trigger: "blur" }
-        ],
+        // versionNumber: [
+        //   { required: true, message: "版本号不能为空", trigger: "blur" }
+        // ],
         uploadTime: [
           { required: true, message: "上传时间不能为空", trigger: "blur" }
         ],
@@ -472,18 +472,18 @@ export default {
         })
       })
     },
-    
+
     // 下载单张图片的辅助方法
     downloadSingleImage(imgSrc, filename, callback) {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
       const img = new Image()
-      
+
       img.onload = () => {
         canvas.width = img.width
         canvas.height = img.height
         ctx.drawImage(img, 0, 0)
-        
+
         // 将canvas转换为blob并下载
         canvas.toBlob((blob) => {
           const url = window.URL.createObjectURL(blob)
@@ -492,14 +492,14 @@ export default {
           a.download = `${filename}_${Date.now()}.png`
           a.click()
           window.URL.revokeObjectURL(url)
-          
+
           // 执行回调函数
           if (callback) {
             callback()
           }
         }, 'image/png')
       }
-      
+
       img.src = imgSrc
     },
 

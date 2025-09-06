@@ -379,21 +379,52 @@ CREATE TABLE sys_model_train_record
     KEY idx_create_time (create_time)
 ) ENGINE = InnoDB  COMMENT = '模型训练记录表';
 
-INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
-                                    init_model_params, execution_process, loss_curve_data,
-                                    create_by, remark)
-VALUES ('2025-08-01', '6M0jYz', '成功', 4,
-        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
-        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
-        'admin', '首次训练');
+INSERT INTO sys_model_train_record (
+    train_date, workflow_version, result, gpu_count,
+    init_model_params, execution_process, loss_curve_data,
+    create_by
+) VALUES
+-- 8月第一周数据
+('2025-08-01', 'v1.0.0', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.85},{"epoch":10,"loss":0.32}]', 'admin'),
+('2025-08-02', 'v1.0.0', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.82},{"epoch":10,"loss":0.30}]', 'admin'),
+('2025-08-03', 'v1.0.1', '失败', 2, 'learning_rate=0.002, batch_size=32', '数据加载→预处理→训练中断', '[]', 'admin'),
+('2025-08-04', 'v1.0.1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.78},{"epoch":10,"loss":0.28}]', 'admin'),
+('2025-08-05', 'v1.0.1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.76},{"epoch":10,"loss":0.27}]', 'admin'),
 
-INSERT INTO sys_model_train_record (train_date, workflow_version, result, gpu_count,
-                                    init_model_params, execution_process, loss_curve_data,
-                                    create_by, remark)
-VALUES ('2025-08-01', '6M0jYz', '失败', 4,
-        'XXXX, YYYY, ZZZZ', 'AAAAA, BBBBB, CCCCC',
-        '[{"name":"系列2","data":[2,4,2,3]},{"name":"系列3","data":[2,2,4,5]}]',
-        'admin', '训练中断');
+-- 8月第二周数据
+('2025-08-06', 'v1.0.2', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.75},{"epoch":10,"loss":0.26}]', 'model_user'),
+('2025-08-07', 'v1.0.2', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.74},{"epoch":10,"loss":0.25}]', 'model_user'),
+('2025-08-08', 'v1.0.2', '失败', 2, 'learning_rate=0.001, batch_size=128', '数据加载→内存溢出', '[]', 'model_user'),
+('2025-08-09', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.72},{"epoch":10,"loss":0.23}]', 'model_user'),
+('2025-08-10', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.71},{"epoch":10,"loss":0.22}]', 'admin'),
+
+-- 8月第三周数据
+('2025-08-11', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.70},{"epoch":10,"loss":0.21}]', 'admin'),
+('2025-08-12', 'v1.1.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.68},{"epoch":10,"loss":0.20}]', 'admin'),
+('2025-08-13', 'v1.1.1', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证失败', '[{"epoch":1,"loss":0.68},{"epoch":5,"loss":0.25}]', 'admin'),
+('2025-08-14', 'v1.1.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.67},{"epoch":10,"loss":0.19}]', 'model_user'),
+('2025-08-15', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.65},{"epoch":10,"loss":0.18}]', 'model_user'),
+
+-- 8月第四周数据
+('2025-08-16', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.64},{"epoch":10,"loss":0.17}]', 'model_user'),
+('2025-08-17', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.63},{"epoch":10,"loss":0.16}]', 'admin'),
+('2025-08-18', 'v2.0.0', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.60},{"epoch":10,"loss":0.15}]', 'admin'),
+('2025-08-19', 'v2.0.0', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.59},{"epoch":10,"loss":0.14}]', 'admin'),
+('2025-08-20', 'v2.0.0', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练中断', '[{"epoch":1,"loss":0.59}]', 'admin'),
+
+-- 8月第五周数据
+('2025-08-21', 'v2.0.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.58},{"epoch":10,"loss":0.13}]', 'model_user'),
+('2025-08-22', 'v2.0.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.57},{"epoch":10,"loss":0.12}]', 'model_user'),
+('2025-08-23', 'v2.0.1', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.56},{"epoch":10,"loss":0.11}]', 'model_user'),
+('2025-08-24', 'v2.0.1', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.55},{"epoch":10,"loss":0.10}]', 'admin'),
+('2025-08-25', 'v3.0.0', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.50},{"epoch":10,"loss":0.08}]', 'admin'),
+
+-- 9月第一周数据
+('2025-08-26', 'v3.0.0', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.49},{"epoch":10,"loss":0.07}]', 'admin'),
+('2025-08-27', 'v3.0.0', '失败', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证失败', '[{"epoch":1,"loss":0.49},{"epoch":8,"loss":0.09}]', 'admin'),
+('2025-08-28', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.48},{"epoch":10,"loss":0.06}]', 'model_user'),
+('2025-08-29', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.47},{"epoch":10,"loss":0.05}]', 'model_user'),
+('2025-08-30', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.46},{"epoch":10,"loss":0.04}]', 'model_user');
 
 
 
@@ -426,14 +457,26 @@ CREATE TABLE sys_model_info
 ) ENGINE = InnoDB COMMENT = '模型信息表';
 
 
-INSERT INTO sys_model_info (model_name, version_number, upload_time, call_count,
-                            precision_rate, recall_rate, model_size, model_path, description, is_used,
-                            create_by, remark)
-VALUES ('故障诊断模型', 'V20.24.22', '2025-08-05 12:44:15', 3351,
-        85.00, 80.00, '120G', '/models/fault_diagnosis_v20.24.22.h5',
-        '用于电力设备故障识别的深度学习模型，基于CNN+LSTM架构。', '1',
-        'admin', '首次发布');
+-- 插入模型数据
+INSERT INTO sys_model_info (
+    model_name, version_number, upload_time, call_count,
+    precision_rate, recall_rate, model_size, model_path,
+    f1_score, description, is_used, create_by
+) VALUES
+-- model_v1
+('model_v1', 'model_v1', '2025-08-10 09:30:00', 4852,
+ 91.20, 89.50, '256MB', '/models/v1',
+ 90.30, ' ', '1', 'admin'),
 
+-- model_v2
+('model_v2', 'model_v2', '2025-08-18 14:15:00', 5127,
+ 92.40, 90.80, '320MB', '/models/v2',
+ 91.60, ' ', '1', 'admin'),
+
+-- model_v3
+('model_v3', 'model_v3', '2025-08-25 16:40:00', 5689,
+ 93.10, 92.30, '410MB', '/models/v3',
+ 92.70, ' ', '1', 'admin');
 
 -- ----------------------------
 -- 意见反馈表
