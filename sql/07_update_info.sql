@@ -279,6 +279,20 @@ INSERT INTO sys_synonym (word, synonym, create_by, create_time) VALUES
 ('弹簧未储能', '储能超时', '系统管理员', '2025-12-12 10:00:00'),
 ('储能超时', '储能超时', '系统管理员', '2025-12-12 10:00:00');
 
+-- 更新创建时间为最近两个月内的随机时间
+UPDATE sys_synonym
+SET create_time = DATE_SUB(
+        NOW(),
+        INTERVAL FLOOR(RAND() * 60*24*60 + RAND() * 24*60 + RAND() * 60) MINUTE
+                  );
+
+-- 更新更新时间为不早于创建时间且在最近两个月内的随机时间
+UPDATE sys_synonym
+SET update_time = FROM_UNIXTIME(
+        UNIX_TIMESTAMP(create_time) +
+        FLOOR(RAND() * (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_time)))
+                  )
+WHERE update_time IS NULL OR update_time < create_time OR update_time > NOW();
 
 
 DROP TABLE IF EXISTS sys_typical_monitor_info;
@@ -522,17 +536,16 @@ CREATE TABLE sys_substation_info
 ) ENGINE = InnoDB COMMENT = '变电站信息表';
 
 -- 插入示例数据
-INSERT INTO sys_substation_info VALUES (1, '草坝站', 'xxxxxx', '220kV', 'admin', '2024-11-01 09:30:00', 'admin', '2024-11-01 09:30:00', '');
-INSERT INTO sys_substation_info VALUES (2, '汉源站', 'xxxxxx', '220kV', 'admin', '2024-11-05 14:15:00', 'admin', '2024-11-05 14:15:00', '');
-INSERT INTO sys_substation_info VALUES (3, '黄岗站', 'xxxxxx', '220kV', 'admin', '2024-11-08 10:00:00', 'admin', '2024-11-08 10:00:00', '');
-INSERT INTO sys_substation_info VALUES (4, '名山站', 'xxxxxx', '110kV', 'admin', '2024-11-12 16:45:00', 'admin', '2024-11-12 16:45:00', '');
-INSERT INTO sys_substation_info VALUES (5, '顺河站', 'xxxxxx', '220kV', 'admin', '2024-11-15 08:20:00', 'admin', '2024-11-15 08:20:00', '');
-INSERT INTO sys_substation_info VALUES (6, '天全站', 'xxxxxx', '110kV', 'admin', '2024-11-18 13:50:00', 'admin', '2024-11-18 13:50:00', '');
-INSERT INTO sys_substation_info VALUES (7, '下坪站', 'xxxxxx', '220kV', 'admin', '2024-11-20 11:30:00', 'admin', '2024-11-20 11:30:00', '');
-INSERT INTO sys_substation_info VALUES (8, '新棉站', 'xxxxxx', '220kV', 'admin', '2024-11-22 15:10:00', 'admin', '2024-11-22 15:10:00', '');
-INSERT INTO sys_substation_info VALUES (9, '荥经站', 'xxxxxx', '110kV', 'admin', '2024-11-25 09:40:00', 'admin', '2024-11-25 09:40:00', '');
-INSERT INTO sys_substation_info VALUES (10, '竹马站', 'xxxxxx', '220kV', 'admin', '2024-11-28 14:20:00', 'admin', '2024-11-28 14:20:00', '');
-INSERT INTO sys_substation_info VALUES (11, '七盘站', 'xxxxxx', '110kV', 'admin', '2024-11-30 10:50:00', 'admin', '2024-11-30 10:50:00', '');
-
+INSERT INTO sys_substation_info VALUES (1, '草坝站', 'xxxxxx', '220kV', 'admin', '2025-08-01 09:30:00', 'admin', '2025-08-01 09:30:00', '');
+INSERT INTO sys_substation_info VALUES (2, '汉源站', 'xxxxxx', '220kV', 'admin', '2025-08-05 14:15:00', 'admin', '2025-08-05 14:15:00', '');
+INSERT INTO sys_substation_info VALUES (3, '黄岗站', 'xxxxxx', '220kV', 'admin', '2025-08-08 10:00:00', 'admin', '2025-08-08 10:00:00', '');
+INSERT INTO sys_substation_info VALUES (4, '名山站', 'xxxxxx', '110kV', 'admin', '2025-08-12 16:45:00', 'admin', '2025-08-12 16:45:00', '');
+INSERT INTO sys_substation_info VALUES (5, '顺河站', 'xxxxxx', '220kV', 'admin', '2025-08-15 08:20:00', 'admin', '2025-08-15 08:20:00', '');
+INSERT INTO sys_substation_info VALUES (6, '天全站', 'xxxxxx', '110kV', 'admin', '2025-08-18 13:50:00', 'admin', '2025-08-18 13:50:00', '');
+INSERT INTO sys_substation_info VALUES (7, '下坪站', 'xxxxxx', '220kV', 'admin', '2025-08-20 11:30:00', 'admin', '2025-08-20 11:30:00', '');
+INSERT INTO sys_substation_info VALUES (8, '新棉站', 'xxxxxx', '220kV', 'admin', '2025-08-22 15:10:00', 'admin', '2025-08-22 15:10:00', '');
+INSERT INTO sys_substation_info VALUES (9, '荥经站', 'xxxxxx', '110kV', 'admin', '2025-08-25 09:40:00', 'admin', '2025-08-25 09:40:00', '');
+INSERT INTO sys_substation_info VALUES (10, '竹马站', 'xxxxxx', '220kV', 'admin', '2025-08-28 14:20:00', 'admin', '2025-08-28 14:20:00', '');
+INSERT INTO sys_substation_info VALUES (11, '七盘站', 'xxxxxx', '110kV', 'admin', '2025-08-30 10:50:00', 'admin', '2025-08-30 10:50:00', '');
 
 
