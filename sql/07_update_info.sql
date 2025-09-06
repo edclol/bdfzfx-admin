@@ -9,7 +9,7 @@ UPDATE sys_yx_info_all
 SET yx_type = CAST(CAST(yx_type AS DECIMAL) AS CHAR)
 WHERE yx_type REGEXP '^[0-9]+\\.0$';
 
-
+# DELETE FROM sys_yx_info_all WHERE yx_type not in ('1', '2', '3', '4', '5', '6');
 
 -- ----------------------------
 -- 1、样本标注任务表
