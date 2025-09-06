@@ -12,7 +12,7 @@
       <el-form-item label="相似度" prop="score">
         <el-input
           v-model="queryParams.score"
-          placeholder="请输入相似度"
+          placeholder="查询相似度低于此值"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -104,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
