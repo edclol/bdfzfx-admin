@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="remoteSignalId != null  and remoteSignalId != ''"> and remote_signal_id like concat('%', #{remoteSignalId}, '%')</if>
             <if test="dbStatement != null  and dbStatement != ''"> and db_statement like concat('%', #{dbStatement}, '%')</if>
-            <if test="score != null "> and score = #{score}</if>
+            <if test="score != null "> and score &lt;= #{score}</if>
             <if test="elapsedTime != null  and elapsedTime != ''"> and elapsed_time = #{elapsedTime}</if>
         </where>
     </select>
