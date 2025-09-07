@@ -8,34 +8,10 @@
       v-show="showSearch"
       label-width="120px"
     >
-      <el-form-item label="任务ID" prop="taskId">
-        <el-input
-          v-model="queryParams.taskId"
-          placeholder="请输入任务ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="任务名称" prop="taskName">
         <el-input
           v-model="queryParams.taskName"
           placeholder="请输入任务名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="样本总数" prop="sampleCount">
-        <el-input
-          v-model="queryParams.sampleCount"
-          placeholder="请输入样本总数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="已完成标注数量" prop="completedCount">
-        <el-input
-          v-model="queryParams.completedCount"
-          placeholder="请输入已完成标注数量"
           clearable
           @keyup.enter.native="handleQuery"
         />

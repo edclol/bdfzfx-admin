@@ -86,6 +86,7 @@
           plain
           icon="el-icon-refresh-right"
           size="mini"
+          @click="handleUpload"
         >上传</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -249,15 +250,39 @@
         <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
       </div>
     </el-dialog>
+
+    <!-- 文件上传对话框 -->
+    <el-dialog title="文件上传" :visible.sync="uploadOpen" width="500px" append-to-body @close="cancelUpload">
+      <el-form ref="uploadForm" :model="uploadForm" label-width="100px">
+        <el-form-item label="上传文件">
+          <file-upload
+            v-model="uploadForm.fileList"
+            :file-type="['pdf', 'doc', 'docx', 'xls', 'xlsx']"
+            :file-size="10"
+            :limit="5"
+            @input="handleFileChange"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitUpload" :loading="uploadLoading" :disabled="!uploadForm.fileList">确 定</el-button>
+        <el-button @click="cancelUpload" :disabled="uploadLoading">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listMonitor, getMonitor, delMonitor, addMonitor, updateMonitor } from "@/api/system/monitor"
+import { getAllStat } from "@/api/system/all"
+import FileUpload from "@/components/FileUpload"
 
-import {  getAllStat, } from "@/api/system/all"
 export default {
   name: "Monitor",
+  components: {
+    FileUpload
+  },
   data() {
     return {
       // 遮罩层
@@ -281,6 +306,12 @@ export default {
       // 数据统计对话框
       statsOpen: false,
       statsChartInstance: null,
+      // 文件上传对话框
+      uploadOpen: false,
+      uploadLoading: false,
+      uploadForm: {
+        fileList: ''
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -487,6 +518,46 @@ export default {
     // 信号同步：仅提示成功
     syncSignal() {
       this.$message.success('信号同步成功')
+    },
+    // 打开上传对话框
+    handleUpload() {
+      this.uploadOpen = true
+      this.resetUploadForm()
+    },
+    // 重置上传表单
+    resetUploadForm() {
+      this.uploadForm = {
+        fileList: ''
+      }
+    },
+    // 文件变化处理
+    handleFileChange(value) {
+      this.uploadForm.fileList = value
+    },
+    // 提交上传
+    submitUpload() {
+      if (!this.uploadForm.fileList) {
+        this.$modal.msgError('请选择要上传的文件')
+        return
+      }
+      
+      this.uploadLoading = true
+      
+      // 模拟上传处理（这里可以根据实际需求调用后端API）
+      setTimeout(() => {
+        this.uploadLoading = false
+        this.$modal.msgSuccess('文件上传成功')
+        this.uploadOpen = false
+        this.resetUploadForm()
+        this.handleQuery()
+        // 上传成功后刷新列表数据
+        this.getList()
+      }, 1000)
+    },
+    // 取消上传
+    cancelUpload() {
+      this.uploadOpen = false
+      this.resetUploadForm()
     }
   }
 }

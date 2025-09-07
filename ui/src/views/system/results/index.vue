@@ -63,22 +63,7 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="20" class="chart-row">
-      <!-- 指标对比图 -->
-      <el-col :span="24">
-        <el-card class="chart-card">
-          <div slot="header" class="card-header">
-            <span class="card-title">
-              <i class="el-icon-pie-chart"></i>
-              指标对比分析
-            </span>
-          </div>
-          <div class="chart-container">
-            <div ref="radarChart" class="chart"></div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+  
   </div>
 </template>
 

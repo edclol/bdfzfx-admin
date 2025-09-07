@@ -89,7 +89,7 @@
           <dict-tag :options="dict.type.sys_device_type" :value="scope.row.yxType"/>
         </template>
       </el-table-column>
-      <el-table-column label="电压等级" align="center" prop="vLevel" />
+      <!-- <el-table-column label="电压等级" align="center" prop="vLevel" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
          

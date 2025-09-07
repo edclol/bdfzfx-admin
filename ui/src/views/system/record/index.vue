@@ -35,7 +35,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -55,7 +55,7 @@
           @click="handleUpdate"
           v-hasPermi="['system:record:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -95,7 +95,14 @@
       <el-table-column label="执行训练过程" align="center" prop="executionProcess" />
       <el-table-column label="损失函数的变化数据" align="center" prop="lossCurveData" />
       <el-table-column label="备注信息" align="center" prop="remark" />
-<!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            @click="openReport(scope.row)"
+          >评估报告</el-button>
+        </template>
 <!--        <template slot-scope="scope">-->
 <!--          <el-button-->
 <!--            size="mini"-->
@@ -112,7 +119,7 @@
 <!--            v-hasPermi="['system:record:remove']"-->
 <!--          >删除</el-button>-->
 <!--        </template>-->
-<!--      </el-table-column>-->
+     </el-table-column>
     </el-table>
 
     <pagination
@@ -161,6 +168,29 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+      <!-- 评估报告对话框 -->
+      <el-dialog title="评估报告" :visible.sync="reportOpen" width="900px" append-to-body>
+      <div class="evaluation-report">
+        <div class="chart-container">
+          <div class="chart-item">
+            <h4>损失曲线 (Loss Curve)</h4>
+            <div class="image-container">
+              <img :src="lossCurveSrc" alt="Loss Curve" class="chart-image" />
+            </div>
+          </div>
+          <div class="chart-item">
+            <h4>训练曲线 (Train Curve)</h4>
+            <div class="image-container">
+              <img :src="trainCurveSrc" alt="Train Curve" class="chart-image" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" icon="el-icon-download" @click="downloadEvaluationReport">下载</el-button>
+        <el-button @click="reportOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -199,6 +229,10 @@ export default {
         workflowVersion: null,
         result: null,
       },
+      reportOpen: false,
+      // 评估报告图片路径
+      lossCurveSrc: require('../model/loss_curve.png'),
+      trainCurveSrc: require('../model/train_curve.png'),
       // 表单参数
       form: {},
       // 表单校验
@@ -261,6 +295,10 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList()
+    },
+    // 打开评估报告
+    openReport() {
+      this.reportOpen = true
     },
     /** 重置按钮操作 */
     resetQuery() {
@@ -329,3 +367,49 @@ export default {
   }
 }
 </script>
+<style scoped>
+/* 评估报告样式 */
+.evaluation-report {
+  padding: 20px 0;
+}
+
+.chart-container {
+  display: flex;
+  gap: 30px;
+}
+
+.chart-item {
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-item h4 {
+  margin: 0 0 15px 0;
+  color: #303133;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-height: 300px;
+}
+
+.chart-image {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  display: block;
+}
+</style>

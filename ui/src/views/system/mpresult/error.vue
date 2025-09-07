@@ -90,10 +90,6 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:mpresult:remove']"
           >删除</el-button>
-          <el-button
-            size="mini"
-            type="text"
-          >映射结果比对</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -164,7 +160,7 @@ export default {
         pageSize: 10,
         remoteSignalId: null,
         dbStatement: null,
-        score: null,
+        score: 0.6,
         elapsedTime: null,
       },
       // 表单参数
@@ -201,7 +197,7 @@ export default {
         id: null,
         remoteSignalId: null,
         dbStatement: null,
-        score: null,
+        score: 0.6,
         elapsedTime: null,
         createBy: null,
         createTime: null,

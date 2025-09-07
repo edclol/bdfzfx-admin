@@ -9,78 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="版本号" prop="versionNumber">
-        <el-input
-          v-model="queryParams.versionNumber"
-          placeholder="请输入版本号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="上传时间" prop="uploadTime">
-        <el-date-picker clearable
-          v-model="queryParams.uploadTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择上传时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="调用次数" prop="callCount">
-        <el-input
-          v-model="queryParams.callCount"
-          placeholder="请输入调用次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="精准率" prop="precisionRate">
-        <el-input
-          v-model="queryParams.precisionRate"
-          placeholder="请输入精准率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="召回率" prop="recallRate">
-        <el-input
-          v-model="queryParams.recallRate"
-          placeholder="请输入召回率"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="模型大小" prop="modelSize">
-        <el-input
-          v-model="queryParams.modelSize"
-          placeholder="请输入模型大小"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="部署路径" prop="modelPath">
-        <el-input
-          v-model="queryParams.modelPath"
-          placeholder="请输入部署路径"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="F1分数" prop="f1Score">
-        <el-input
-          v-model="queryParams.f1Score"
-          placeholder="请输入F1分数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否启用" prop="isUsed">
-        <el-input
-          v-model="queryParams.isUsed"
-          placeholder="请输入是否启用"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -88,38 +16,6 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:model:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:model:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:model:remove']"
-        >删除</el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -153,15 +49,15 @@
 
     <el-table v-loading="loading" :data="modelList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键ID" align="center" prop="id" />
+      <!-- <el-table-column label="主键ID" align="center" prop="id" /> -->
       <el-table-column label="模型名称" align="center" prop="modelName" />
-      <el-table-column label="版本号" align="center" prop="versionNumber" />
-      <el-table-column label="上传时间" align="center" prop="uploadTime" width="180">
+      <!-- <el-table-column label="版本号" align="center" prop="versionNumber" /> -->
+      <el-table-column label="操作时间" align="center" prop="updateTime">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.uploadTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="调用次数" align="center" prop="callCount" />
+      <!-- <el-table-column label="调用次数" align="center" prop="callCount" />
       <el-table-column label="精准率" align="center" prop="precisionRate" />
       <el-table-column label="召回率" align="center" prop="recallRate" />
       <el-table-column label="模型大小" align="center" prop="modelSize" />
@@ -169,10 +65,10 @@
       <el-table-column label="F1分数" align="center" prop="f1Score" />
       <el-table-column label="模型描述或用途说明" align="center" prop="description" />
       <el-table-column label="是否启用" align="center" prop="isUsed" />
-      <el-table-column label="备注信息" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300">
+      <el-table-column label="备注信息" align="center" prop="remark" /> -->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" >
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -185,17 +81,17 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:model:remove']"
-          >删除</el-button>
+          >删除</el-button> -->
           <el-button
             size="mini"
             type="text"
             @click="openThreshold(scope.row)"
           >阈值设置</el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             @click="openReport(scope.row)"
-          >评估报告</el-button>
+          >评估报告</el-button> -->
           <el-button
             size="mini"
             type="text"
@@ -286,9 +182,9 @@
       <el-form label-width="80px">
         <el-form-item label="模型">
           <el-select v-model="thresholdForm.model" placeholder="选择模型版本" style="width: 100%;">
-            <el-option label="model v1" value="v1" />
-            <el-option label="model v2" value="v2" />
-            <el-option label="model v3" value="v3" />
+            <el-option label="v1" value="v1" />
+            <el-option label="v2" value="v2" />
+            <el-option label="v3" value="v3" />
           </el-select>
         </el-form-item>
         <el-form-item label="阈值">
@@ -330,9 +226,9 @@
       <el-form label-width="90px">
         <el-form-item label="选择版本">
           <el-select v-model="modelSwitchForm.version" placeholder="选择模型版本" style="width: 100%;">
-            <el-option label="model v1" value="v1" />
-            <el-option label="model v2" value="v2" />
-            <el-option label="model v3" value="v3" />
+            <el-option label="v1" value="v1" />
+            <el-option label="v2" value="v2" />
+            <el-option label="v3" value="v3" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -390,6 +286,7 @@ export default {
       // 阈值设置弹窗
       thresholdOpen: false,
       thresholdForm: { model: 'v1', value: '' },
+      currentRow: null, // 当前选中的行数据
       // 评估报告弹窗
       reportOpen: false,
       // 推理示例弹窗
@@ -510,11 +407,29 @@ export default {
         this.$message.warning('请输入阈值')
         return
       }
-      this.$message.success(`已设置 ${this.thresholdForm.model} 阈值为：${value}`)
-      this.thresholdOpen = false
+      
+      if (!this.currentRow) {
+        this.$message.error('未找到模型信息')
+        return
+      }
+      
+      // 调用updateModel接口更新阈值，使用当前行的ID
+      const updateData = {
+        ...this.currentRow,
+      }
+      
+      updateModel(updateData).then(response => {
+        this.$message.success(`已设置 ${this.currentRow.modelName} (${this.thresholdForm.model}) 阈值为：${value}`)
+        this.thresholdOpen = false
+        this.getList() // 刷新列表
+      }).catch(error => {
+        this.$message.error('阈值设置失败')
+        console.error('阈值设置失败:', error)
+      })
     },
     // 打开阈值设置
     openThreshold(row) {
+      this.currentRow = row // 保存当前行数据
       this.thresholdForm = {
         model: this.thresholdForm.model || 'v1',
         value: this.thresholdForm.value || '',
@@ -527,12 +442,30 @@ export default {
     },
     // 打开模型切换
     openModelSwitch(row) {
+      this.currentRow = row // 保存当前行数据
       this.modelSwitchOpen = true
     },
     // 确认模型切换
     confirmModelSwitch() {
-      this.$message.success(`已切换到 ${this.modelSwitchForm.version}`)
-      this.modelSwitchOpen = false
+      if (!this.currentRow) {
+        this.$message.error('未找到模型信息')
+        return
+      }
+      
+      // 调用updateModel接口切换模型版本，使用当前行的ID
+      const updateData = {
+        
+        ...this.currentRow,
+      }
+      
+      updateModel(updateData).then(response => {
+        this.$message.success(`已将 ${this.currentRow.modelName} 切换到 ${this.modelSwitchForm.version}`)
+        this.modelSwitchOpen = false
+        this.getList() // 刷新列表
+      }).catch(error => {
+        this.$message.error('模型切换失败')
+        console.error('模型切换失败:', error)
+      })
     },
     // 打开推理示例
     openInference() {
