@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdfzfx.system.mapper.SysModelWarningMapper">
+    
+    <resultMap type="SysModelWarning" id="SysModelWarningResult">
+        <result property="id"    column="id"    />
+        <result property="occurTime"    column="occur_time"    />
+        <result property="warningLevel"    column="warning_level"    />
+        <result property="warningContent"    column="warning_content"    />
+        <result property="suggestion"    column="suggestion"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysModelWarningVo">
+        select id, occur_time, warning_level, warning_content, suggestion, status, remark, create_by, create_time, update_by, update_time from sys_model_warning
+    </sql>
+
+    <select id="selectSysModelWarningList" parameterType="SysModelWarning" resultMap="SysModelWarningResult">
+        <include refid="selectSysModelWarningVo"/>
+        <where>  
+            <if test="params.beginOccurTime != null and params.beginOccurTime != '' and params.endOccurTime != null and params.endOccurTime != ''"> and occur_time between #{params.beginOccurTime} and #{params.endOccurTime}</if>
+            <if test="warningLevel != null  and warningLevel != ''"> and warning_level = #{warningLevel}</if>
+            <if test="warningContent != null  and warningContent != ''"> and warning_content like concat('%', #{warningContent}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysModelWarningById" parameterType="Long" resultMap="SysModelWarningResult">
+        <include refid="selectSysModelWarningVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysModelWarning" parameterType="SysModelWarning" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_model_warning
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="occurTime != null">occur_time,</if>
+            <if test="warningLevel != null and warningLevel != ''">warning_level,</if>
+            <if test="warningContent != null and warningContent != ''">warning_content,</if>
+            <if test="suggestion != null">suggestion,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="occurTime != null">#{occurTime},</if>
+            <if test="warningLevel != null and warningLevel != ''">#{warningLevel},</if>
+            <if test="warningContent != null and warningContent != ''">#{warningContent},</if>
+            <if test="suggestion != null">#{suggestion},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysModelWarning" parameterType="SysModelWarning">
+        update sys_model_warning
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="occurTime != null">occur_time = #{occurTime},</if>
+            <if test="warningLevel != null and warningLevel != ''">warning_level = #{warningLevel},</if>
+            <if test="warningContent != null and warningContent != ''">warning_content = #{warningContent},</if>
+            <if test="suggestion != null">suggestion = #{suggestion},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysModelWarningById" parameterType="Long">
+        delete from sys_model_warning where id = #{id}
+    </delete>
+
+    <delete id="deleteSysModelWarningByIds" parameterType="String">
+        delete from sys_model_warning where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
