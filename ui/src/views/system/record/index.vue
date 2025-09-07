@@ -12,10 +12,10 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="工作流版本号" prop="workflowVersion" label-width="20">
+      <el-form-item label="版本号" prop="workflowVersion" label-width="20">
         <el-input
           v-model="queryParams.workflowVersion"
-          placeholder="请输入工作流版本号"
+          placeholder="请输入版本号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -88,7 +88,7 @@
 <!--          <span>{{ parseTime(scope.row.trainDate, '{y}-{m}-{d}') }}</span>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-      <el-table-column label="工作流版本号" align="center" prop="workflowVersion" />
+      <el-table-column label="版本号" align="center" prop="workflowVersion" />
       <el-table-column label="训练结果" align="center" prop="result" />
       <el-table-column label="GPU数量" align="center" prop="gpuCount" />
       <el-table-column label="初始化模型参数" align="center" prop="initModelParams" />
@@ -141,8 +141,8 @@
             placeholder="请选择训练日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="工作流版本号" prop="workflowVersion">
-          <el-input v-model="form.workflowVersion" placeholder="请输入工作流版本号" />
+        <el-form-item label="版本号" prop="workflowVersion">
+          <el-input v-model="form.workflowVersion" placeholder="请输入版本号" />
         </el-form-item>
         <el-form-item label="训练结果" prop="result">
           <el-input v-model="form.result" placeholder="请输入训练结果" />
@@ -241,7 +241,7 @@ export default {
           { required: true, message: "训练日期不能为空", trigger: "blur" }
         ],
         workflowVersion: [
-          { required: true, message: "工作流版本号不能为空", trigger: "blur" }
+          { required: true, message: "版本号不能为空", trigger: "blur" }
         ],
         result: [
           { required: true, message: "训练结果不能为空", trigger: "blur" }

@@ -100,15 +100,15 @@ public class SysYxInfoAllController extends BaseController
     @Cacheable(value = "sysYxInfoStat", key = "'stat'", unless = "#result == null")
     public AjaxResult getStat() {
         // 获取各类设备的数量
-        Integer yici = sysYxInfoAllService.countByType("一次设备");
-        Integer erci = sysYxInfoAllService.countByType("二次设备");
-        Integer zidong = sysYxInfoAllService.countByType("自动装置");
-        Integer jiaozhliu = sysYxInfoAllService.countByType("站用交直流");
-        Integer gongyong = sysYxInfoAllService.countByType("公用设备");
-        Integer fukong = sysYxInfoAllService.countByType("辅控装置");
+        Integer yici = sysYxInfoAllService.countByType("1");
+        Integer erci = sysYxInfoAllService.countByType("2");
+        Integer zidong = sysYxInfoAllService.countByType("3");
+        Integer jiaozhliu = sysYxInfoAllService.countByType("4");
+        Integer gongyong = sysYxInfoAllService.countByType("5");
+        Integer fukong = sysYxInfoAllService.countByType("6");
 
         // 计算总量
-        Integer total = yici + erci + zidong + jiaozhliu + gongyong + fukong;
+        Integer total = sysYxInfoAllService.selectSysYxInfoAllList(null).size();
 
         // 构建统计结果
         List<StatItem> categories = Arrays.asList(

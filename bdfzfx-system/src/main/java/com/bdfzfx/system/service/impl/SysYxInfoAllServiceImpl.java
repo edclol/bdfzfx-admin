@@ -24,7 +24,7 @@ public class SysYxInfoAllServiceImpl implements ISysYxInfoAllService
     @Override
     public Integer countByType(String type) {
         SysYxInfoAll sysYxInfoAll = new SysYxInfoAll();
-        sysYxInfoAll.setDeviceType(type);
+        sysYxInfoAll.setYxType(type);
         return sysYxInfoAllMapper.selectSysYxInfoAllList(sysYxInfoAll).size();
     }
 

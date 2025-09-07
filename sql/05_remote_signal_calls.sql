@@ -119,29 +119,3 @@ LIMIT 3000;
 
 
 
-drop table if exists sys_yx_info_all;
-CREATE TABLE sys_yx_info_all
-(
-    id                      INT AUTO_INCREMENT PRIMARY KEY,
-    yx_id                   VARCHAR(255) NOT NULL COMMENT '遥信ID',
-    info_name               VARCHAR(255) COMMENT '信息名称',
-    info_name_original      VARCHAR(255) COMMENT '原始信息名称',
-    substation_id           VARCHAR(50) COMMENT '变电站ID',
-    interval_id             VARCHAR(50) COMMENT '间隔ID',
-    yx_type                 VARCHAR(50) COMMENT '遥信类型',
-    device_type             VARCHAR(100) COMMENT '设备类型',
-    part_type               VARCHAR(100) COMMENT '部件类型',
-    device_principle        VARCHAR(255) COMMENT '设备原理',
-    v_level                 VARCHAR(50) COMMENT '电压等级',
-    alarm_type              VARCHAR(100) COMMENT '告警类型',
-    alarm_level             VARCHAR(50) COMMENT '告警级别',
-    need_push               VARCHAR(20) COMMENT '是否需要推送',
-    reference               TEXT COMMENT '参考资料',
-    requirement             TEXT COMMENT '要求',
-    target_device           VARCHAR(255) COMMENT '目标设备',
-    origin_device           VARCHAR(255) COMMENT '源设备',
-    data_primary_device     VARCHAR(255) COMMENT '主数据设备',
-    data_secondary_device   VARCHAR(255) COMMENT '从数据设备',
-    is_include_curly_braces VARCHAR(20) COMMENT '是否包含花括号'
-) ENGINE = InnoDB COMMENT ='遥信信息数据表';
-
