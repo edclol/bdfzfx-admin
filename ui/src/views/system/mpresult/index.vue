@@ -65,7 +65,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键ID" align="center" prop="id" />
       <el-table-column label="遥信ID" align="center" prop="remoteSignalId" />
-      <el-table-column label="条件语句" align="center" prop="dbStatement" />
+      <el-table-column label="标准信号" align="center" prop="dbStatement" />
       <el-table-column label="相似度" align="center" prop="score" >
         <template slot-scope="scope">
           <span v-if="scope.row.score <0.6" style="color: red;">{{ (scope.row.score * 100).toFixed(2) }}%</span>
@@ -93,7 +93,8 @@
           <el-button
             size="mini"
             type="text"
-          >映射结果比对</el-button>
+            @click="handleView(scope.row)"
+          >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,7 +113,7 @@
         <el-form-item label="遥信ID" prop="remoteSignalId">
           <el-input v-model="form.remoteSignalId" placeholder="请输入遥信ID" />
         </el-form-item>
-        <el-form-item label="条件语句" prop="dbStatement">
+        <el-form-item label="标准信号" prop="dbStatement">
           <el-input v-model="form.dbStatement" type="textarea" placeholder="请输入内容" />
         </el-form-item>
         <el-form-item label="相似度" prop="score">
@@ -128,6 +129,30 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 简化版流程动画对话框（仅四步：标准信号 → 遥信ID → 相似度 → 匹配耗时） -->
+    <el-dialog :title="viewTitle" :visible.sync="viewOpen" width="760px" append-to-body @close="stopAnimation">
+      <div v-if="selectedRow" v-loading="viewLoading" element-loading-text="加载中..." style="display:flex; justify-content:center; align-items:center; padding: 16px 8px;">
+        <div :style="stepStyle(0)" class="flow-step" v-loading="isStepLoading(0)" element-loading-text="加载中...">
+          <template v-if="isStepLoaded(0)">标准信号<br/><span>{{ typedValues[0] }}</span></template>
+        </div>
+        <div class="flow-arrow" :style="arrowStyle(0)">→</div>
+        <div :style="stepStyle(1)" class="flow-step" v-loading="isStepLoading(1)" element-loading-text="加载中...">
+          <template v-if="isStepLoaded(1)">遥信ID<br/><span>{{ typedValues[1] }}</span></template>
+        </div>
+        <div class="flow-arrow" :style="arrowStyle(1)">→</div>
+        <div :style="stepStyle(2)" class="flow-step" v-loading="isStepLoading(2)" element-loading-text="加载中...">
+          <template v-if="isStepLoaded(2)">相似度<br/><span>{{ typedValues[2] }}</span></template>
+        </div>
+        <div class="flow-arrow" :style="arrowStyle(2)">→</div>
+        <div :style="stepStyle(3)" class="flow-step" v-loading="isStepLoading(3)" element-loading-text="加载中...">
+          <template v-if="isStepLoaded(3)">匹配耗时<br/><span>{{ typedValues[3] }}</span></template>
+        </div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="viewOpen = false">关 闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -158,6 +183,21 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 查看过程对话框
+      viewOpen: false,
+      viewTitle: "查看",
+      selectedRow: null,
+      // 简化动画：仅四个关键步骤
+      currentStepIndex: -1,
+      animationTimer: null,
+      animationRunning: true,
+      viewLoading: false,
+      visibleSteps: 0,
+      stepLoaded: [false, false, false, false],
+      typedValues: ['', '', '', ''],
+      typingTimers: [],
+      stepIntervalMs: 2000,
+      stepLoadingDelay: 400,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -278,6 +318,109 @@ export default {
       this.download('system/mpresult/export', {
         ...this.queryParams
       }, `mpresult_${new Date().getTime()}.xlsx`)
+    },
+    /** 查看按钮操作 */
+    handleView(row) {
+      this.selectedRow = row
+      this.viewOpen = true
+      this.viewTitle = `查看`
+      this.viewLoading = true
+      this.currentStepIndex = -1
+      this.visibleSteps = 0
+      this.stepLoaded = [false, false, false, false]
+      this.typedValues = ['', '', '', '']
+      this.clearTypingTimers()
+      // 模拟加载延迟，结束后依次展示
+      setTimeout(() => {
+        this.viewLoading = false
+        this.startAnimation()
+      }, 400)
+    },
+    startAnimation() {
+      this.stopAnimation()
+      let idx = -1
+      const total = 4
+      this.animationTimer = setInterval(() => {
+        idx += 1
+        if (idx >= total) {
+          this.stopAnimation()
+          return
+        }
+        this.currentStepIndex = idx
+        this.visibleSteps = Math.max(this.visibleSteps, idx + 1)
+        // 先进入该步的 loading 态，稍后再展示内容
+        this.$set(this.stepLoaded, idx, false)
+        setTimeout(() => {
+          this.$set(this.stepLoaded, idx, true)
+          this.startTyping(idx)
+        }, this.stepLoadingDelay)
+      }, this.stepIntervalMs)
+    },
+    stopAnimation() {
+      if (this.animationTimer) {
+        clearInterval(this.animationTimer)
+        this.animationTimer = null
+      }
+      this.clearTypingTimers()
+    },
+    startTyping(stepIndex) {
+      const texts = [
+        (this.selectedRow && this.selectedRow.dbStatement) || '',
+        (this.selectedRow && this.selectedRow.remoteSignalId) || '',
+        this.formatPercent((this.selectedRow && this.selectedRow.score) || 0),
+        (this.selectedRow && this.selectedRow.elapsedTime) || ''
+      ]
+      const fullText = String(texts[stepIndex])
+      this.$set(this.typedValues, stepIndex, '')
+      let i = 0
+      const timer = setInterval(() => {
+        if (i >= fullText.length) {
+          clearInterval(timer)
+          return
+        }
+        this.$set(this.typedValues, stepIndex, this.typedValues[stepIndex] + fullText.charAt(i))
+        i += 1
+      }, 20)
+      this.typingTimers.push(timer)
+    },
+    clearTypingTimers() {
+      if (!this.typingTimers) return
+      this.typingTimers.forEach(t => clearInterval(t))
+      this.typingTimers = []
+    },
+    isStepLoaded(index) {
+      return !!this.stepLoaded[index]
+    },
+    isStepLoading(index) {
+      // 仅当前步骤在未加载完成前显示 loading，其它未来步骤只占位
+      return this.currentStepIndex === index && !this.stepLoaded[index]
+    },
+    arrowStyle(index) {
+      const enabled = this.visibleSteps > index + 1
+      return {
+        margin: '0 8px',
+        color: enabled ? '#909399' : '#dcdfe6',
+        fontSize: '16px',
+        transition: 'color .3s'
+      }
+    },
+    formatPercent(v) {
+      if (v === null || v === undefined || isNaN(v)) return '-'
+      return `${(Number(v) * 100).toFixed(2)}%`
+    },
+    stepStyle(stepIndex) {
+      const isActive = this.currentStepIndex === stepIndex
+      const loaded = this.isStepLoaded(stepIndex)
+      return {
+        padding: '12px 16px',
+        minWidth: '150px',
+        textAlign: 'center',
+        borderRadius: '8px',
+        border: loaded ? (isActive ? '2px solid #409EFF' : '1px solid #e5e7eb') : '1px dashed transparent',
+        boxShadow: loaded && isActive ? '0 0 8px rgba(64,158,255,0.5)' : 'none',
+        transition: 'all .3s',
+        background: loaded ? (isActive ? 'rgba(64,158,255,0.06)' : '#fff') : 'transparent'
+      }
     }
   }
 }

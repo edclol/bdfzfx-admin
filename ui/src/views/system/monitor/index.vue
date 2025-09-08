@@ -244,7 +244,7 @@
     </el-dialog>
 
     <!-- 数据统计对话框（复用样本库统计） -->
-    <el-dialog title="样本库数据统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
+    <el-dialog title="实际信号分类统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
       <div ref="statsChart" style="width: 100%; height: 400px;"></div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
