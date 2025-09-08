@@ -30,14 +30,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="响应时长" prop="responseTime">
+      <!-- <el-form-item label="响应时长" prop="responseTime">
         <el-input
           v-model="queryParams.responseTime"
           placeholder="请输入响应时长"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
 <!--      <el-form-item label="厂站ID" prop="stationId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.stationId"-->
@@ -72,14 +72,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="电压等级" prop="voltageLevel">
+      <!-- <el-form-item label="电压等级" prop="voltageLevel">
         <el-input
           v-model="queryParams.voltageLevel"
           placeholder="请输入电压等级"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="操作" prop="operation">
         <el-input
           v-model="queryParams.operation"
@@ -88,14 +88,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建者" prop="createBy">
+      <!-- <el-form-item label="创建者" prop="createBy">
         <el-input
           v-model="queryParams.createBy"
           placeholder="请输入创建者"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
