@@ -252,7 +252,7 @@
 
 <script>
 import { listMonitor, getMonitor, delMonitor, addMonitor, updateMonitor } from "@/api/system/monitor"
-import { getAllStat } from "@/api/system/all"
+import { dataStatistics } from "@/api/system/monitor"
 import FileUpload from "@/components/FileUpload"
 
 export default {
@@ -348,12 +348,16 @@ export default {
       }
       this.statsChartInstance = echarts.init(this.$refs.statsChart)
       try {
-        const res = await getAllStat()
-        const total = (res && res.data && res.data.total) ? res.data.total : 0
-        const data = (res && res.data && Array.isArray(res.data.categories)) ? res.data.categories.map(i => ({ name: i.name, value: i.value })) : []
+        const res = await dataStatistics()
+        // 处理新的接口返回格式
+        const data = (res && res.data && Array.isArray(res.data)) ? res.data.map(item => ({ 
+          name: item.deviceType, 
+          value: item.totalCount 
+        })) : []
+        const total = data.reduce((sum, item) => sum + item.value, 0)
         const legend = data.map(d => d.name)
         const option = {
-          title: { text: '样本库数据统计', subtext: total ? `共计${total}条` : '', left: 'center' },
+          title: { text: '实际信号分类统计', subtext: total ? `共计${total}条` : ''},
           tooltip: { trigger: 'item', formatter: '{b} : {c} ({d}%)' },
           legend: { left: 'center', bottom: 10, data: legend },
           series: [{

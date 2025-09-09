@@ -349,7 +349,7 @@
     </el-dialog>
     
     <!-- 实际信号分类统计对话框（同步监控页实现） -->
-    <el-dialog title="实际信号分类统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
+    <el-dialog title="数据统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
       <div ref="statsChart" style="width: 100%; height: 400px;"></div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
@@ -362,7 +362,7 @@
 import { listCall, getCall, delCall, addCall, updateCall } from "@/api/system/call"
 import { getEnhanceFunctionCode, getDefaultFunctionCode, saveEnhanceFunctionCode } from "@/utils/enhanceFunction"
 import { getStorageConfig, saveStorageConfig, getDefaultStorageConfig, resetStorageConfig } from "@/utils/storageConfig"
-import { getAllStat } from "@/api/system/all"
+import { dataStatistics } from "@/api/system/call"
 
 export default {
   name: "Call",
@@ -491,16 +491,30 @@ export default {
       }
       this.statsChartInstance = echarts.init(this.$refs.statsChart)
       try {
-        const res = await getAllStat()
-        const total = (res && res.data && res.data.total) ? res.data.total : 0
-        const data = (res && res.data && Array.isArray(res.data.categories)) ? res.data.categories.map(i => ({ name: i.name, value: i.value })) : []
+        const res = await dataStatistics()
+        // 适配新的数据格式
+        const stationData = (res && res.data && Array.isArray(res.data)) ? res.data : []
+        const total = stationData.reduce((sum, item) => sum + (item.totalCount || 0), 0)
+        const data = stationData.map(item => ({ 
+          name: item.stationName || '未知站点', 
+          value: item.totalCount || 0 
+        }))
         const legend = data.map(d => d.name)
         const option = {
-          title: { text: '样本库数据统计', subtext: total ? `共计${total}条` : '', left: 'center' },
-          tooltip: { trigger: 'item', formatter: '{b} : {c} ({d}%)' },
+          title: { text: '厂站调用统计',  left: 'center' },
+          tooltip: { 
+            trigger: 'item', 
+            formatter: function(params) {
+              const station = stationData.find(s => s.stationName === params.name)
+              if (station) {
+                return `${params.name}<br/>总调用: ${station.totalCount}次<br/>成功: ${station.successCount}次<br/>失败: ${station.failCount}次<br/>平均响应时间: ${station.avgResponseTime.toFixed(2)}ms<br/>占比: ${params.percent}%`
+              }
+              return `${params.name} : ${params.value} (${params.percent}%)`
+            }
+          },
           legend: { left: 'center', bottom: 10, data: legend },
           series: [{
-            name: '类别占比',
+            name: '调用次数',
             type: 'pie',
             radius: ['30%', '70%'],
             center: ['50%', '45%'],
