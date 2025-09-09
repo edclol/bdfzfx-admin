@@ -26,7 +26,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -70,11 +70,11 @@
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="warningList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="id" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <el-table-column label="序号" align="center" prop="id"  width="55"/>
       <el-table-column label="发生时间" align="center" prop="occurTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.occurTime, '{y}-{m}-{d}') }}</span>
@@ -82,9 +82,9 @@
       </el-table-column>
       <el-table-column label="预警等级" align="center" prop="warningLevel" />
       <el-table-column label="预警内容" align="center" prop="warningContent" />
-      <el-table-column label="建议处理" align="center" prop="suggestion" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="建议处理" align="center" prop="suggestion" />
+      <el-table-column label="状态" align="center" prop="status" /> -->
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -101,7 +101,7 @@
             v-hasPermi="['system:warning:remove']"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
     <pagination
