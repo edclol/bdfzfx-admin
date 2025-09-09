@@ -299,50 +299,75 @@ DROP TABLE IF EXISTS sys_typical_monitor_info;
 CREATE TABLE sys_typical_monitor_info
 (
     id                     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    device_type            VARCHAR(50)  NOT NULL COMMENT '设备类型，如：开关保护、线路保护',
-    device_principle       VARCHAR(100) NOT NULL COMMENT '设备原理，如：带过压远跳功能',
-    info_name              TEXT         NOT NULL COMMENT '信息名称，格式为：[电压等级][间隔名称][设备编号][保护（型号）] 光纤通道一软压板',
-    voltage_level          VARCHAR(50)  DEFAULT NULL COMMENT '通用电压等级，如：550/220kV',
+    device_type            VARCHAR(500)  DEFAULT NULL COMMENT '设备类型，如：开关保护、线路保护',
+    device_principle       VARCHAR(500) DEFAULT NULL COMMENT '设备原理，如：带过压远跳功能',
+    info_name              TEXT         DEFAULT NULL COMMENT '信息名称，格式为：[电压等级][间隔名称][设备编号][保护（型号）] 光纤通道一软压板',
+    voltage_level          VARCHAR(500)  DEFAULT NULL COMMENT '通用电压等级，如：550/220kV',
     alarm_status           VARCHAR(20)  DEFAULT NULL COMMENT '告警状态，如：告警、动作、异常',
     alarm_level            varchar(10)  DEFAULT NULL COMMENT '告警等级，如：4级',
     send_to_monitor        varchar(10)  DEFAULT '0' COMMENT '是否上送监控（0否，1是）',
-    reference_basis        VARCHAR(50)  DEFAULT NULL COMMENT '参考依据，如：新一代、2020企标',
-    collection_requirement VARCHAR(100) DEFAULT NULL COMMENT '采集要求，如：实时采集、定时采集',
-    target_device          VARCHAR(100) DEFAULT NULL COMMENT '指向设备，如：线路保护装置、开关',
-    source_device          VARCHAR(100) DEFAULT NULL COMMENT '采集源设备，如：线路保护装置',
-    integration_device     VARCHAR(100) DEFAULT NULL COMMENT '数据集成设备，如：线路保护装置',
+    reference_basis        VARCHAR(500)  DEFAULT NULL COMMENT '参考依据，如：新一代、2020企标',
+    collection_requirement VARCHAR(500) DEFAULT NULL COMMENT '采集要求，如：实时采集、定时采集',
+    target_device          VARCHAR(500) DEFAULT NULL COMMENT '指向设备，如：线路保护装置、开关',
+    source_device          VARCHAR(500) DEFAULT NULL COMMENT '采集源设备，如：线路保护装置',
+    integration_device     VARCHAR(500) DEFAULT NULL COMMENT '数据集成设备，如：线路保护装置',
     update_time            DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     create_by              VARCHAR(64)  DEFAULT '' COMMENT '创建者',
     create_time            DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_by              VARCHAR(64)  DEFAULT '' COMMENT '更新者',
     remark                 VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
-    PRIMARY KEY (id),
-    KEY idx_device_type (device_type),
-    KEY idx_voltage_level (voltage_level),
-    KEY idx_alarm_level (alarm_level),
-    KEY idx_info_name (info_name(255)),
-    KEY idx_update_time (update_time)
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB COMMENT = '典型监控信息管理表';
 
 
-INSERT INTO sys_typical_monitor_info (device_type, device_principle, info_name, voltage_level, alarm_status,
-                                      alarm_level,
-                                      send_to_monitor, reference_basis, collection_requirement, target_device,
-                                      source_device, integration_device, create_by)
-VALUES ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道一软压板', '550/220kV', '告警', 4, 1,
-        '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道二软压板',
-        '500kV', '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '220kV',
-        '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护出口', '550/220kV', '告警', 4, 1, '2020企标',
-        '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
-       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）远方其他保护出口', '550/220kV', '告警', 4, 1,
-        '2020企标', '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '550/220kV',
-        '告警', 4, 1, '2020企标', '实时采集', '开关', '线路保护装置', '线路保护装置', 'admin');
+INSERT INTO sys_typical_monitor_info (
+    device_type,
+    device_principle,
+    info_name,
+    voltage_level,
+    alarm_status,
+    alarm_level,
+    send_to_monitor,
+    reference_basis,
+    collection_requirement,
+    target_device,
+    source_device,
+    integration_device,
+    create_time,
+    update_time
+)
+SELECT
+    device_type,
+    device_principle,
+    info_name,
+    v_level AS voltage_level,
+    alarm_type AS alarm_status,
+    alarm_level,
+    '0' AS send_to_monitor,  -- 使用默认值0（否）
+    reference AS reference_basis,
+    requirement AS collection_requirement,
+    target_device,
+    origin_device AS source_device,
+    data_primary_device AS integration_device,
+    null AS create_time,
+    null AS update_time
+FROM sys_yx_info_all
+ORDER BY RAND()
+LIMIT 1000;
 
+UPDATE sys_typical_monitor_info
+SET create_time = DATE_SUB(
+        NOW(),
+        INTERVAL FLOOR(RAND() * 60*24*60 + RAND() * 24*60 + RAND() * 60) MINUTE
+                  );
 
+-- 更新更新时间为不早于创建时间且在最近两个月内的随机时间
+UPDATE sys_typical_monitor_info
+SET update_time = FROM_UNIXTIME(
+        UNIX_TIMESTAMP(create_time) +
+        FLOOR(RAND() * (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_time)))
+                  )
+WHERE update_time IS NULL OR update_time < create_time OR update_time > NOW();
 
 -- 停用词表
 DROP TABLE IF EXISTS sys_stop_word;
