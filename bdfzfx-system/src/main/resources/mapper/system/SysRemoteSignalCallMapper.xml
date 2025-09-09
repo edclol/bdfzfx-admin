@@ -22,6 +22,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
+    <resultMap type="SysRemoteSignalCallStat" id="SysRemoteSignalCallStatResult">
+        <result property="stationName" column="station_name" />
+        <result property="totalCount" column="total_calls" />
+        <result property="successCount" column="success_count" />
+        <result property="failCount" column="fail_count" />
+        <result property="avgResponseTime" column="avg_response_time_sec" />
+    </resultMap>
+
     <sql id="selectSysRemoteSignalCallVo">
         select id, call_time, interface_name, call_result, response_time, station_id, station_name, device_name, device_type, voltage_level, operation, create_by, create_time, update_by, update_time from sys_remote_signal_call
     </sql>
@@ -43,6 +51,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
+    <select id="selectSysRemoteSignalCallStatByStation" resultMap="SysRemoteSignalCallStatResult">
+        SELECT
+            station_name,
+            COUNT(*) AS total_calls,
+            SUM(CASE WHEN call_result = '0' THEN 1 ELSE 0 END) AS success_count,
+            SUM(CASE WHEN call_result = '1' THEN 1 ELSE 0 END) AS fail_count,
+            AVG(
+                CASE
+                    WHEN response_time LIKE '%s%' THEN CAST(SUBSTRING_INDEX(response_time, 's', 1) AS DECIMAL(10,2))
+                    WHEN response_time LIKE '%ms%' THEN CAST(SUBSTRING_INDEX(response_time, 'ms', 1) AS DECIMAL(10,2)) / 1000.0
+                    ELSE 0
+                END
+            ) AS avg_response_time_sec
+        FROM sys_remote_signal_call
+        GROUP BY station_name
+        ORDER BY total_calls DESC
+    </select>
+
     <select id="selectSysRemoteSignalCallById" parameterType="Long" resultMap="SysRemoteSignalCallResult">
         <include refid="selectSysRemoteSignalCallVo"/>
         where id = #{id}

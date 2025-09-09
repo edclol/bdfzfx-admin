@@ -2,11 +2,11 @@ package com.bdfzfx.system.mapper;
 
 import java.util.List;
 import com.bdfzfx.system.domain.SysRemoteSignalCall;
+import com.bdfzfx.system.domain.SysRemoteSignalCallStat;
 
 /**
  * 遥信调用记录Mapper接口
  * 
- *
  * @date 2025-08-17
  */
 public interface SysRemoteSignalCallMapper 
@@ -58,4 +58,11 @@ public interface SysRemoteSignalCallMapper
      * @return 结果
      */
     public int deleteSysRemoteSignalCallByIds(Long[] ids);
+    
+    /**
+     * 按厂站统计遥信调用记录
+     * 
+     * @return 厂站统计结果列表
+     */
+    public List<SysRemoteSignalCallStat> selectSysRemoteSignalCallStatByStation();
 }
