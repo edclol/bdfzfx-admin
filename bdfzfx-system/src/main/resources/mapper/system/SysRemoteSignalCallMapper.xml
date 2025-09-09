@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectSysRemoteSignalCallList" parameterType="SysRemoteSignalCall" resultMap="SysRemoteSignalCallResult">
         <include refid="selectSysRemoteSignalCallVo"/>
         <where>  
-            <if test="params.beginCallTime != null and params.beginCallTime != '' and params.endCallTime != null and params.endCallTime != ''"> and call_time between #{params.beginCallTime} and #{params.endCallTime}</if>
+            <if test="params != null and params.beginCallTime != null and params.beginCallTime != '' and params.endCallTime != null and params.endCallTime != ''"> and call_time between #{params.beginCallTime} and #{params.endCallTime}</if>
             <if test="interfaceName != null  and interfaceName != ''"> and interface_name like concat('%', #{interfaceName}, '%')</if>
             <if test="callResult != null  and callResult != ''"> and call_result = #{callResult}</if>
             <if test="responseTime != null  and responseTime != ''"> and response_time = #{responseTime}</if>
