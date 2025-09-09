@@ -1,18 +1,17 @@
 package com.bdfzfx.system.service.impl;
 
 import java.util.List;
-import com.bdfzfx.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bdfzfx.system.mapper.SysTypicalMonitorInfoMapper;
 import com.bdfzfx.system.domain.SysTypicalMonitorInfo;
 import com.bdfzfx.system.service.ISysTypicalMonitorInfoService;
+import com.bdfzfx.system.domain.SysTypicalMonitorInfoStat;
 
 /**
  * 典型监控信息管理Service业务层处理
  * 
- * @author admin
- * @date 2025-08-19
+ * @date 2025-08-14
  */
 @Service
 public class SysTypicalMonitorInfoServiceImpl implements ISysTypicalMonitorInfoService 
@@ -53,7 +52,6 @@ public class SysTypicalMonitorInfoServiceImpl implements ISysTypicalMonitorInfoS
     @Override
     public int insertSysTypicalMonitorInfo(SysTypicalMonitorInfo sysTypicalMonitorInfo)
     {
-        sysTypicalMonitorInfo.setCreateTime(DateUtils.getNowDate());
         return sysTypicalMonitorInfoMapper.insertSysTypicalMonitorInfo(sysTypicalMonitorInfo);
     }
 
@@ -66,7 +64,6 @@ public class SysTypicalMonitorInfoServiceImpl implements ISysTypicalMonitorInfoS
     @Override
     public int updateSysTypicalMonitorInfo(SysTypicalMonitorInfo sysTypicalMonitorInfo)
     {
-        sysTypicalMonitorInfo.setUpdateTime(DateUtils.getNowDate());
         return sysTypicalMonitorInfoMapper.updateSysTypicalMonitorInfo(sysTypicalMonitorInfo);
     }
 
@@ -92,5 +89,16 @@ public class SysTypicalMonitorInfoServiceImpl implements ISysTypicalMonitorInfoS
     public int deleteSysTypicalMonitorInfoById(Long id)
     {
         return sysTypicalMonitorInfoMapper.deleteSysTypicalMonitorInfoById(id);
+    }
+    
+    /**
+     * 按设备类型统计典型监控信息
+     * 
+     * @return 设备类型统计结果列表
+     */
+    @Override
+    public List<SysTypicalMonitorInfoStat> selectSysTypicalMonitorInfoStatByDeviceType()
+    {
+        return sysTypicalMonitorInfoMapper.selectSysTypicalMonitorInfoStatByDeviceType();
     }
 }

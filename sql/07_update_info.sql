@@ -320,6 +320,8 @@ CREATE TABLE sys_typical_monitor_info
 ) ENGINE = InnoDB COMMENT = '典型监控信息管理表';
 
 
+
+
 INSERT INTO sys_typical_monitor_info (
     device_type,
     device_principle,
@@ -337,7 +339,14 @@ INSERT INTO sys_typical_monitor_info (
     update_time
 )
 SELECT
-    device_type,
+    case
+        when yx_type = '1' then '一次设备'
+        when yx_type = '2' then '二次设备'
+        when yx_type = '3' then '自动装置'
+        when yx_type = '4' then '站用交直流'
+        when yx_type = '5' then '公用设备'
+        when yx_type = '6' then '辅控装置'
+        end as device_type,
     device_principle,
     info_name,
     v_level AS voltage_level,
@@ -368,6 +377,30 @@ SET update_time = FROM_UNIXTIME(
         FLOOR(RAND() * (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_time)))
                   )
 WHERE update_time IS NULL OR update_time < create_time OR update_time > NOW();
+
+SELECT
+    device_type,
+    COUNT(*) AS total_count
+FROM
+    sys_typical_monitor_info
+WHERE
+    device_type IS NOT NULL
+GROUP BY
+    device_type
+ORDER BY
+    total_count DESC;
+
+SELECT
+    voltage_level,
+    COUNT(*) AS total_count
+FROM
+    sys_typical_monitor_info
+WHERE
+    voltage_level IS NOT NULL
+GROUP BY
+    voltage_level
+ORDER BY
+    total_count DESC;
 
 -- 停用词表
 DROP TABLE IF EXISTS sys_stop_word;
