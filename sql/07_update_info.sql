@@ -319,50 +319,153 @@ CREATE TABLE sys_typical_monitor_info
     PRIMARY KEY (id)
 ) ENGINE = InnoDB COMMENT = '典型监控信息管理表';
 
+INSERT INTO sys_typical_monitor_info (device_type,
+                                      device_principle,
+                                      info_name,
+                                      voltage_level,
+                                      alarm_status,
+                                      alarm_level,
+                                      send_to_monitor,
+                                      reference_basis,
+                                      collection_requirement,
+                                      target_device,
+                                      source_device,
+                                      integration_device,
+                                      create_time,
+                                      update_time)
+SELECT *
+FROM (
+         -- 一次设备遥信 - 208条
+         (SELECT '一次设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '1'
+          ORDER BY RAND()
+          LIMIT 208)
 
+         UNION ALL
 
+         -- 二次设备遥信 - 986条
+         (SELECT '二次设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '2'
+          ORDER BY RAND()
+          LIMIT 986)
 
-INSERT INTO sys_typical_monitor_info (
-    device_type,
-    device_principle,
-    info_name,
-    voltage_level,
-    alarm_status,
-    alarm_level,
-    send_to_monitor,
-    reference_basis,
-    collection_requirement,
-    target_device,
-    source_device,
-    integration_device,
-    create_time,
-    update_time
-)
-SELECT
-    case
-        when yx_type = '1' then '一次设备'
-        when yx_type = '2' then '二次设备'
-        when yx_type = '3' then '自动装置'
-        when yx_type = '4' then '站用交直流'
-        when yx_type = '5' then '公用设备'
-        when yx_type = '6' then '辅控装置'
-        end as device_type,
-    device_principle,
-    info_name,
-    v_level AS voltage_level,
-    alarm_type AS alarm_status,
-    alarm_level,
-    '0' AS send_to_monitor,  -- 使用默认值0（否）
-    reference AS reference_basis,
-    requirement AS collection_requirement,
-    target_device,
-    origin_device AS source_device,
-    data_primary_device AS integration_device,
-    null AS create_time,
-    null AS update_time
-FROM sys_yx_info_all
-ORDER BY RAND()
-LIMIT 1000;
+         UNION ALL
+
+         -- 自动装置遥信 - 96条
+         (SELECT '自动装置'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '3'
+          ORDER BY RAND()
+          LIMIT 96)
+
+         UNION ALL
+
+         -- 站用交直流遥信 - 99条
+         (SELECT '站用交直流'        AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '4'
+          ORDER BY RAND()
+          LIMIT 99)
+
+         UNION ALL
+
+         -- 公用设备遥信 - 36条
+         (SELECT '公用设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '5'
+          ORDER BY RAND()
+          LIMIT 36)
+
+         UNION ALL
+
+         -- 辅控装置遥信 - 152条
+         (SELECT '辅控装置'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '6'
+          ORDER BY RAND()
+          LIMIT 152)) AS combined_data
+ORDER BY RAND();
+
 
 UPDATE sys_typical_monitor_info
 SET create_time = DATE_SUB(
