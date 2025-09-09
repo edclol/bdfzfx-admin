@@ -2,12 +2,12 @@ package com.bdfzfx.system.mapper;
 
 import java.util.List;
 import com.bdfzfx.system.domain.SysTypicalMonitorInfo;
+import com.bdfzfx.system.domain.SysTypicalMonitorInfoStat;
 
 /**
  * 典型监控信息管理Mapper接口
  * 
- * @author admin
- * @date 2025-08-19
+ * @date 2025-08-14
  */
 public interface SysTypicalMonitorInfoMapper 
 {
@@ -58,4 +58,11 @@ public interface SysTypicalMonitorInfoMapper
      * @return 结果
      */
     public int deleteSysTypicalMonitorInfoByIds(Long[] ids);
+    
+    /**
+     * 按设备类型统计典型监控信息
+     * 
+     * @return 设备类型统计结果列表
+     */
+    public List<SysTypicalMonitorInfoStat> selectSysTypicalMonitorInfoStatByDeviceType();
 }

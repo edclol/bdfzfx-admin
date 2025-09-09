@@ -1,5 +1,6 @@
 package com.bdfzfx.web.controller.system;
 
+import com.bdfzfx.system.domain.SysTypicalMonitorInfoStat;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -48,6 +49,17 @@ public class SysTypicalMonitorInfoController extends BaseController
         startPage();
         List<SysTypicalMonitorInfo> list = sysTypicalMonitorInfoService.selectSysTypicalMonitorInfoList(sysTypicalMonitorInfo);
         return getDataTable(list);
+    }
+
+    /**
+     * 统计分析点典型监控信息
+     */
+    @ApiOperation("统计分析点典型监控信息")
+    @GetMapping("/stat")
+    public AjaxResult stat()
+    {
+        List<SysTypicalMonitorInfoStat> statResult = sysTypicalMonitorInfoService.selectSysTypicalMonitorInfoStatByDeviceType();
+        return AjaxResult.success(statResult);
     }
 
     /**

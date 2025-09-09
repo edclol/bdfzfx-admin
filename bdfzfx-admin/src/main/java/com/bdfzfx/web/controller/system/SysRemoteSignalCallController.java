@@ -3,6 +3,7 @@ package com.bdfzfx.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bdfzfx.system.domain.SysRemoteSignalCallStat;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,16 +59,7 @@ public class SysRemoteSignalCallController extends BaseController
     @GetMapping("/stat")
     public AjaxResult stat()
     {
-        List<SysRemoteSignalCall> sysRemoteSignalCalls = sysRemoteSignalCallService.selectSysRemoteSignalCallList(null);
-        //统计不同厂站的调用次数
-        List<String> stationNames = sysRemoteSignalCalls.stream().map(SysRemoteSignalCall::getStationName).distinct().collect(java.util.stream.Collectors.toList());
-        List<Long> counts = stationNames.stream().map(stationName -> sysRemoteSignalCalls.stream().filter(sysRemoteSignalCall -> sysRemoteSignalCall.getStationName().equals(stationName)).count()).collect(java.util.stream.Collectors.toList());
-        
-        // 构造返回结果
-        java.util.Map<String, Long> statResult = new java.util.HashMap<>();
-        for (int i = 0; i < stationNames.size(); i++) {
-            statResult.put(stationNames.get(i), counts.get(i));
-        }
+        List<SysRemoteSignalCallStat> statResult = sysRemoteSignalCallService.selectSysRemoteSignalCallStatByStation();
         return AjaxResult.success(statResult);
     }
 

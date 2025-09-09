@@ -1,17 +1,16 @@
 package com.bdfzfx.system.service.impl;
 
 import java.util.List;
-import com.bdfzfx.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bdfzfx.system.mapper.SysRemoteSignalCallMapper;
 import com.bdfzfx.system.domain.SysRemoteSignalCall;
 import com.bdfzfx.system.service.ISysRemoteSignalCallService;
+import com.bdfzfx.system.domain.SysRemoteSignalCallStat;
 
 /**
  * 遥信调用记录Service业务层处理
  * 
- *
  * @date 2025-08-17
  */
 @Service
@@ -53,7 +52,6 @@ public class SysRemoteSignalCallServiceImpl implements ISysRemoteSignalCallServi
     @Override
     public int insertSysRemoteSignalCall(SysRemoteSignalCall sysRemoteSignalCall)
     {
-        sysRemoteSignalCall.setCreateTime(DateUtils.getNowDate());
         return sysRemoteSignalCallMapper.insertSysRemoteSignalCall(sysRemoteSignalCall);
     }
 
@@ -66,7 +64,6 @@ public class SysRemoteSignalCallServiceImpl implements ISysRemoteSignalCallServi
     @Override
     public int updateSysRemoteSignalCall(SysRemoteSignalCall sysRemoteSignalCall)
     {
-        sysRemoteSignalCall.setUpdateTime(DateUtils.getNowDate());
         return sysRemoteSignalCallMapper.updateSysRemoteSignalCall(sysRemoteSignalCall);
     }
 
@@ -92,5 +89,16 @@ public class SysRemoteSignalCallServiceImpl implements ISysRemoteSignalCallServi
     public int deleteSysRemoteSignalCallById(Long id)
     {
         return sysRemoteSignalCallMapper.deleteSysRemoteSignalCallById(id);
+    }
+    
+    /**
+     * 按厂站统计遥信调用记录
+     * 
+     * @return 厂站统计结果列表
+     */
+    @Override
+    public List<SysRemoteSignalCallStat> selectSysRemoteSignalCallStatByStation()
+    {
+        return sysRemoteSignalCallMapper.selectSysRemoteSignalCallStatByStation();
     }
 }

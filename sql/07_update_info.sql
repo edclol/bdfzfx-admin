@@ -299,50 +299,211 @@ DROP TABLE IF EXISTS sys_typical_monitor_info;
 CREATE TABLE sys_typical_monitor_info
 (
     id                     BIGINT(20)   NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    device_type            VARCHAR(50)  NOT NULL COMMENT '设备类型，如：开关保护、线路保护',
-    device_principle       VARCHAR(100) NOT NULL COMMENT '设备原理，如：带过压远跳功能',
-    info_name              TEXT         NOT NULL COMMENT '信息名称，格式为：[电压等级][间隔名称][设备编号][保护（型号）] 光纤通道一软压板',
-    voltage_level          VARCHAR(50)  DEFAULT NULL COMMENT '通用电压等级，如：550/220kV',
+    device_type            VARCHAR(500)  DEFAULT NULL COMMENT '设备类型，如：开关保护、线路保护',
+    device_principle       VARCHAR(500) DEFAULT NULL COMMENT '设备原理，如：带过压远跳功能',
+    info_name              TEXT         DEFAULT NULL COMMENT '信息名称，格式为：[电压等级][间隔名称][设备编号][保护（型号）] 光纤通道一软压板',
+    voltage_level          VARCHAR(500)  DEFAULT NULL COMMENT '通用电压等级，如：550/220kV',
     alarm_status           VARCHAR(20)  DEFAULT NULL COMMENT '告警状态，如：告警、动作、异常',
     alarm_level            varchar(10)  DEFAULT NULL COMMENT '告警等级，如：4级',
     send_to_monitor        varchar(10)  DEFAULT '0' COMMENT '是否上送监控（0否，1是）',
-    reference_basis        VARCHAR(50)  DEFAULT NULL COMMENT '参考依据，如：新一代、2020企标',
-    collection_requirement VARCHAR(100) DEFAULT NULL COMMENT '采集要求，如：实时采集、定时采集',
-    target_device          VARCHAR(100) DEFAULT NULL COMMENT '指向设备，如：线路保护装置、开关',
-    source_device          VARCHAR(100) DEFAULT NULL COMMENT '采集源设备，如：线路保护装置',
-    integration_device     VARCHAR(100) DEFAULT NULL COMMENT '数据集成设备，如：线路保护装置',
+    reference_basis        VARCHAR(500)  DEFAULT NULL COMMENT '参考依据，如：新一代、2020企标',
+    collection_requirement VARCHAR(500) DEFAULT NULL COMMENT '采集要求，如：实时采集、定时采集',
+    target_device          VARCHAR(500) DEFAULT NULL COMMENT '指向设备，如：线路保护装置、开关',
+    source_device          VARCHAR(500) DEFAULT NULL COMMENT '采集源设备，如：线路保护装置',
+    integration_device     VARCHAR(500) DEFAULT NULL COMMENT '数据集成设备，如：线路保护装置',
     update_time            DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     create_by              VARCHAR(64)  DEFAULT '' COMMENT '创建者',
     create_time            DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_by              VARCHAR(64)  DEFAULT '' COMMENT '更新者',
     remark                 VARCHAR(500) DEFAULT NULL COMMENT '备注信息',
-    PRIMARY KEY (id),
-    KEY idx_device_type (device_type),
-    KEY idx_voltage_level (voltage_level),
-    KEY idx_alarm_level (alarm_level),
-    KEY idx_info_name (info_name(255)),
-    KEY idx_update_time (update_time)
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB COMMENT = '典型监控信息管理表';
 
-
-INSERT INTO sys_typical_monitor_info (device_type, device_principle, info_name, voltage_level, alarm_status,
+INSERT INTO sys_typical_monitor_info (device_type,
+                                      device_principle,
+                                      info_name,
+                                      voltage_level,
+                                      alarm_status,
                                       alarm_level,
-                                      send_to_monitor, reference_basis, collection_requirement, target_device,
-                                      source_device, integration_device, create_by)
-VALUES ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道一软压板', '550/220kV', '告警', 4, 1,
-        '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）光纤通道二软压板',
-        '500kV', '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '带过压远跳功能', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '220kV',
-        '告警', 4, 1, '新一代', '实时采集', '线路保护装置', '线路保护装置', '线路保护装置', 'admin'),
-       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护出口', '550/220kV', '告警', 4, 1, '2020企标',
-        '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
-       ('开关保护', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）远方其他保护出口', '550/220kV', '告警', 4, 1,
-        '2020企标', '实时采集', '线路', '线路保护装置', '线路保护装置', 'admin'),
-       ('线路保护（220kV及以上）', '通用', '[电压等级] [间隔名称] [设备编号] 保护（型号）沟通三跳软压板', '550/220kV',
-        '告警', 4, 1, '2020企标', '实时采集', '开关', '线路保护装置', '线路保护装置', 'admin');
+                                      send_to_monitor,
+                                      reference_basis,
+                                      collection_requirement,
+                                      target_device,
+                                      source_device,
+                                      integration_device,
+                                      create_time,
+                                      update_time)
+SELECT *
+FROM (
+         -- 一次设备遥信 - 208条
+         (SELECT '一次设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '1'
+          ORDER BY RAND()
+          LIMIT 208)
+
+         UNION ALL
+
+         -- 二次设备遥信 - 986条
+         (SELECT '二次设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '2'
+          ORDER BY RAND()
+          LIMIT 986)
+
+         UNION ALL
+
+         -- 自动装置遥信 - 96条
+         (SELECT '自动装置'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '3'
+          ORDER BY RAND()
+          LIMIT 96)
+
+         UNION ALL
+
+         -- 站用交直流遥信 - 99条
+         (SELECT '站用交直流'        AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '4'
+          ORDER BY RAND()
+          LIMIT 99)
+
+         UNION ALL
+
+         -- 公用设备遥信 - 36条
+         (SELECT '公用设备'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '5'
+          ORDER BY RAND()
+          LIMIT 36)
+
+         UNION ALL
+
+         -- 辅控装置遥信 - 152条
+         (SELECT '辅控装置'          AS device_type,
+                 device_principle,
+                 info_name,
+                 v_level             AS voltage_level,
+                 alarm_type          AS alarm_status,
+                 alarm_level,
+                 '0'                 AS send_to_monitor,
+                 reference           AS reference_basis,
+                 requirement         AS collection_requirement,
+                 target_device,
+                 origin_device       AS source_device,
+                 data_primary_device AS integration_device,
+                 NULL                AS create_time,
+                 NULL                AS update_time
+          FROM sys_yx_info_all
+          WHERE yx_type = '6'
+          ORDER BY RAND()
+          LIMIT 152)) AS combined_data
+ORDER BY RAND();
 
 
+UPDATE sys_typical_monitor_info
+SET create_time = DATE_SUB(
+        NOW(),
+        INTERVAL FLOOR(RAND() * 60*24*60 + RAND() * 24*60 + RAND() * 60) MINUTE
+                  );
+
+-- 更新更新时间为不早于创建时间且在最近两个月内的随机时间
+UPDATE sys_typical_monitor_info
+SET update_time = FROM_UNIXTIME(
+        UNIX_TIMESTAMP(create_time) +
+        FLOOR(RAND() * (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_time)))
+                  )
+WHERE update_time IS NULL OR update_time < create_time OR update_time > NOW();
+
+SELECT
+    device_type,
+    COUNT(*) AS total_count
+FROM
+    sys_typical_monitor_info
+WHERE
+    device_type IS NOT NULL
+GROUP BY
+    device_type
+ORDER BY
+    total_count DESC;
+
+SELECT
+    voltage_level,
+    COUNT(*) AS total_count
+FROM
+    sys_typical_monitor_info
+WHERE
+    voltage_level IS NOT NULL
+GROUP BY
+    voltage_level
+ORDER BY
+    total_count DESC;
 
 -- 停用词表
 DROP TABLE IF EXISTS sys_stop_word;
@@ -393,52 +554,36 @@ CREATE TABLE sys_model_train_record
     KEY idx_create_time (create_time)
 ) ENGINE = InnoDB  COMMENT = '模型训练记录表';
 
-INSERT INTO sys_model_train_record (
-    train_date, workflow_version, result, gpu_count,
-    init_model_params, execution_process, loss_curve_data,
-    create_by
-) VALUES
--- 8月第一周数据
-('2025-08-01', 'v1.0.0', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.85},{"epoch":10,"loss":0.32}]', 'admin'),
-('2025-08-02', 'v1.0.0', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.82},{"epoch":10,"loss":0.30}]', 'admin'),
-('2025-08-03', 'v1.0.1', '失败', 2, 'learning_rate=0.002, batch_size=32', '数据加载→预处理→训练中断', '[]', 'admin'),
-('2025-08-04', 'v1.0.1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.78},{"epoch":10,"loss":0.28}]', 'admin'),
-('2025-08-05', 'v1.0.1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.76},{"epoch":10,"loss":0.27}]', 'admin'),
-
--- 8月第二周数据
-('2025-08-06', 'v1.0.2', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.75},{"epoch":10,"loss":0.26}]', 'model_user'),
-('2025-08-07', 'v1.0.2', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.74},{"epoch":10,"loss":0.25}]', 'model_user'),
-('2025-08-08', 'v1.0.2', '失败', 2, 'learning_rate=0.001, batch_size=128', '数据加载→内存溢出', '[]', 'model_user'),
-('2025-08-09', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.72},{"epoch":10,"loss":0.23}]', 'model_user'),
-('2025-08-10', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.71},{"epoch":10,"loss":0.22}]', 'admin'),
-
--- 8月第三周数据
-('2025-08-11', 'v1.1.0', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.70},{"epoch":10,"loss":0.21}]', 'admin'),
-('2025-08-12', 'v1.1.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.68},{"epoch":10,"loss":0.20}]', 'admin'),
-('2025-08-13', 'v1.1.1', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证失败', '[{"epoch":1,"loss":0.68},{"epoch":5,"loss":0.25}]', 'admin'),
-('2025-08-14', 'v1.1.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.67},{"epoch":10,"loss":0.19}]', 'model_user'),
-('2025-08-15', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.65},{"epoch":10,"loss":0.18}]', 'model_user'),
-
--- 8月第四周数据
-('2025-08-16', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.64},{"epoch":10,"loss":0.17}]', 'model_user'),
-('2025-08-17', 'v1.2.0', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.63},{"epoch":10,"loss":0.16}]', 'admin'),
-('2025-08-18', 'v2.0.0', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.60},{"epoch":10,"loss":0.15}]', 'admin'),
-('2025-08-19', 'v2.0.0', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.59},{"epoch":10,"loss":0.14}]', 'admin'),
-('2025-08-20', 'v2.0.0', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练中断', '[{"epoch":1,"loss":0.59}]', 'admin'),
-
--- 8月第五周数据
-('2025-08-21', 'v2.0.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.58},{"epoch":10,"loss":0.13}]', 'model_user'),
-('2025-08-22', 'v2.0.1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.57},{"epoch":10,"loss":0.12}]', 'model_user'),
-('2025-08-23', 'v2.0.1', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.56},{"epoch":10,"loss":0.11}]', 'model_user'),
-('2025-08-24', 'v2.0.1', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.55},{"epoch":10,"loss":0.10}]', 'admin'),
-('2025-08-25', 'v3.0.0', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.50},{"epoch":10,"loss":0.08}]', 'admin'),
-
--- 9月第一周数据
-('2025-08-26', 'v3.0.0', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.49},{"epoch":10,"loss":0.07}]', 'admin'),
-('2025-08-27', 'v3.0.0', '失败', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证失败', '[{"epoch":1,"loss":0.49},{"epoch":8,"loss":0.09}]', 'admin'),
-('2025-08-28', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.48},{"epoch":10,"loss":0.06}]', 'model_user'),
-('2025-08-29', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.47},{"epoch":10,"loss":0.05}]', 'model_user'),
-('2025-08-30', 'v3.0.1', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.46},{"epoch":10,"loss":0.04}]', 'model_user');
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (1, '2025-08-01', 'model_v1', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.85},{"epoch":10,"loss":0.32}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (2, '2025-08-02', 'model_v1', '成功', 2, 'learning_rate=0.001, batch_size=32', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.82},{"epoch":10,"loss":0.30}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (3, '2025-08-03', 'model_v1', '失败', 2, 'learning_rate=0.002, batch_size=32', '数据加载→预处理→训练中断', '[]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (4, '2025-08-04', 'model_v1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.78},{"epoch":10,"loss":0.28}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (5, '2025-08-05', 'model_v1', '成功', 4, 'learning_rate=0.002, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.76},{"epoch":10,"loss":0.27}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (6, '2025-08-06', 'model_v1', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.75},{"epoch":10,"loss":0.26}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (7, '2025-08-07', 'model_v1', '成功', 4, 'learning_rate=0.001, batch_size=64', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.74},{"epoch":10,"loss":0.25}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (8, '2025-08-08', 'model_v1', '失败', 2, 'learning_rate=0.001, batch_size=128', '数据加载→内存溢出', '[]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (9, '2025-08-09', 'model_v1', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.72},{"epoch":10,"loss":0.23}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (10, '2025-08-10', 'model_v1', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.71},{"epoch":10,"loss":0.22}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (11, '2025-08-11', 'model_v1', '成功', 8, 'learning_rate=0.0005, batch_size=128', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.70},{"epoch":10,"loss":0.21}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (12, '2025-08-12', 'model_v1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.68},{"epoch":10,"loss":0.20}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (13, '2025-08-13', 'model_v1', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证失败', '[{"epoch":1,"loss":0.68},{"epoch":5,"loss":0.25}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (14, '2025-08-14', 'model_v1', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→训练→验证→测试', '[{"epoch":1,"loss":0.67},{"epoch":10,"loss":0.19}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (15, '2025-08-15', 'model_v1', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.65},{"epoch":10,"loss":0.18}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (16, '2025-08-16', 'model_v2', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.64},{"epoch":10,"loss":0.17}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (17, '2025-08-17', 'model_v2', '成功', 4, 'learning_rate=0.001, batch_size=128', '数据加载→预处理→训练→验证', '[{"epoch":1,"loss":0.63},{"epoch":10,"loss":0.16}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (18, '2025-08-18', 'model_v2', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.60},{"epoch":10,"loss":0.15}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (19, '2025-08-19', 'model_v2', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.59},{"epoch":10,"loss":0.14}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (20, '2025-08-20', 'model_v2', '失败', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练中断', '[{"epoch":1,"loss":0.59}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (21, '2025-08-21', 'model_v2', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.58},{"epoch":10,"loss":0.13}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (22, '2025-08-22', 'model_v2', '成功', 8, 'learning_rate=0.0005, batch_size=256', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.57},{"epoch":10,"loss":0.12}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (23, '2025-08-23', 'model_v2', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.56},{"epoch":10,"loss":0.11}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (24, '2025-08-24', 'model_v2', '成功', 16, 'learning_rate=0.0005, batch_size=512', '数据加载→预处理→增强→训练→验证→测试', '[{"epoch":1,"loss":0.55},{"epoch":10,"loss":0.10}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (25, '2025-08-25', 'model_v3', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.50},{"epoch":10,"loss":0.08}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (26, '2025-08-26', 'model_v3', '成功', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.49},{"epoch":10,"loss":0.07}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (27, '2025-08-27', 'model_v3', '失败', 16, 'learning_rate=0.0001, batch_size=512', '数据加载→预处理→增强→特征工程→训练→验证失败', '[{"epoch":1,"loss":0.49},{"epoch":8,"loss":0.09}]', 'admin', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (28, '2025-08-28', 'model_v3', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.48},{"epoch":10,"loss":0.06}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (29, '2025-08-29', 'model_v3', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.47},{"epoch":10,"loss":0.05}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
+INSERT INTO app.sys_model_train_record (id, train_date, workflow_version, result, gpu_count, init_model_params, execution_process, loss_curve_data, create_by, create_time, update_by, update_time, remark) VALUES (30, '2025-08-30', 'model_v3', '成功', 16, 'learning_rate=0.0001, batch_size=1024', '数据加载→预处理→增强→特征工程→训练→验证→测试', '[{"epoch":1,"loss":0.46},{"epoch":10,"loss":0.04}]', 'model_user', '2025-09-06 10:30:48', '', '2025-09-06 10:30:48', null);
 
 
 
