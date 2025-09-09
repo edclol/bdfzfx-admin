@@ -16,14 +16,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="处理人姓名" prop="handler">
-        <el-input
-          v-model="queryParams.handler"
-          placeholder="请输入处理人姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+     
       <el-form-item>
         <el-button
           type="primary"

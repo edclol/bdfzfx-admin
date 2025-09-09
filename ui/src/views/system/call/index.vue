@@ -30,14 +30,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="响应时长" prop="responseTime">
+      <!-- <el-form-item label="响应时长" prop="responseTime">
         <el-input
           v-model="queryParams.responseTime"
           placeholder="请输入响应时长"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
 <!--      <el-form-item label="厂站ID" prop="stationId">-->
 <!--        <el-input-->
 <!--          v-model="queryParams.stationId"-->
@@ -72,14 +72,14 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="电压等级" prop="voltageLevel">
+      <!-- <el-form-item label="电压等级" prop="voltageLevel">
         <el-input
           v-model="queryParams.voltageLevel"
           placeholder="请输入电压等级"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="操作" prop="operation">
         <el-input
           v-model="queryParams.operation"
@@ -88,14 +88,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建者" prop="createBy">
+      <!-- <el-form-item label="创建者" prop="createBy">
         <el-input
           v-model="queryParams.createBy"
           placeholder="请输入创建者"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -162,6 +162,15 @@
           size="mini"
           @click="handleEnhanceFunction"
         >增强函数配置</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-s-data"
+          size="mini"
+          @click="handleStatistics"
+        >统计分析</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -338,6 +347,14 @@
         <el-button @click="enhanceFunctionOpen = false">取 消</el-button>
       </div>
     </el-dialog>
+    
+    <!-- 实际信号分类统计对话框（同步监控页实现） -->
+    <el-dialog title="实际信号分类统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
+      <div ref="statsChart" style="width: 100%; height: 400px;"></div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -345,6 +362,7 @@
 import { listCall, getCall, delCall, addCall, updateCall } from "@/api/system/call"
 import { getEnhanceFunctionCode, getDefaultFunctionCode, saveEnhanceFunctionCode } from "@/utils/enhanceFunction"
 import { getStorageConfig, saveStorageConfig, getDefaultStorageConfig, resetStorageConfig } from "@/utils/storageConfig"
+import { getAllStat } from "@/api/system/all"
 
 export default {
   name: "Call",
@@ -412,6 +430,9 @@ export default {
       enhanceFunctionCode: '',
       testInput: '',
       testResult: '',
+      // 统计分析
+      statsOpen: false,
+      statsChartInstance: null,
       // 表单校验
       rules: {
         callTime: [
@@ -448,6 +469,66 @@ export default {
     this.getList()
   },
   methods: {
+    /** 打开统计分析对话框 */
+    handleStatistics() {
+      this.statsOpen = true
+      this.$nextTick(() => {
+        this.initStatsChart()
+      })
+    },
+    /** 初始化统计图表 */
+    async initStatsChart() {
+      if (!this.$refs.statsChart) return
+      if (this.statsChartInstance) {
+        this.statsChartInstance.dispose()
+        this.statsChartInstance = null
+      }
+      const echartsModule = await import('echarts')
+      const echarts = echartsModule && (echartsModule.default || echartsModule)
+      if (!echarts || !echarts.init) {
+        this.$message.error('图表库加载失败')
+        return
+      }
+      this.statsChartInstance = echarts.init(this.$refs.statsChart)
+      try {
+        const res = await getAllStat()
+        const total = (res && res.data && res.data.total) ? res.data.total : 0
+        const data = (res && res.data && Array.isArray(res.data.categories)) ? res.data.categories.map(i => ({ name: i.name, value: i.value })) : []
+        const legend = data.map(d => d.name)
+        const option = {
+          title: { text: '样本库数据统计', subtext: total ? `共计${total}条` : '', left: 'center' },
+          tooltip: { trigger: 'item', formatter: '{b} : {c} ({d}%)' },
+          legend: { left: 'center', bottom: 10, data: legend },
+          series: [{
+            name: '类别占比',
+            type: 'pie',
+            radius: ['30%', '70%'],
+            center: ['50%', '45%'],
+            roseType: false,
+            data,
+            animationEasing: 'cubicInOut',
+            animationDuration: 800
+          }]
+        }
+        this.statsChartInstance.setOption(option)
+        this.statsChartInstance.resize()
+      } catch (e) {
+        this.$message.error('获取统计数据失败')
+      }
+      window.addEventListener('resize', this.resizeStatsChart, { passive: true })
+    },
+    resizeStatsChart() {
+      if (this.statsChartInstance) {
+        this.statsChartInstance.resize()
+      }
+    },
+    onStatsDialogClosed() {
+      window.removeEventListener('resize', this.resizeStatsChart)
+      if (this.statsChartInstance) {
+        this.statsChartInstance.dispose()
+        this.statsChartInstance = null
+      }
+    },
     /** 查询遥信调用记录列表 */
     getList() {
       this.loading = true

@@ -47,7 +47,7 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="主键ID" align="center" prop="id" />
         <el-table-column label="遥信ID" align="center" prop="remoteSignalId" />
-        <el-table-column label="条件语句" align="center" prop="dbStatement" />
+        <el-table-column label="标准信号" align="center" prop="dbStatement" />
         <el-table-column label="相似度" align="center" prop="score" >
           <template slot-scope="scope">
             <span v-if="scope.row.score <0.6" style="color: red;">{{ (scope.row.score * 100).toFixed(2) }}%</span>
@@ -83,7 +83,7 @@
           <el-form-item label="遥信ID" prop="remoteSignalId">
             <el-input v-model="form.remoteSignalId" placeholder="请输入遥信ID" />
           </el-form-item>
-          <el-form-item label="条件语句" prop="dbStatement">
+          <el-form-item label="标准信号" prop="dbStatement">
             <el-input v-model="form.dbStatement" type="textarea" placeholder="请输入内容" />
           </el-form-item>
           <el-form-item label="相似度" prop="score">

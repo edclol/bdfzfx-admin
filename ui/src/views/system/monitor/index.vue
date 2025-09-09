@@ -25,30 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否上送监控" prop="sendToMonitor">
-        <el-input
-          v-model="queryParams.sendToMonitor"
-          placeholder="请输入是否上送监控"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="参考依据" prop="referenceBasis">
-        <el-input
-          v-model="queryParams.referenceBasis"
-          placeholder="请输入参考依据"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="采集要求" prop="collectionRequirement">
-        <el-input
-          v-model="queryParams.collectionRequirement"
-          placeholder="请输入采集要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+   
       <el-form-item label="指向设备" prop="targetDevice">
         <el-input
           v-model="queryParams.targetDevice"
@@ -244,7 +221,7 @@
     </el-dialog>
 
     <!-- 数据统计对话框（复用样本库统计） -->
-    <el-dialog title="样本库数据统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
+    <el-dialog title="实际信号分类统计" :visible.sync="statsOpen" width="720px" append-to-body @closed="onStatsDialogClosed">
       <div ref="statsChart" style="width: 100%; height: 400px;"></div>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="statsOpen = false">关 闭</el-button>
