@@ -52,6 +52,26 @@ public class SysRemoteSignalCallController extends BaseController
     }
 
     /**
+     * 统计分析调用记录
+     */
+    @ApiOperation("统计分析调用记录")
+    @GetMapping("/stat")
+    public AjaxResult stat()
+    {
+        List<SysRemoteSignalCall> sysRemoteSignalCalls = sysRemoteSignalCallService.selectSysRemoteSignalCallList(null);
+        //统计不同厂站的调用次数
+        List<String> stationNames = sysRemoteSignalCalls.stream().map(SysRemoteSignalCall::getStationName).distinct().collect(java.util.stream.Collectors.toList());
+        List<Long> counts = stationNames.stream().map(stationName -> sysRemoteSignalCalls.stream().filter(sysRemoteSignalCall -> sysRemoteSignalCall.getStationName().equals(stationName)).count()).collect(java.util.stream.Collectors.toList());
+        
+        // 构造返回结果
+        java.util.Map<String, Long> statResult = new java.util.HashMap<>();
+        for (int i = 0; i < stationNames.size(); i++) {
+            statResult.put(stationNames.get(i), counts.get(i));
+        }
+        return AjaxResult.success(statResult);
+    }
+
+    /**
      * 导出遥信调用记录列表
      */
     @PreAuthorize("@ss.hasPermi('system:call:export')")
