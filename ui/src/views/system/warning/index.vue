@@ -75,10 +75,7 @@
     <el-table v-loading="loading" :data="warningList" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" align="center" prop="id"  width="55"/>
-      <el-table-column label="发生时间" align="center" prop="occurTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.occurTime, '{y}-{m}-{d}') }}</span>
-        </template>
+      <el-table-column label="预警ID" align="center" prop="warningId" width="180">
       </el-table-column>
       <el-table-column label="预警等级" align="center" prop="warningLevel" />
       <el-table-column label="预警内容" align="center" prop="warningContent" />

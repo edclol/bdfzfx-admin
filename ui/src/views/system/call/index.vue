@@ -161,7 +161,7 @@
           icon="el-icon-magic-stick"
           size="mini"
           @click="handleEnhanceFunction"
-        >增强函数配置</el-button>
+        >增强函数管理</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button

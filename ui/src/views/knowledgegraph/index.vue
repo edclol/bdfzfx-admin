@@ -27,7 +27,7 @@
             :before-upload="beforeImport"
             accept=".json"
           >
-            <el-button type="primary">导入</el-button>
+            <el-button type="primary">上传</el-button>
           </el-upload>
           <el-button @click="exportJSON" type="primary">导出</el-button>
           <el-button type="primary" @click="openStatsDialog"
@@ -53,7 +53,7 @@
 
     <!-- 知识卡片推荐抽屉 -->
     <el-drawer
-      title="节点详情"
+      title="资源推荐"
       :visible.sync="recDrawerVisible"
       direction="rtl"
       size="380px"
