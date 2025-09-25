@@ -684,12 +684,12 @@ CREATE TABLE sys_substation_info
 INSERT INTO sys_substation_info VALUES (1, '草坝站', 'xxxxxx', '220kV', 'admin', '2025-08-01 09:30:00', 'admin', '2025-08-01 09:30:00', '');
 INSERT INTO sys_substation_info VALUES (2, '汉源站', 'xxxxxx', '220kV', 'admin', '2025-08-05 14:15:00', 'admin', '2025-08-05 14:15:00', '');
 INSERT INTO sys_substation_info VALUES (3, '黄岗站', 'xxxxxx', '220kV', 'admin', '2025-08-08 10:00:00', 'admin', '2025-08-08 10:00:00', '');
-INSERT INTO sys_substation_info VALUES (4, '名山站', 'xxxxxx', '110kV', 'admin', '2025-08-12 16:45:00', 'admin', '2025-08-12 16:45:00', '');
+INSERT INTO sys_substation_info VALUES (4, '名山站', 'xxxxxx', '220kV', 'admin', '2025-08-12 16:45:00', 'admin', '2025-08-12 16:45:00', '');
 INSERT INTO sys_substation_info VALUES (5, '顺河站', 'xxxxxx', '220kV', 'admin', '2025-08-15 08:20:00', 'admin', '2025-08-15 08:20:00', '');
-INSERT INTO sys_substation_info VALUES (6, '天全站', 'xxxxxx', '110kV', 'admin', '2025-08-18 13:50:00', 'admin', '2025-08-18 13:50:00', '');
+INSERT INTO sys_substation_info VALUES (6, '天全站', 'xxxxxx', '220kV', 'admin', '2025-08-18 13:50:00', 'admin', '2025-08-18 13:50:00', '');
 INSERT INTO sys_substation_info VALUES (7, '下坪站', 'xxxxxx', '220kV', 'admin', '2025-08-20 11:30:00', 'admin', '2025-08-20 11:30:00', '');
 INSERT INTO sys_substation_info VALUES (8, '新棉站', 'xxxxxx', '220kV', 'admin', '2025-08-22 15:10:00', 'admin', '2025-08-22 15:10:00', '');
-INSERT INTO sys_substation_info VALUES (9, '荥经站', 'xxxxxx', '110kV', 'admin', '2025-08-25 09:40:00', 'admin', '2025-08-25 09:40:00', '');
+INSERT INTO sys_substation_info VALUES (9, '荥经站', 'xxxxxx', '220kV', 'admin', '2025-08-25 09:40:00', 'admin', '2025-08-25 09:40:00', '');
 INSERT INTO sys_substation_info VALUES (10, '竹马站', 'xxxxxx', '220kV', 'admin', '2025-08-28 14:20:00', 'admin', '2025-08-28 14:20:00', '');
 INSERT INTO sys_substation_info VALUES (11, '七盘站', 'xxxxxx', '110kV', 'admin', '2025-08-30 10:50:00', 'admin', '2025-08-30 10:50:00', '');
 
