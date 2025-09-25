@@ -54,7 +54,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="openStats"
-          >数据统计</el-button
+          >标注总体统计</el-button
         >
       </el-col>
       <el-col :span="1.5">

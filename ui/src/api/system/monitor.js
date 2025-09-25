@@ -42,3 +42,11 @@ export function delMonitor(id) {
     method: 'delete'
   })
 }
+
+//数据统计
+export function dataStatistics() {
+  return request({
+    url: '/system/monitor/stat',
+    method: 'get',
+  })
+}

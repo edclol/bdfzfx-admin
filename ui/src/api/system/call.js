@@ -42,3 +42,11 @@ export function delCall(id) {
     method: 'delete'
   })
 }
+
+//数据统计
+export function dataStatistics() {
+  return request({
+    url: '/system/call/stat',
+    method: 'get',
+  })
+}
