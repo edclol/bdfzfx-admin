@@ -764,7 +764,9 @@ create table sys_job (
 insert into sys_job values(1, '系统默认（无参）', 'DEFAULT', 'Task.noParams',        '0/10 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
 insert into sys_job values(2, '系统默认（有参）', 'DEFAULT', 'Task.params(\'有参😊\')',  '0/15 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
 insert into sys_job values(3, '系统默认（多参）', 'DEFAULT', 'Task.multipleParams(\'多参😎\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 'admin', sysdate(), '', null, '');
-INSERT INTO sys_job VALUES (4, '定时更新调用记录数据', 'DEFAULT', 'Task.updateCallRecord()', '0 0 1 L * ?', '1', '1', '0', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_job VALUES (4, '定时更新调用记录数据', 'DEFAULT', 'Task.updateCallRecord()', '0 0 1 * * ?', '1', '1', '0', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_job VALUES (5, '定时更新操作日志', 'DEFAULT', 'Task.updateOperLogDates()', '0 0 1 * * ?', '1', '1', '0', 'admin', sysdate(), '', null, '');
+INSERT INTO sys_job VALUES (6, '定时更新登录日志', 'DEFAULT', 'Task.updateLoginLogDates()', '0 0 1 * * ?', '1', '1', '0', 'admin', sysdate(), '', null, '');
 
 
 -- ----------------------------
