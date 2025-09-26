@@ -75,7 +75,10 @@
     <el-table v-loading="loading" :data="warningList" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <el-table-column label="序号" align="center" prop="id"  width="55"/>
-      <el-table-column label="预警ID" align="center" prop="warningId" width="180">
+      <el-table-column label="预警ID" align="center" width="300">
+        <template slot-scope="scope">
+          {{ generateMD5Id(scope.row) }}
+        </template>
       </el-table-column>
       <el-table-column label="预警等级" align="center" prop="warningLevel" />
       <el-table-column label="预警内容" align="center" prop="warningContent" />
@@ -143,6 +146,7 @@
 
 <script>
 import { listWarning, getWarning, delWarning, addWarning, updateWarning } from "@/api/system/warning"
+import CryptoJS from 'crypto-js'
 
 export default {
   name: "Warning",
@@ -197,6 +201,16 @@ export default {
     this.getList()
   },
   methods: {
+    generateHashId(row) {
+      // 使用SHA256
+      const uniqueStr = `${row.id || ''}${row.occurTime || ''}${Date.now()}${Math.random()}`
+      return CryptoJS.SHA256(uniqueStr).toString()
+    },
+    generateMD5Id(row) {
+      // 基于行数据的唯一标识生成MD5
+      const uniqueStr = `${row.id}${row.occurTime}${Math.random()}`
+      return CryptoJS.MD5(uniqueStr).toString()
+    },
     /** 查询模型预警列表 */
     getList() {
       this.loading = true
