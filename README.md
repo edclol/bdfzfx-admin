@@ -26,7 +26,7 @@
 17. 在线构建器：拖动表单元素生成相应的HTML代码。
 18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
-## 账号密码
+## new-ui 账号密码
 - admin/W41XsAftTYp90ayhg8P
 - shuzihua_1/shuzihua123
 - shuzihua_2/shuzihua123
@@ -47,3 +47,74 @@
 ## 旧版UI账号密码
 - 管理员账号/密码: admin/1Q2w3e4r5t
 - 普通用户账号/密码: yunjian_1/1Q2w3e4r5t
+
+
+系统启动说明
+一、环境要求服务器需已安装 Docker 与 Docker Compose。
+二、部署步骤
+上传文件：将本目录所有文件（含sql文件夹、.env、compose.yml、image_tar文件夹）至服务器目标路径（例：/opt/[项目名]）。
+进入目录：登录服务器，终端执行：
+bash
+cd /opt/[项目名]
+加载镜像：进入目录后，先加载image_tar文件夹中的所有镜像文件（否则docker compose可能因找不到镜像而启动失败），执行：
+bash
+# 批量加载所有tar.gz格式的镜像
+for tar in ./image_tar/*.tar.gz; do docker load -i $tar; done
+启动服务：
+bash
+docker compose up -d
+三、验证与访问检查状态：执行以下命令，确保所有服务状态为Up：
+bash
+docker compose ps
+访问系统：浏览器输入 http://服务IP:8082/，确认登录页正常加载。
+四、异常排查
+端口检查：若无法访问，确认服务器防火墙已开放 8082 端口。
+日志排查：查看容器日志定位问题：
+bash
+docker compose logs -f
+五、补充说明
+sql文件夹：存放数据库初始化脚本，由compose.yml中数据库服务自动加载执行。
+.env文件：存放项目环境变量（如数据库密码、服务端口），请勿随意修改。
+image_tar文件夹：存放项目所需的 Docker 镜像压缩包，需先通过docker load加载至本地镜像库，否则服务无法启动。
+
+
+
+svc
+bdfzfx-admin-service:8080
+bdfzfx-admin-mysql:3306
+bdfzfx-admin-redis:6379
+
+
+kubectl exec -it mysql-sts-0-0 -- /bin/bash
+mysql -u app -ptB91Y7X5e8oipZJu
+
+
+申请四个端口出来；要访问14机器的 30377(mysql) 30378(new-ui) 30379(old-ui) 30380(bigscreen);这端口可以改 只要符合要求就行
+
+
+
+## new-ui 账号密码
+- admin/W41XsAftTYp90ayhg8P
+- shuzihua_1/shuzihua123
+- shuzihua_2/shuzihua123
+- shuzihua_3/shuzihua123
+- shuzihua_4/shuzihua123
+- shuzihua_5/shuzihua123
+- yunjian_1/yunjian123
+- yunjian_2/yunjian123
+- yunjian_3/yunjian123
+- yunjian_4/yunjian123
+- yunjian_5/yunjian123
+- yunjian_6/yunjian123
+- yunjian_7/yunjian123
+- yunjian_8/yunjian123
+- yunjian_9/yunjian123
+- yunjian_10/yunjian123
+
+## 旧版UI账号密码
+- 管理员账号/密码: admin/1Q2w3e4r5t
+- 普通用户账号/密码: yunjian_1/1Q2w3e4r5t
+
+
+
+
