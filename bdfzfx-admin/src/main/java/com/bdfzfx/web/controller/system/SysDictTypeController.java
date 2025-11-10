@@ -1,18 +1,5 @@
 package com.bdfzfx.web.controller.system;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.bdfzfx.common.annotation.Log;
 import com.bdfzfx.common.core.controller.BaseController;
 import com.bdfzfx.common.core.domain.AjaxResult;
@@ -21,6 +8,15 @@ import com.bdfzfx.common.core.page.TableDataInfo;
 import com.bdfzfx.common.enums.BusinessType;
 import com.bdfzfx.common.utils.poi.ExcelUtil;
 import com.bdfzfx.system.service.ISysDictTypeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 数据字典信息
@@ -29,6 +25,7 @@ import com.bdfzfx.system.service.ISysDictTypeService;
  */
 @RestController
 @RequestMapping("/system/dict/type")
+@Api(tags = "字典类型管理")
 public class SysDictTypeController extends BaseController
 {
     @Autowired
@@ -36,6 +33,7 @@ public class SysDictTypeController extends BaseController
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
+    @ApiOperation("查询字典类型列表")
     public TableDataInfo list(SysDictType dictType)
     {
         startPage();
@@ -46,6 +44,7 @@ public class SysDictTypeController extends BaseController
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
+    @ApiOperation("导出字典类型数据")
     public void export(HttpServletResponse response, SysDictType dictType)
     {
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
@@ -58,6 +57,7 @@ public class SysDictTypeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictId}")
+    @ApiOperation("根据字典编号获取详细信息")
     public AjaxResult getInfo(@PathVariable Long dictId)
     {
         return success(dictTypeService.selectDictTypeById(dictId));
@@ -69,6 +69,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
     @Log(title = "字典类型", businessType = BusinessType.INSERT)
     @PostMapping
+    @ApiOperation("新增字典类型")
     public AjaxResult add(@Validated @RequestBody SysDictType dict)
     {
         if (!dictTypeService.checkDictTypeUnique(dict))
@@ -85,6 +86,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
     @Log(title = "字典类型", businessType = BusinessType.UPDATE)
     @PutMapping
+    @ApiOperation("修改字典类型")
     public AjaxResult edit(@Validated @RequestBody SysDictType dict)
     {
         if (!dictTypeService.checkDictTypeUnique(dict))
@@ -101,6 +103,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
     @DeleteMapping("/{dictIds}")
+    @ApiOperation("删除字典类型")
     public AjaxResult remove(@PathVariable Long[] dictIds)
     {
         dictTypeService.deleteDictTypeByIds(dictIds);
@@ -113,6 +116,7 @@ public class SysDictTypeController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.CLEAN)
     @DeleteMapping("/refreshCache")
+    @ApiOperation("刷新字典缓存")
     public AjaxResult refreshCache()
     {
         dictTypeService.resetDictCache();
@@ -123,6 +127,7 @@ public class SysDictTypeController extends BaseController
      * 获取字典选择框列表
      */
     @GetMapping("/optionselect")
+    @ApiOperation("获取字典选择框列表")
     public AjaxResult optionselect()
     {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();

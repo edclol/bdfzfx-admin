@@ -3,6 +3,9 @@ package com.bdfzfx.web.controller.system;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +32,7 @@ import com.bdfzfx.system.service.ISysMenuService;
  * 
  *
  */
+@Api(tags = "登录验证")
 @RestController
 public class SysLoginController
 {
@@ -54,6 +58,7 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/login")
+    @ApiOperation("登录")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
@@ -70,6 +75,7 @@ public class SysLoginController
      * @return 用户信息
      */
     @GetMapping("getInfo")
+    @ApiOperation("获取用户信息")
     public AjaxResult getInfo()
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
@@ -98,6 +104,7 @@ public class SysLoginController
      * @return 路由信息
      */
     @GetMapping("getRouters")
+    @ApiOperation("获取路由信息")
     public AjaxResult getRouters()
     {
         Long userId = SecurityUtils.getUserId();

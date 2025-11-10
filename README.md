@@ -26,27 +26,6 @@
 17. 在线构建器：拖动表单元素生成相应的HTML代码。
 18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
-## new-ui 账号密码
-- admin/W41XsAftTYp90ayhg8P
-- shuzihua_1/shuzihua123
-- shuzihua_2/shuzihua123
-- shuzihua_3/shuzihua123
-- shuzihua_4/shuzihua123
-- shuzihua_5/shuzihua123
-- yunjian_1/yunjian123
-- yunjian_2/yunjian123
-- yunjian_3/yunjian123
-- yunjian_4/yunjian123
-- yunjian_5/yunjian123
-- yunjian_6/yunjian123
-- yunjian_7/yunjian123
-- yunjian_8/yunjian123
-- yunjian_9/yunjian123
-- yunjian_10/yunjian123
-
-## 旧版UI账号密码
-- 管理员账号/密码: admin/1Q2w3e4r5t
-- 普通用户账号/密码: yunjian_1/1Q2w3e4r5t
 
 
 系统启动说明
@@ -89,8 +68,16 @@ kubectl exec -it mysql-sts-0-0 -- /bin/bash
 mysql -u app -ptB91Y7X5e8oipZJu
 
 
-申请四个端口出来；要访问14机器的 30377(mysql) 30378(new-ui) 30379(old-ui) 30380(bigscreen);这端口可以改 只要符合要求就行
+申请五个端口出来；要访问14机器的 30377(mysql) 30378(new-ui) 30379(old-ui) 30380(bigscreen) 30381(analyze-service) ;这端口可以改 只要符合要求就行
 
+1. bdfzfx-admin-ui 对外暴露 30378（new-ui），对应容器内部 80 端口。
+2. bdfzfx-admin-ui 对外暴露 30379（old-ui），对应容器内部 81 端口。
+3. bdfzfx-yx-analyze-service 对外暴露 30381（analyze-service），对应内部 8090 端口。
+4. bdfzfx-bigscreen-ya 对外暴露 30380（bigscreen），对应内部 80 端口。
+
+
+http://10.176.100.15:30378  new-ui
+http://10.176.100.15:30379  old-ui
 
 
 ## new-ui 账号密码
@@ -112,8 +99,8 @@ mysql -u app -ptB91Y7X5e8oipZJu
 - yunjian_10/yunjian123
 
 ## 旧版UI账号密码
-- 管理员账号/密码: admin/1Q2w3e4r5t
-- 普通用户账号/密码: yunjian_1/1Q2w3e4r5t
+- 管理员账号/密码: admin/1Q2w3e4r5t.
+- 普通用户账号/密码: yunjian_1/1Q2w3e4r5t.
 
 
 
