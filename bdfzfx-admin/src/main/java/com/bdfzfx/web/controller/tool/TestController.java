@@ -1,37 +1,21 @@
 package com.bdfzfx.web.controller.tool;
 
+import com.bdfzfx.common.annotation.Anonymous;
+import com.bdfzfx.common.core.domain.R;
+import com.bdfzfx.common.utils.StringUtils;
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.bdfzfx.common.core.controller.BaseController;
-import com.bdfzfx.common.core.domain.R;
-import com.bdfzfx.common.utils.StringUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 
 /**
- * swagger 用户测试方法
- * 
- *
+ * 测试用控制器
  */
-@Api(tags = "用户信息管理")
 @RestController
-@RequestMapping("/test/user")
-public class TestController extends BaseController
-{
+public class TestController {
     private final static Map<Integer, UserEntity> users = new LinkedHashMap<Integer, UserEntity>();
     {
         users.put(1, new UserEntity(1, "admin", "admin123", "15888888888"));
@@ -110,6 +94,23 @@ public class TestController extends BaseController
         {
             return R.fail("用户不存在");
         }
+    }
+
+    /**
+     * 测试匿名访问接口
+     */
+    @Anonymous
+    @GetMapping("/test/anon")
+    public String testAnon() {
+        return "这是一个匿名访问测试接口";
+    }
+
+    /**
+     * 测试需要认证的接口
+     */
+    @GetMapping("/test/auth")
+    public String testAuth() {
+        return "这是一个需要认证的测试接口";
     }
 }
 

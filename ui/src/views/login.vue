@@ -39,17 +39,29 @@
       </el-form-item>
       <!-- <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox> -->
       <el-form-item style="width:100%;">
-        <el-button
-          :loading="loading"
-          size="medium"
-          type="primary"
-          style="width:100%;"
-          @click.native.prevent="handleLogin"
-        >
-          <span v-if="!loading">登 录</span>
-          <span v-else>登 录 中...</span>
-        </el-button>
-        <div style="float: right;" v-if="register">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <el-button
+            :loading="loading"
+            size="medium"
+            type="primary"
+            style="width:100%;"
+            @click.native.prevent="handleLogin"
+          >
+            <span v-if="!loading">登 录</span>
+            <span v-else>登 录 中...</span>
+          </el-button>
+          <el-button
+            :loading="ssoLoading"
+            size="medium"
+            type="info"
+            style="width:100%;"
+            @click.native.prevent="handleSSOLogin"
+          >
+            <span v-if="!ssoLoading">SSO 登录</span>
+            <span v-else>登 录 中...</span>
+          </el-button>
+        </div>
+        <div style="float: right; margin-top: 10px;" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
         </div>
       </el-form-item>
@@ -65,6 +77,7 @@
 import { getCodeImg } from "@/api/login"
 import Cookies from "js-cookie"
 import { encrypt, decrypt } from '@/utils/jsencrypt'
+import settings from '@/settings'
 
 export default {
   name: "Login",
@@ -89,6 +102,8 @@ export default {
         code: [{ required: true, trigger: "change", message: "请输入验证码" }]
       },
       loading: false,
+      // SSO登录loading状态
+      ssoLoading: false,
       // 验证码开关
       captchaEnabled: false,
       // 注册开关
@@ -151,6 +166,14 @@ export default {
           })
         }
       })
+    },
+    handleSSOLogin() {
+      // 从配置中获取SSO登录地址和回调地址
+      const { loginUrl, callbackUrl } = settings.sso;
+      // 构建CAS登录URL
+      const casLoginUrl = `${loginUrl}?service=${encodeURIComponent(callbackUrl)}`;
+      // 重定向到CAS登录页
+      window.location.href = casLoginUrl;
     }
   }
 }

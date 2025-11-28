@@ -52,5 +52,15 @@ module.exports = {
   /**
    * 底部版权文本内容
    */
-  footerContent: 'Copyright © 2018-2025   All Rights Reserved.'
+  footerContent: 'Copyright © 2018-2025   All Rights Reserved.',
+
+  /**
+   * SSO登录配置
+   */
+  sso: {
+    // CAS登录地址
+    loginUrl: 'http://10.176.3.217/isc_sso/login',
+    // 回调地址
+    callbackUrl: 'http://10.176.100.15:30378/callback'
+  }
 }

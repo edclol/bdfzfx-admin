@@ -6,14 +6,12 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
  * 启动程序
- * 
- *  
+ *
+ *
  */
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-public class BdfzfxAdminApp
-{
-    public static void main(String[] args)
-    {
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+public class BdfzfxAdminApp {
+    public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(BdfzfxAdminApp.class, args);
         System.out.println("JDK 版本: " + System.getProperty("java.version"));

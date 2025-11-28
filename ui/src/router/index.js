@@ -52,6 +52,16 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/cas-callback',
+    component: () => import('@/views/cas-callback'),
+    hidden: true
+  },
+  {
+    path: '/callback',
+    component: () => import('@/views/cas-callback'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/error/404'),
     hidden: true

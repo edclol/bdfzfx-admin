@@ -4,9 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.sgcc.isc.ualogin.client.util.IscSSOResourceUtil;
+import com.sgcc.isc.ualogin.client.vo.IscSSOUserBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +33,8 @@ import com.bdfzfx.framework.web.service.TokenService;
 import com.bdfzfx.system.service.ISysConfigService;
 import com.bdfzfx.system.service.ISysMenuService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 登录验证
  * 
@@ -36,6 +44,8 @@ import com.bdfzfx.system.service.ISysMenuService;
 @RestController
 public class SysLoginController
 {
+    private static final Logger logger = LoggerFactory.getLogger(SysLoginController.class);
+    
     @Autowired
     private SysLoginService loginService;
 
@@ -51,14 +61,17 @@ public class SysLoginController
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     /**
-     * 登录方法
+     * 用户名密码登录方法
      * 
      * @param loginBody 登录信息
      * @return 结果
      */
     @PostMapping("/login")
-    @ApiOperation("登录")
+    @ApiOperation("用户名密码登录")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
@@ -67,6 +80,50 @@ public class SysLoginController
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
         return ajax;
+    }
+
+    /**
+     * SSO登录方法
+     * 
+     * @return 结果
+     */
+    @GetMapping("/isc/callback")
+    @ApiOperation("SSO登录")
+    public AjaxResult ssoLogin(HttpServletRequest request) {
+        logger.debug("SSO登录开始");
+        AjaxResult ajax = AjaxResult.success();
+        try {
+            logger.debug("SSO登录请求参数: {}", request.getQueryString());
+            IscSSOUserBean userBean = IscSSOResourceUtil.getIscUserBean(request);
+            logger.debug("从SSO获取到的用户信息: {}", userBean);
+            
+            if (userBean == null || StringUtils.isEmpty(userBean.getName())) {
+                logger.warn("SSO登录失败，无法获取用户信息，请求参数: {}", request.getQueryString());
+                return AjaxResult.error("SSO登录失败，无法获取用户信息");
+            }
+            
+            logger.debug("准备通过SSO用户名获取本地用户详情，用户名: {}", userBean.getName());
+
+            // 通过SSO用户信息获取本地用户详情
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userBean.getName());
+            logger.debug("获取到的本地用户详情: {}", userDetails);
+            
+            if (userDetails == null) {
+                logger.warn("SSO登录失败，用户不存在，用户名: {}", userBean.getName());
+                return AjaxResult.error("SSO登录失败，用户不存在");
+            }
+            
+            logger.debug("准备为用户生成令牌，用户名: {}", userDetails.getUsername());
+            // 生成令牌
+            String token = loginService.login(userDetails.getUsername(), userDetails.getPassword(), "",
+                    "");
+            logger.debug("成功为用户生成令牌，用户名: {}", userDetails.getUsername());
+            ajax.put(Constants.TOKEN, token);
+            return ajax;
+        } catch (Exception e) {
+            logger.error("SSO登录异常，错误信息: {}", e.getMessage(), e);
+            return AjaxResult.error("SSO登录异常: " + e.getMessage());
+        }
     }
 
     /**

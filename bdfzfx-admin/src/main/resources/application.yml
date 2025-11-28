@@ -99,3 +99,19 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+isc:
+  sso:
+    appid: 402881483c18585e013c185c01c110001
+    # 统一认证服务地址
+    sso-server-url: http://10.176.3.217/isc_sso
+    # 登录地址
+    server-login-url: ${isc.sso.sso-server-url}/login
+    # 登出地址
+    server-logout-url: ${isc.sso.sso-server-url}/logout
+    # 认证服务前缀
+    server-url-prefix: ${isc.sso.sso-server-url}/
+    # 业务系统地址
+    business-server-url: http://10.176.100.15:30378
+    # 业务系统应用根路径
+    business-app-url: http://10.176.100.15:30378/all

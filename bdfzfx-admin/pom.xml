@@ -16,11 +16,7 @@
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.isc.sso</groupId>
-            <artifactId>isc-sso-agent</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+
 
         <!-- spring-boot-devtools -->
         <dependency>
@@ -69,6 +65,10 @@
         <dependency>
             <groupId>com.huaban</groupId>
             <artifactId>jieba-analysis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
     </dependencies>
