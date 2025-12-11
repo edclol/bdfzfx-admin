@@ -105,6 +105,7 @@ isc:
     appid: 402881483c18585e013c185c01c110001
     # 统一认证服务地址
     sso-server-url: http://10.176.3.217/isc_sso
+    sso-server-validate-url: http://10.176.3.217/isc_sso/serviceValidate
     # 登录地址
     server-login-url: ${isc.sso.sso-server-url}/login
     # 登出地址

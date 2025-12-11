@@ -1,22 +1,27 @@
 package com.bdfzfx.web.controller.system;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.bdfzfx.common.exception.user.UserNotExistsException;
+import com.bdfzfx.system.service.ISysUserService;
+import com.sgcc.isc.ualogin.client.IscServiceTicketValidator;
 import com.sgcc.isc.ualogin.client.util.IscSSOResourceUtil;
 import com.sgcc.isc.ualogin.client.vo.IscSSOUserBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.jasig.cas.client.javafilter.validation.TicketValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 import com.bdfzfx.common.constant.Constants;
 import com.bdfzfx.common.core.domain.AjaxResult;
 import com.bdfzfx.common.core.domain.entity.SysMenu;
@@ -34,6 +39,10 @@ import com.bdfzfx.system.service.ISysConfigService;
 import com.bdfzfx.system.service.ISysMenuService;
 
 import javax.servlet.http.HttpServletRequest;
+
+// 添加FastJSON2的导入
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 
 /**
  * 登录验证
@@ -64,6 +73,11 @@ public class SysLoginController
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Value("${isc.sso.sso-server-validate-url}")
+    private String casValidateUrl;
+
+    @Autowired
+    private ISysUserService userService;
     /**
      * 用户名密码登录方法
      * 
@@ -89,41 +103,70 @@ public class SysLoginController
      */
     @GetMapping("/isc/callback")
     @ApiOperation("SSO登录")
-    public AjaxResult ssoLogin(HttpServletRequest request) {
-        logger.debug("SSO登录开始");
+    public AjaxResult ssoLogin(HttpServletRequest request, @RequestParam String ticket) {
+        logger.debug("SSO登录开始，ticket: {}", ticket);
         AjaxResult ajax = AjaxResult.success();
+        IscSSOUserBean userBean = null;
+
         try {
-            logger.debug("SSO登录请求参数: {}", request.getQueryString());
-            IscSSOUserBean userBean = IscSSOResourceUtil.getIscUserBean(request);
-            logger.debug("从SSO获取到的用户信息: {}", userBean);
-            
+            // 方式1：CAS票据解析获取用户信息
+            try {
+                IscServiceTicketValidator ticketValidator = new IscServiceTicketValidator();
+                ticketValidator.setCasValidateUrl(casValidateUrl);
+                ticketValidator.setServiceTicket(ticket);
+                ticketValidator.validate();
+
+                String userJsonStr = ticketValidator.getUser();
+                logger.debug("CAS票据解析获取用户原始信息: {}", userJsonStr);
+                if (StringUtils.isNotBlank(userJsonStr)) {
+                    String userStr = URLDecoder.decode(userJsonStr, StandardCharsets.UTF_8.name());
+                    JSONObject jsonObject = JSON.parseObject(userStr);
+                    userBean = jsonObject.toJavaObject(IscSSOUserBean.class);
+                    logger.debug("解析出用户信息: {}", userBean);
+                }
+            } catch (Exception e) {
+                logger.warn("CAS票据解析获取用户信息失败，原因: {}", e.getMessage(), e);
+                // 仅记录异常，不中断，继续执行方式2
+            }
+
+            // 方式2：Request兜底获取（仅方式1失败/无数据时执行）
             if (userBean == null || StringUtils.isEmpty(userBean.getName())) {
-                logger.warn("SSO登录失败，无法获取用户信息，请求参数: {}", request.getQueryString());
+                try {
+                    logger.debug("尝试从Request中获取用户信息");
+                    userBean = IscSSOResourceUtil.getIscUserBean(request);
+                    logger.debug("从Request获取的用户信息: {}", userBean);
+                } catch (Exception e) {
+                    logger.warn("从Request获取用户信息失败，原因: {}", e.getMessage(), e);
+                }
+            }
+
+            // 最终用户信息校验
+            if (userBean == null || StringUtils.isEmpty(userBean.getName())) {
+                String requestParams = request.getQueryString();
+                logger.warn("SSO登录失败：所有方式均未获取到有效用户信息，请求参数: {}", requestParams);
                 return AjaxResult.error("SSO登录失败，无法获取用户信息");
             }
-            
-            logger.debug("准备通过SSO用户名获取本地用户详情，用户名: {}", userBean.getName());
 
-            // 通过SSO用户信息获取本地用户详情
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userBean.getName());
-            logger.debug("获取到的本地用户详情: {}", userDetails);
-            
+            // 本地用户校验 + 令牌生成
+            logger.debug("通过SSO用户名[{}]查询本地用户信息", userBean);
+            SysUser userDetails = userService.selectUserByUserName(userBean.getName());
             if (userDetails == null) {
-                logger.warn("SSO登录失败，用户不存在，用户名: {}", userBean.getName());
-                return AjaxResult.error("SSO登录失败，用户不存在");
+                logger.warn("SSO登录失败：本地系统无该用户，用户名: {}", userBean.getName());
+                return AjaxResult.error("SSO登录失败，用户未在本系统注册，请联系管理员");
             }
-            
-            logger.debug("准备为用户生成令牌，用户名: {}", userDetails.getUsername());
-            // 生成令牌
-            String token = loginService.login(userDetails.getUsername(), userDetails.getPassword(), "",
-                    "");
-            logger.debug("成功为用户生成令牌，用户名: {}", userDetails.getUsername());
+
+            String token = loginService.login(userDetails.getUserName(), "yunjian123", "", "");
+            logger.debug("用户[{}]SSO登录成功，生成令牌: {}", userBean.getName(), token);
             ajax.put(Constants.TOKEN, token);
-            return ajax;
+
+        } catch (UserNotExistsException e) {
+            logger.error("SSO登录失败：本地用户不存在", e);
+            return AjaxResult.error("SSO登录失败，用户未在本系统注册，请联系管理员");
         } catch (Exception e) {
-            logger.error("SSO登录异常，错误信息: {}", e.getMessage(), e);
+            logger.error("SSO登录异常", e);
             return AjaxResult.error("SSO登录异常: " + e.getMessage());
         }
+        return ajax;
     }
 
     /**

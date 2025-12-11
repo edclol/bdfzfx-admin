@@ -7,12 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * SSO 认证配置类（完全对齐 web.xml 配置，替代 web.xml）
+ * SSO 认证配置类
  */
 @Configuration
 public class SSOConfig {
 
-    // 从配置文件读取参数（与 web.xml 中的 param-value 对应）
+    // 从配置文件读取参数
     @Value("${isc.sso.appid:40288cd65fbf9021015fc2dc5ac500bc}")
     private String appid;
 
