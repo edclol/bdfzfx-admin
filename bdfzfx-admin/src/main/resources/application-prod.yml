@@ -93,3 +93,8 @@ swagger:
   enabled: true
   # 请求前缀
   pathMapping: /prod-api
+
+isc:
+  sso:
+    # 启用/禁用SSO功能
+    enabled: false

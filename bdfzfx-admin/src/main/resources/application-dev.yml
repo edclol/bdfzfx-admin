@@ -190,4 +190,7 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
-
+isc:
+  sso:
+    # 启用/禁用SSO功能
+    enabled: false

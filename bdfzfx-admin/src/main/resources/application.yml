@@ -116,3 +116,5 @@ isc:
     business-server-url: http://10.176.100.15:30378
     # 业务系统应用根路径
     business-app-url: http://10.176.100.15:30378/all
+    # 启用/禁用SSO拦截
+    enabled: false
