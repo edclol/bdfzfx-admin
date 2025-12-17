@@ -21,3 +21,19 @@ insert into sys_user values(30,  101, '梁宇','梁宇', '00', 'liangy0014@sc.sg
 
 
 UPDATE sys_user SET user_name = nick_name;
+
+
+insert into sys_user_role values ('17', '2');
+insert into sys_user_role values ('18', '2');
+insert into sys_user_role values ('19', '2');
+insert into sys_user_role values ('20', '2');
+insert into sys_user_role values ('21', '2');
+insert into sys_user_role values ('22', '2');
+insert into sys_user_role values ('23', '2');
+insert into sys_user_role values ('24', '2');
+insert into sys_user_role values ('25', '2');
+insert into sys_user_role values ('26', '2');
+insert into sys_user_role values ('27', '2');
+insert into sys_user_role values ('28', '2');
+insert into sys_user_role values ('29', '2');
+insert into sys_user_role values ('30', '2');
