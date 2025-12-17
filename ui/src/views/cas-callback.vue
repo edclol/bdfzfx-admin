@@ -107,7 +107,7 @@ export default {
             // 保存token
             setToken(response.token)
             // 跳转到首页
-            window.location.href = '/all'
+            window.location.href = '/'
           } else {
             this.errorMsg = 'SSO登录失败：' + (response.msg || '未知错误')
           }
