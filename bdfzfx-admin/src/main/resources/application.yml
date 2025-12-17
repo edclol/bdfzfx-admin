@@ -118,3 +118,4 @@ isc:
     business-app-url: http://10.176.100.15:30378/all
     # 启用/禁用SSO拦截
     enabled: false
+    callbackUrl: http://10.176.100.15:30378/callback

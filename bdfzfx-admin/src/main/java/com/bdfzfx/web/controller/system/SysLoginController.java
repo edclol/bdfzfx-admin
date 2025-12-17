@@ -76,6 +76,9 @@ public class SysLoginController
     @Value("${isc.sso.sso-server-validate-url}")
     private String casValidateUrl;
 
+    @Value("${isc.sso.callbackUrl}")
+    private String callbackUrl;
+
     @Autowired
     private ISysUserService userService;
     /**
@@ -114,6 +117,7 @@ public class SysLoginController
                 IscServiceTicketValidator ticketValidator = new IscServiceTicketValidator();
                 ticketValidator.setCasValidateUrl(casValidateUrl);
                 ticketValidator.setServiceTicket(ticket);
+                ticketValidator.setService(callbackUrl);
                 ticketValidator.validate();
 
                 String userJsonStr = ticketValidator.getUser();
