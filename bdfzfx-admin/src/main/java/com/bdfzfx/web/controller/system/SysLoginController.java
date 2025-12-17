@@ -152,7 +152,18 @@ public class SysLoginController
             }
 
             // 本地用户校验 + 令牌生成
-            logger.debug("通过SSO用户名[{}]查询本地用户信息", userBean);
+            logger.debug("通过SSO用户名[{}]查询本地用户信息", userBean.getName());
+            logger.debug("用户名: {}", userBean.getName());
+            logger.debug("用户ID: {}", userBean.getIscUserId());
+            logger.debug("用户源ID: {}", userBean.getIscUserSourceId());
+            logger.debug("基础组织ID: {}", userBean.getBaseOrgId());
+            logger.debug("基础组织名称: {}", userBean.getBaseOrgName());
+            logger.debug("行政区划代码: {}", userBean.getIscAdCode());
+            logger.debug("登录时间: {}", userBean.getLoginTime());
+            logger.debug("IP地址: {}", userBean.getIp());
+            logger.debug("密码: {}", userBean.getPassword());
+            logger.debug("网络范围: {}", userBean.getNetscop());
+            logger.debug("是否管理员: {}", userBean.getIsAdmin());
             SysUser userDetails = userService.selectUserByUserName(userBean.getName());
             if (userDetails == null) {
                 logger.warn("SSO登录失败：本地系统无该用户，用户名: {}", userBean.getName());
