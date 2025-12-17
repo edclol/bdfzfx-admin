@@ -32,10 +32,10 @@ server:
 
 # 日志配置
 logging:
-  level:
-    com.bdfzfx: info
-    org.springframework: warn
-    com.alibaba: info
+  config: classpath:logback-spring.xml
+  file:
+    path: logs
+
 
 # 用户配置
 user:

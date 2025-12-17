@@ -120,7 +120,7 @@
             <appender-ref ref="WARN_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
         </root>
-        <logger name="com.bdfzfx" level="info"/>
+        <logger name="com.bdfzfx" level="debug"/>
         <logger name="org.springframework" level="error"/>
         <logger name="org.apache.ibatis" level="debug"/>
     </springProfile>
