@@ -234,6 +234,7 @@
         <module>bdfzfx-quartz</module>
         <module>bdfzfx-generator</module>
         <module>bdfzfx-common</module>
+        <module>cas-server-mock</module>
     </modules>
     <packaging>pom</packaging>
 
