@@ -13,7 +13,7 @@
       <!-- 主内容区 -->
       <div class="main-content">
         <!-- 加载状态 -->
-        <div class="loading-state" v-if="!errorMsg">
+        <div class="loading-state" v-if="!errorMsg && !loginSuccess">
           <!-- 加载动画 -->
           <div class="loading-animation">
             <el-spinner size="large" type="pulse" color="#409EFF" />
@@ -49,13 +49,20 @@
         </div>
 
         <!-- 错误状态 -->
-        <div class="error-state" v-else>
+        <div class="error-state" v-else-if="errorMsg && !loginSuccess">
           <el-icon class="error-icon">circle-close</el-icon>
           <h3 class="error-title">登录失败</h3>
           <p class="error-message">{{ errorMsg }}</p>
           <el-button type="primary" @click="handleRetry" class="retry-btn">
             重新尝试
           </el-button>
+        </div>
+
+        <!-- 成功状态 -->
+        <div class="success-state" v-else-if="loginSuccess">
+          <el-icon class="success-icon">circle-check</el-icon>
+          <h3 class="success-title">登录成功</h3>
+          <p class="success-message">正在跳转到系统...</p>
         </div>
       </div>
 
@@ -78,7 +85,8 @@ export default {
     return {
       title: settings.title,
       footerContent: settings.footerContent,
-      errorMsg: ''
+      errorMsg: '',
+      loginSuccess: false
     }
   },
   created() {
@@ -104,6 +112,8 @@ export default {
           timeout: 30000 // 增加超时时间到30秒
         }).then(response => {
           if (response.code === 200 && response.token) {
+            // 标记登录成功
+            this.loginSuccess = true
             // 保存token
             setToken(response.token)
             // 跳转到首页
@@ -340,6 +350,31 @@ export default {
   width: 100%;
   padding: 10px;
   font-size: 15px;
+}
+
+/* 成功状态 */
+.success-state {
+  padding: 30px 0;
+}
+
+.success-icon {
+  font-size: 64px;
+  color: #67c23a;
+  margin-bottom: 15px;
+}
+
+.success-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #67c23a;
+  margin: 0 0 10px 0;
+}
+
+.success-message {
+  font-size: 14px;
+  color: #606266;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
 }
 
 /* 页脚 */
