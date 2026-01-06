@@ -27,7 +27,12 @@ module.exports = {
   assetsDir: 'static',
   // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   productionSourceMap: false,
-  transpileDependencies: ['quill'],
+  // 需要对部分第三方依赖做 ES5 转译以兼容 IE
+  transpileDependencies: [
+    'quill',
+    'element-ui',
+    '@riophae/vue-treeselect'
+  ],
   // webpack-dev-server 相关配置
   devServer: {
     host: '0.0.0.0',
