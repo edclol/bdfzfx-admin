@@ -54,7 +54,7 @@
             :loading="ssoLoading"
             size="medium"
             type="info"
-            style="width:100%;"
+            style="width:100%;margin-left: 0"
             @click.native.prevent="handleSSOLogin"
           >
             <span v-if="!ssoLoading">SSO 登录</span>
