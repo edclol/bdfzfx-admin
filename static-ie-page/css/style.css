@@ -35,6 +35,24 @@ html, body {
     position: relative;
 }
 
+img {
+    width: 100%;
+    height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: silver;
+    border-radius: 3px
+}
 /* 左侧导航栏 - 白色背景 */
 .sidebar {
     position: fixed;
@@ -355,15 +373,15 @@ html, body {
 
 /* 样本上传 - primary plain (蓝色) */
 .action-btn:first-child {
-    color: #409EFF;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
+    color: #67C23A;
+    border-color: #c2e7b0;
+    background-color: #f0f9ff;
 }
 
 .action-btn:first-child:hover {
-    color: #ffffff;
-    background-color: #409EFF;
-    border-color: #409EFF;
+    color: #67C23A;
+    border-color: #c2e7b0;
+    background-color: #f0f9ff;
 }
 
 /* 样本打乱/导出 - warning plain (橙色) */
@@ -394,15 +412,15 @@ html, body {
 
 /* 版本管理 - primary plain (蓝色) */
 .action-btn:nth-child(4) {
-    color: #409EFF;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
+    color: #67C23A;
+    border-color: #c2e7b0;
+    background-color: #f0f9ff;
 }
 
 .action-btn:nth-child(4):hover {
-    color: #ffffff;
-    background-color: #409EFF;
-    border-color: #409EFF;
+    color: #67C23A;
+    border-color: #c2e7b0;
+    background-color: #f0f9ff;
 }
 
 /* 标准化检测 - success plain (绿色) */
