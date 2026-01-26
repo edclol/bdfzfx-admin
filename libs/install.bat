@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=D:\libs\isc-sso-agent-1.0.0.jar -DgroupId=com.isc.sso -DartifactId=isc-sso-agent -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true
